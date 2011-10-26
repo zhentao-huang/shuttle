@@ -82,6 +82,8 @@
     <string name="overwrite">Replace existing file?</string>
     <string name="loading">Loading ... </string>
     <string name="context_path">Context Path</string>
+    <string name="hello">Hello World</string>
+    <string name="launch_any">Launch!</string>
     
     <!-- External Storage State Messages -->
     <string name="header_sd_media"><b>External Media Unavailable</b>\n\nThe SD Card is a required part of i-jetty, and needs to be present, formatted, mounted, <u>not</u> read-only, and with sufficient space to hold the temporary files that i-jetty needs.\n\nPlease correct your SD-Card state.</string>

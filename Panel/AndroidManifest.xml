@@ -36,6 +36,8 @@
     <activity
       android:name=".SdCardUnavailableActivity"
       android:theme="@style/Theme.IJetty" />
+    <activity
+      android:name=".ui.WebUi" />
   	<service 
   	  android:name=".TrendBoxService"/>
   </application>

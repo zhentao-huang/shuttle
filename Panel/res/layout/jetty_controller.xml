@@ -64,6 +64,23 @@
         android:layout_height="wrap_content"
         android:text="@string/download_webapp" />
     </TableRow>
+    <TableRow
+      android:layout_weight="1.0"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
+      <Button
+        android:id="@+id/hello"
+        android:layout_weight="1.0"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello" />
+      <Button
+        android:id="@+id/launch_any"
+        android:layout_weight="1.0"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/launch_any" />
+    </TableRow>
   </TableLayout>
     
   <TextView

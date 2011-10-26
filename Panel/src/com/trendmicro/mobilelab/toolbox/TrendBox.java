@@ -35,6 +35,7 @@ import com.trendmicro.mobilelab.toolbox.R;
 import com.trendmicro.mobilelab.toolbox.container.log.AndroidLog;
 import com.trendmicro.mobilelab.toolbox.util.AndroidInfo;
 import com.trendmicro.mobilelab.toolbox.util.IJettyToast;
+import com.trendmicro.mobilelab.toolbox.ui.WebUi;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -99,6 +100,7 @@ public class TrendBox extends Activity
     private Button startButton;
     private Button stopButton;
     private Button configButton;
+    private Button helloButton;
     private TextView footer;
     private TextView info;
     private TextView console;
@@ -424,6 +426,7 @@ public class TrendBox extends Activity
         startButton = (Button)findViewById(R.id.start);
         stopButton = (Button)findViewById(R.id.stop);
         configButton = (Button)findViewById(R.id.config);
+        helloButton = (Button)findViewById(R.id.hello);
         final Button downloadButton = (Button)findViewById(R.id.download);
         
         
@@ -513,6 +516,15 @@ public class TrendBox extends Activity
             public void onClick(View v)
             {
                 TrendBoxDownloader.show(TrendBox.this);
+            }
+        });
+        
+        helloButton.setOnClickListener(new OnClickListener()
+        {
+            
+            public void onClick(View v)
+            {
+                startActivity(new Intent(TrendBox.this, WebUi.class));
             }
         });
 
