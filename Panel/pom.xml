@@ -28,7 +28,7 @@
       <artifactId>servlet-api</artifactId>
       <version>2.5</version>
     </dependency>
-    <!-- dependency>
+    <!--  dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-deploy</artifactId>
       <type>jar</type>
@@ -51,10 +51,39 @@
       <exclusions>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+      <artifactId>mainapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
    </dependencies>
    <build>
       <sourceDirectory>src</sourceDirectory>
       <plugins>
+      	<plugin>
+      	  <groupId>org.apache.maven.plugins</groupId>
+      	  <artifactId>maven-dependency-plugin</artifactId>
+      	  <version>2.0</version>
+      	  <executions>
+      	    <execution>
+      	      <id>copy-war</id>
+      	      <phase>generate-sources</phase>
+      	      <goals>
+      	      	<goal>copy-dependencies</goal>
+      	      </goals>
+      	      <configuration>
+                <outputDirectory>${project.build.directory}/res-overlay/raw</outputDirectory>
+                <overWriteReleases>false</overWriteReleases>
+                <overWriteSnapshots>false</overWriteSnapshots>
+                <overWriteIfNewer>true</overWriteIfNewer>
+                <excludeTransitive>true</excludeTransitive>
+                <stripVersion>true</stripVersion>
+                <includeArtifactIds>mainapp</includeArtifactIds>
+      	      </configuration>
+      	    </execution>
+      	  </executions>
+      	</plugin>
         <plugin>
           <groupId>com.jayway.maven.plugins.android.generation2</groupId>
           <artifactId>maven-android-plugin</artifactId>
@@ -67,6 +96,9 @@
               <deleteConflictingFiles>true</deleteConflictingFiles>
               <extractDuplicates>true</extractDuplicates> 
               <undeployBeforeDeploy>true</undeployBeforeDeploy>
+              <resourceOverlayDirectories>
+                <resourceOverlayDirectory>${project.build.directory}/res-overlay</resourceOverlayDirectory>
+              </resourceOverlayDirectories>
           </configuration>
           <executions>
             <execution>

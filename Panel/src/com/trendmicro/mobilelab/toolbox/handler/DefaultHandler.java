@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,7 +36,15 @@ public class DefaultHandler extends org.eclipse.jetty.server.handler.DefaultHand
         String method=request.getMethod();
 
     
-
+        /*
+        if (method.equals(HttpMethods.GET) && request.getRequestURI().equals("/main"))
+        {
+              HttpServlet servlet = new com.trendmicro.mobilelab.toolbox.servlet.MainUiServlet();
+              servlet.service(request, response);
+              return;
+        }
+        */
+        
         if (!method.equals(HttpMethods.GET) || !request.getRequestURI().equals("/"))
         {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

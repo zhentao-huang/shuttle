@@ -18,6 +18,7 @@ package com.trendmicro.mobilelab.toolbox;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -101,6 +102,7 @@ public class TrendBox extends Activity
     private Button stopButton;
     private Button configButton;
     private Button helloButton;
+    private Button launchButton;
     private TextView footer;
     private TextView info;
     private TextView console;
@@ -427,6 +429,8 @@ public class TrendBox extends Activity
         stopButton = (Button)findViewById(R.id.stop);
         configButton = (Button)findViewById(R.id.config);
         helloButton = (Button)findViewById(R.id.hello);
+        launchButton = (Button)findViewById(R.id.launch_any);
+        
         final Button downloadButton = (Button)findViewById(R.id.download);
         
         
@@ -525,6 +529,26 @@ public class TrendBox extends Activity
             public void onClick(View v)
             {
                 startActivity(new Intent(TrendBox.this, WebUi.class));
+            }
+        });
+        
+        launchButton.setOnClickListener(new OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                try
+                {
+                    File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+                    String name = "mainapp";
+                    
+                    InputStream warStream = getResources().openRawResource(R.raw.mainapp);
+                   
+                    Installer.install(warStream, "/main", webappDir, name, true);                      
+                }
+                catch (Exception e)
+                {
+                    Log.e(TAG, "Bad resource", e);
+                }
             }
         });
 
@@ -709,5 +733,5 @@ public class TrendBox extends Activity
         progressThread = new ProgressThread(handler);
         progressThread.start();
     };
-
+    
 }

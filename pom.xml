@@ -11,6 +11,7 @@
 
    <modules>
        <module>Container</module>
+       <module>Webapp</module>
        <module>Panel</module>
    </modules>
 

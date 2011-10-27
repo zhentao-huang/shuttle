@@ -22,7 +22,7 @@ public class WebUi extends Activity
         setContentView(R.layout.webui);
         
         WebView webView = (WebView) findViewById(R.id.webview);
-        String uri = "http://127.0.0.1:8000/hello";
+        String uri = "http://127.0.0.1:8000/main";
         webView.setWebViewClient(new WebViewClientDemo());
         webView.loadUrl(uri);
     }

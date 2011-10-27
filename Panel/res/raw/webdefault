@@ -153,12 +153,25 @@
     -->
     <load-on-startup>0</load-on-startup>
   </servlet>
+  
+  <!--
+  <servlet>
+  	<servlet-name>mainui</servlet-name>
+  	<servlet-class>com.trendmicro.mobilelab.toolbox.servlet.MainUiServlet</servlet-class>
+  </servlet>
+    -->
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
+  <!--
+  <servlet-mapping>
+  	<servlet-name>mainui<servlet-name>
+  	<url-pattern>/main</url-pattern>
+  </servlet-mapping>
+  -->
 
   <!-- ==================================================================== -->
   <!-- JSP Servlet                                                          -->
