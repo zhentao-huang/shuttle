@@ -66,6 +66,85 @@ import android.util.Log;
  */
 public class TrendBoxService extends Service
 {
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        if (server != null)
+        {
+            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_already_started);
+            return 0;
+        }
+
+        try
+        {
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+            String portDefault = getText(R.string.pref_port_value).toString();
+            String sslPortDefault = getText(R.string.pref_ssl_port_value).toString();
+            String pwdDefault = getText(R.string.pref_console_pwd_value).toString();
+            
+            String nioEnabledDefault = getText(R.string.pref_nio_value).toString();
+            String sslEnabledDefault = getText(R.string.pref_ssl_value).toString();
+
+            String portKey = getText(R.string.pref_port_key).toString();
+            String sslPortKey = getText(R.string.pref_ssl_port_key).toString();
+            String pwdKey = getText(R.string.pref_console_pwd_key).toString();
+            String nioKey = getText(R.string.pref_nio_key).toString();
+            String sslKey = getText(R.string.pref_ssl_key).toString();
+            
+            _useSSL = preferences.getBoolean(sslKey, Boolean.valueOf(sslEnabledDefault));
+            _useNIO = preferences.getBoolean(nioKey, Boolean.valueOf(nioEnabledDefault));
+            _port = Integer.parseInt(preferences.getString(portKey, portDefault));
+            if (_useSSL)
+            {
+              _sslPort = Integer.parseInt(preferences.getString(sslPortKey, sslPortDefault));
+              String defaultValue = getText(R.string.pref_keystore_pwd_value).toString();
+              String key = getText(R.string.pref_keystore_pwd_key).toString();
+              _keystorePassword = preferences.getString(key, defaultValue);
+              
+              defaultValue = getText(R.string.pref_keymgr_pwd_value).toString();
+              key = getText(R.string.pref_keymgr_pwd_key).toString();
+              _keymgrPassword = preferences.getString(key, defaultValue);
+              
+              defaultValue = getText(R.string.pref_truststore_pwd_value).toString();
+              key = getText(R.string.pref_truststore_pwd_key).toString();
+              _truststorePassword = preferences.getString(key, defaultValue);
+              
+              defaultValue = getText(R.string.pref_keystore_file).toString();
+              key = getText(R.string.pref_keystore_file_key).toString();
+              _keystoreFile = preferences.getString(key, defaultValue);
+              
+              defaultValue = getText(R.string.pref_truststore_file).toString();
+              key = getText(R.string.pref_truststore_file_key).toString();
+              _truststoreFile = preferences.getString(key, defaultValue);
+            }
+
+            _consolePassword = preferences.getString(pwdKey, pwdDefault);
+
+            Log.d("Jetty", "pref port = "+_port);
+            Log.d("Jetty", "pref use nio = "+_useNIO);
+            Log.d("Jetty", "pref use ssl = "+_useSSL);
+            Log.d("Jetty", "pref ssl port = "+_sslPort);
+           
+            //Get a wake lock to stop the cpu going to sleep
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "IJetty");
+            wakeLock.acquire();
+
+            new JettyStarterThread(_handler).start();
+ 
+            super.onStart(intent, startId);
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "Error starting jetty", e);
+            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_started);
+            return 0;
+        }
+        
+        return Service.START_REDELIVER_INTENT;
+    }
+
     private static final String TAG = "TrendBox";
     
     private static Resources __resources;
@@ -79,6 +158,7 @@ public class TrendBoxService extends Service
     public static final int __NOT_STOPPED = 3;
     public static final int __STARTING = 4;
     public static final int __STOPPING = 5;
+    public static final int __LOADER_DEPLOYED = 6;
     
     public static final String[] __configurationClasses = 
         new String[]
@@ -250,7 +330,7 @@ public class TrendBoxService extends Service
                     case __STARTED:
                     {
                         IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_started);
-                        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         // The PendingIntent to launch IJetty activity if the user selects this notification
                         PendingIntent contentIntent = PendingIntent.getActivity(TrendBoxService.this, 0,
                                 new Intent(TrendBoxService.this, TrendBox.class), 0);
@@ -264,7 +344,8 @@ public class TrendBoxService extends Service
                         notification.setLatestEventInfo(TrendBoxService.this, getText(R.string.app_name),
                                 text, contentIntent);
 
-                        mNM.notify(R.string.jetty_started, notification);
+//                        mNM.notify(R.string.jetty_started, notification);
+                        startForeground(101, notification);
                         
                         Intent startIntent = new Intent(TrendBox.__START_ACTION);
                         startIntent.addCategory("default");
@@ -290,8 +371,9 @@ public class TrendBoxService extends Service
                     case __STOPPED:
                     {
                         // Cancel the persistent notification.
-                        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                        mNM.cancel(R.string.jetty_started);
+//                        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                        mNM.cancel(R.string.jetty_started);
+                        stopForeground(true);
                         // Tell the user we stopped.
                         IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_stopped);
                         Intent stopIntent = new Intent(TrendBox.__STOP_ACTION);
@@ -313,6 +395,14 @@ public class TrendBoxService extends Service
                     case __STOPPING:
                     {
                         IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_stopping);
+                        break;
+                    }
+                    case __LOADER_DEPLOYED:
+                    {
+                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.loader_deployed);
+                        Intent deployIntent = new Intent(TrendBox.__DEPLOY_ACTION);
+                        deployIntent.addCategory("default");
+                        sendBroadcast(deployIntent);
                         break;
                     }
                 }
@@ -349,84 +439,84 @@ public class TrendBoxService extends Service
     }
 
 
-    /** 
-     * Android Service Start
-     * @see android.app.Service#onStart(android.content.Intent, int)
-     */
-    public void onStart(Intent intent, int startId)
-    {
-        if (server != null)
-        {
-            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_already_started);
-            return;
-        }
-
-        try
-        {
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-            String portDefault = getText(R.string.pref_port_value).toString();
-            String sslPortDefault = getText(R.string.pref_ssl_port_value).toString();
-            String pwdDefault = getText(R.string.pref_console_pwd_value).toString();
-            
-            String nioEnabledDefault = getText(R.string.pref_nio_value).toString();
-            String sslEnabledDefault = getText(R.string.pref_ssl_value).toString();
-
-            String portKey = getText(R.string.pref_port_key).toString();
-            String sslPortKey = getText(R.string.pref_ssl_port_key).toString();
-            String pwdKey = getText(R.string.pref_console_pwd_key).toString();
-            String nioKey = getText(R.string.pref_nio_key).toString();
-            String sslKey = getText(R.string.pref_ssl_key).toString();
-            
-            _useSSL = preferences.getBoolean(sslKey, Boolean.valueOf(sslEnabledDefault));
-            _useNIO = preferences.getBoolean(nioKey, Boolean.valueOf(nioEnabledDefault));
-            _port = Integer.parseInt(preferences.getString(portKey, portDefault));
-            if (_useSSL)
-            {
-              _sslPort = Integer.parseInt(preferences.getString(sslPortKey, sslPortDefault));
-              String defaultValue = getText(R.string.pref_keystore_pwd_value).toString();
-              String key = getText(R.string.pref_keystore_pwd_key).toString();
-              _keystorePassword = preferences.getString(key, defaultValue);
-              
-              defaultValue = getText(R.string.pref_keymgr_pwd_value).toString();
-              key = getText(R.string.pref_keymgr_pwd_key).toString();
-              _keymgrPassword = preferences.getString(key, defaultValue);
-              
-              defaultValue = getText(R.string.pref_truststore_pwd_value).toString();
-              key = getText(R.string.pref_truststore_pwd_key).toString();
-              _truststorePassword = preferences.getString(key, defaultValue);
-              
-              defaultValue = getText(R.string.pref_keystore_file).toString();
-              key = getText(R.string.pref_keystore_file_key).toString();
-              _keystoreFile = preferences.getString(key, defaultValue);
-              
-              defaultValue = getText(R.string.pref_truststore_file).toString();
-              key = getText(R.string.pref_truststore_file_key).toString();
-              _truststoreFile = preferences.getString(key, defaultValue);
-            }
-
-            _consolePassword = preferences.getString(pwdKey, pwdDefault);
-
-            Log.d("Jetty", "pref port = "+_port);
-            Log.d("Jetty", "pref use nio = "+_useNIO);
-            Log.d("Jetty", "pref use ssl = "+_useSSL);
-            Log.d("Jetty", "pref ssl port = "+_sslPort);
-           
-            //Get a wake lock to stop the cpu going to sleep
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "IJetty");
-            wakeLock.acquire();
-
-            new JettyStarterThread(_handler).start();
- 
-            super.onStart(intent, startId);
-        }
-        catch (Exception e)
-        {
-            Log.e(TAG, "Error starting jetty", e);
-            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_started);
-        }
-    }
+//    /** 
+//     * Android Service Start
+//     * @see android.app.Service#onStart(android.content.Intent, int)
+//     */
+//    public void onStart(Intent intent, int startId)
+//    {
+//        if (server != null)
+//        {
+//            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_already_started);
+//            return;
+//        }
+//
+//        try
+//        {
+//            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//
+//            String portDefault = getText(R.string.pref_port_value).toString();
+//            String sslPortDefault = getText(R.string.pref_ssl_port_value).toString();
+//            String pwdDefault = getText(R.string.pref_console_pwd_value).toString();
+//            
+//            String nioEnabledDefault = getText(R.string.pref_nio_value).toString();
+//            String sslEnabledDefault = getText(R.string.pref_ssl_value).toString();
+//
+//            String portKey = getText(R.string.pref_port_key).toString();
+//            String sslPortKey = getText(R.string.pref_ssl_port_key).toString();
+//            String pwdKey = getText(R.string.pref_console_pwd_key).toString();
+//            String nioKey = getText(R.string.pref_nio_key).toString();
+//            String sslKey = getText(R.string.pref_ssl_key).toString();
+//            
+//            _useSSL = preferences.getBoolean(sslKey, Boolean.valueOf(sslEnabledDefault));
+//            _useNIO = preferences.getBoolean(nioKey, Boolean.valueOf(nioEnabledDefault));
+//            _port = Integer.parseInt(preferences.getString(portKey, portDefault));
+//            if (_useSSL)
+//            {
+//              _sslPort = Integer.parseInt(preferences.getString(sslPortKey, sslPortDefault));
+//              String defaultValue = getText(R.string.pref_keystore_pwd_value).toString();
+//              String key = getText(R.string.pref_keystore_pwd_key).toString();
+//              _keystorePassword = preferences.getString(key, defaultValue);
+//              
+//              defaultValue = getText(R.string.pref_keymgr_pwd_value).toString();
+//              key = getText(R.string.pref_keymgr_pwd_key).toString();
+//              _keymgrPassword = preferences.getString(key, defaultValue);
+//              
+//              defaultValue = getText(R.string.pref_truststore_pwd_value).toString();
+//              key = getText(R.string.pref_truststore_pwd_key).toString();
+//              _truststorePassword = preferences.getString(key, defaultValue);
+//              
+//              defaultValue = getText(R.string.pref_keystore_file).toString();
+//              key = getText(R.string.pref_keystore_file_key).toString();
+//              _keystoreFile = preferences.getString(key, defaultValue);
+//              
+//              defaultValue = getText(R.string.pref_truststore_file).toString();
+//              key = getText(R.string.pref_truststore_file_key).toString();
+//              _truststoreFile = preferences.getString(key, defaultValue);
+//            }
+//
+//            _consolePassword = preferences.getString(pwdKey, pwdDefault);
+//
+//            Log.d("Jetty", "pref port = "+_port);
+//            Log.d("Jetty", "pref use nio = "+_useNIO);
+//            Log.d("Jetty", "pref use ssl = "+_useSSL);
+//            Log.d("Jetty", "pref ssl port = "+_sslPort);
+//           
+//            //Get a wake lock to stop the cpu going to sleep
+//            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//            wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "IJetty");
+//            wakeLock.acquire();
+//
+//            new JettyStarterThread(_handler).start();
+// 
+//            super.onStart(intent, startId);
+//        }
+//        catch (Exception e)
+//        {
+//            Log.e(TAG, "Error starting jetty", e);
+//            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_started);
+//        }
+//    }
 
 
     /** 
@@ -586,6 +676,7 @@ public class TrendBoxService extends Service
                 contextDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
                 contextDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);             
                 contextDeployer.setContexts(contexts);
+                contextDeployer.setAndroidHandler(_handler);
             }
             
             if (server != null)

@@ -52,6 +52,7 @@ public class AndroidClassLoader extends ClassLoader //extends WebAppClassLoader
     {
         this(parent, context);
         _path = path;
+        android.util.Log.i("TrendBox", "AndroidClassLoader initialized", new Throwable());
     }
 
     public AndroidClassLoader(WebAppContext context)

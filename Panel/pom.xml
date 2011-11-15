@@ -53,7 +53,7 @@
     </dependency>
     <dependency>
       <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-      <artifactId>mainapp</artifactId>
+      <artifactId>loader</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
@@ -79,7 +79,7 @@
                 <overWriteIfNewer>true</overWriteIfNewer>
                 <excludeTransitive>true</excludeTransitive>
                 <stripVersion>true</stripVersion>
-                <includeArtifactIds>mainapp</includeArtifactIds>
+                <includeArtifactIds>loader</includeArtifactIds>
       	      </configuration>
       	    </execution>
       	  </executions>

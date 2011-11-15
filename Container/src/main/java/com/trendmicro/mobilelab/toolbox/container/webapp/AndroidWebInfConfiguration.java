@@ -25,6 +25,12 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
 
 public class AndroidWebInfConfiguration extends WebInfConfiguration {
 
+	public AndroidWebInfConfiguration()
+	{
+		super();
+        android.util.Log.i("TrendBox", "AndroidWebInfConfiguration initialized", new Throwable());
+	}
+	
     /**
      * 
      */
@@ -34,6 +40,7 @@ public class AndroidWebInfConfiguration extends WebInfConfiguration {
     public void preConfigure(WebAppContext context)
     throws Exception
     {
+        android.util.Log.i("TrendBox", "AndroidWebInfConfiguration preConfigure ", new Throwable());
     	Log.debug("AndroidWebInfConfig preConfigure()");
        
         context.setClassLoader(new AndroidClassLoader(this.getClass().getClassLoader(), context));
@@ -48,6 +55,7 @@ public class AndroidWebInfConfiguration extends WebInfConfiguration {
     throws Exception
     {
     	Log.debug("AndroidWebInfConfig configure()");
+        android.util.Log.i("TrendBox", "AndroidWebInfConfiguration configure ", new Throwable());
         //cannot configure if the context is already started
         if (context.isStarted())
         {

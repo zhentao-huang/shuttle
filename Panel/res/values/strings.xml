@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">i-Jetty</string>
-    <string name="jetty_started">Jetty started</string>
-    <string name="jetty_starting">Jetty starting</string>
-    <string name="jetty_stopping">Jetty stopping</string>
-    <string name="jetty_not_started">Jetty not started</string>
-    <string name="jetty_already_started">Jetty already running</string>
-    <string name="jetty_stopped">Jetty stopped</string>
-    <string name="jetty_not_stopped">Jetty not stopped</string>
-    <string name="jetty_not_running">Jetty not running</string>
-    <string name="manage_jetty">Manage Jetty</string>
-    <string name="jetty_controller">Start and Stop Jetty</string>
+    <string name="app_name">Trend Shuttle</string>
+    <string name="jetty_started">Shuttle started</string>
+    <string name="jetty_starting">Shuttle starting</string>
+    <string name="jetty_stopping">Shuttle stopping</string>
+    <string name="jetty_not_started">Shuttle not started</string>
+    <string name="jetty_already_started">Shuttle already running</string>
+    <string name="jetty_stopped">Shuttle stopped</string>
+    <string name="jetty_not_stopped">Shuttle not stopped</string>
+    <string name="jetty_not_running">Shuttle not running</string>
+    <string name="manage_jetty">Manage Shuttle</string>
+    <string name="jetty_controller">Start and Stop Shuttle</string>
     <string name="jetty_downloader">Enter URL</string>
-    <string name="start_jetty">Start Jetty</string>
-    <string name="stop_jetty">Stop Jetty</string>
+    <string name="start_jetty">Start Shuttle</string>
+    <string name="stop_jetty">Stop Shuttle</string>
     <string name="config_jetty">Configure</string>
     <string name="start_download">Download</string>
     <string name="download_webapp">Download</string>
+    <string name="loader_installed">Loader installed</string>
+    <string name="loader_deployed">Loader deployed</string>
     <string name="retry">Retry</string>
     <string name="url">URL</string>
     <string name="console">Console</string>
@@ -82,7 +84,8 @@
     <string name="overwrite">Replace existing file?</string>
     <string name="loading">Loading ... </string>
     <string name="context_path">Context Path</string>
-    <string name="hello">Hello World</string>
+    <string name="hello">Wait for a while ...</string>
+    <string name="hello_ready">Share your Apps</string>
     <string name="launch_any">Launch!</string>
     
     <!-- External Storage State Messages -->

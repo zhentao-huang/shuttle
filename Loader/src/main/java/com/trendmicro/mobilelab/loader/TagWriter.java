@@ -1,4 +1,4 @@
-package com.trendmicro.mobilelab.toolbox.servlet;
+package com.trendmicro.mobilelab.loader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,9 +15,9 @@ public class TagWriter extends PrintWriter
         boolean finished;
     }
     
-    public TagWriter(PrintWriter writer)
+    public TagWriter(PrintWriter writer, String root)
     {
-        super(writer, true);
+    	super(writer, true);
         mCursor = new Cursor();
         mCursor.top = this;
         mCursor.last = this;
@@ -27,7 +27,12 @@ public class TagWriter extends PrintWriter
         mChildren = new ArrayList<Object>();
         mLeading = 0;
         mIndent = 0;
-        setTag("html");
+        setTag(root);
+    }
+    
+    public TagWriter(PrintWriter writer)
+    {
+        this(writer, "html");
     }
     
     public TagWriter(TagWriter parent, String tag)

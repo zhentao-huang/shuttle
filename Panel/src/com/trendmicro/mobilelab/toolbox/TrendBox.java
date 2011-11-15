@@ -45,6 +45,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -58,6 +60,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * IJetty
@@ -73,6 +76,7 @@ public class TrendBox extends Activity
     
     public static final String __START_ACTION = "com.trendmicro.mobilelab.toolbox.start";
     public static final String __STOP_ACTION = "com.trendmicro.mobilelab.toolbox.stop";
+    public static final String __DEPLOY_ACTION = "com.trendmicro.mobilelab.toolbox.loader";
     
     public static final String __PORT = "com.trendmicro.mobilelab.toolbox.port";
     public static final String __NIO = "com.trendmicro.mobilelab.toolbox.nio";
@@ -102,7 +106,7 @@ public class TrendBox extends Activity
     private Button stopButton;
     private Button configButton;
     private Button helloButton;
-    private Button launchButton;
+//    private Button launchButton;
     private TextView footer;
     private TextView info;
     private TextView console;
@@ -144,12 +148,31 @@ public class TrendBox extends Activity
             _handler.sendMessage(msg);
         }
         
+        void DeleteRecursive(File fileOrDirectory) {
+            if (fileOrDirectory.isDirectory())
+                for (File child : fileOrDirectory.listFiles())
+                    DeleteRecursive(child);
+
+            fileOrDirectory.delete();
+        }
+        
         public void run ()
         {
             boolean updateNeeded = isUpdateNeeded();
             
+            stopService(new Intent(TrendBox.this,TrendBoxService.class));
+            
             //create the jetty dir structure
             File jettyDir = __TRENDBOX_DIR;
+            
+            Log.w(TAG, "ProgressThread.run(), first delete " + __TRENDBOX_DIR.getAbsolutePath());
+            
+            if (jettyDir.exists())
+            {
+                Log.w(TAG, "delete existing folder");
+                DeleteRecursive(jettyDir);
+            }
+                
             if (!jettyDir.exists())
             {
                 boolean made = jettyDir.mkdirs();
@@ -158,14 +181,15 @@ public class TrendBox extends Activity
             else
             {
                 Log.i(TAG,__TRENDBOX_DIR + " exists");
-
-                // Always update if ${jetty.home}/.update exists (DEBUG)
-                File alwaysUpdate = new File(jettyDir,".update");
-                if (alwaysUpdate.exists())
-                {
-                    Log.i(TAG,"Always Update tag found " + alwaysUpdate);
-                    updateNeeded = true;
-                }
+                
+//
+//                // Always update if ${jetty.home}/.update exists (DEBUG)
+//                File alwaysUpdate = new File(jettyDir,".update");
+//                if (alwaysUpdate.exists())
+//                {
+//                    Log.i(TAG,"Always Update tag found " + alwaysUpdate);
+//                    updateNeeded = true;
+//                }
             }
             sendProgressUpdate(10);
 
@@ -298,8 +322,20 @@ public class TrendBox extends Activity
             }
 
             sendProgressUpdate(100);
+            
+            startJettyServer();
         }
     };
+    
+    private void startJettyServer()
+    {
+        Intent intent = new Intent(TrendBox.this,TrendBoxService.class);
+        intent.putExtra(__PORT,__PORT_DEFAULT);
+        intent.putExtra(__NIO,__NIO_DEFAULT);
+        intent.putExtra(__SSL,__SSL_DEFAULT);
+        intent.putExtra(__CONSOLE_PWD,__CONSOLE_PWD_DEFAULT);
+        startService(intent);
+    }
     
     static
     {
@@ -429,7 +465,7 @@ public class TrendBox extends Activity
         stopButton = (Button)findViewById(R.id.stop);
         configButton = (Button)findViewById(R.id.config);
         helloButton = (Button)findViewById(R.id.hello);
-        launchButton = (Button)findViewById(R.id.launch_any);
+//        launchButton = (Button)findViewById(R.id.launch_any);
         
         final Button downloadButton = (Button)findViewById(R.id.download);
         
@@ -437,6 +473,7 @@ public class TrendBox extends Activity
         IntentFilter filter = new IntentFilter();
         filter.addAction(__START_ACTION);
         filter.addAction(__STOP_ACTION);
+        filter.addAction(__DEPLOY_ACTION);
         filter.addCategory("default");
 
         bcastReceiver = 
@@ -460,6 +497,30 @@ public class TrendBox extends Activity
                     
                     printNetworkInterfaces();
                     
+                    try
+                    {
+                        File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+                        String name = "loader";
+                        
+                        File loader = new File(webappDir, name);
+
+                        if (!loader.exists())
+                        {
+                            InputStream warStream = getResources().openRawResource(R.raw.loader);
+                       
+                            Installer.install(warStream, "/loader", webappDir, name, true);    
+                            
+                            Log.i(TAG, "Loader installed");
+                            
+                            IJettyToast.showServiceToast(TrendBox.this,R.string.loader_installed);
+                        }
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e(TAG, "Bad resource", e);
+                    }
+                    
                     if (AndroidInfo.isOnEmulator(TrendBox.this))
                         consolePrint("Set up port forwarding to see i-jetty outside of the emulator.");
                 }
@@ -469,7 +530,13 @@ public class TrendBox extends Activity
                     configButton.setEnabled(true);
                     stopButton.setEnabled(false);
                     consolePrint("<br/> Jetty stopped at %s",new Date());
-                }                   
+                }
+                else if (__DEPLOY_ACTION.equalsIgnoreCase(intent.getAction()))
+                {
+                    helloButton.setEnabled(true);
+                    helloButton.setText(R.string.hello_ready);
+                    startActivity(new Intent(TrendBox.this, WebUi.class));
+                }
             }
             
         };
@@ -525,32 +592,33 @@ public class TrendBox extends Activity
         
         helloButton.setOnClickListener(new OnClickListener()
         {
-            
             public void onClick(View v)
             {
                 startActivity(new Intent(TrendBox.this, WebUi.class));
             }
         });
         
-        launchButton.setOnClickListener(new OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                try
-                {
-                    File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
-                    String name = "mainapp";
-                    
-                    InputStream warStream = getResources().openRawResource(R.raw.mainapp);
-                   
-                    Installer.install(warStream, "/main", webappDir, name, true);                      
-                }
-                catch (Exception e)
-                {
-                    Log.e(TAG, "Bad resource", e);
-                }
-            }
-        });
+        helloButton.setEnabled(false);
+        
+//        launchButton.setOnClickListener(new OnClickListener()
+//        {
+//            public void onClick(View v)
+//            {
+//                try
+//                {
+//                    File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+//                    String name = "loader";
+//                    
+//                    InputStream warStream = getResources().openRawResource(R.raw.loader);
+//                   
+//                    Installer.install(warStream, "/loader", webappDir, name, true);                      
+//                }
+//                catch (Exception e)
+//                {
+//                    Log.e(TAG, "Bad resource", e);
+//                }
+//            }
+//        });
 
         info = (TextView)findViewById(R.id.info);
         footer = (TextView)findViewById(R.id.footer);
@@ -561,7 +629,7 @@ public class TrendBox extends Activity
         try
         {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(),0);        
-            infoBuffer.append(formatJettyInfoLine ("i-jetty version %s (%s)",pi.versionName,pi.versionCode));
+            infoBuffer.append(formatJettyInfoLine ("based on i-jetty version %s (%s)",pi.versionName,pi.versionCode));
         }
         catch (NameNotFoundException e)
         {
@@ -571,9 +639,9 @@ public class TrendBox extends Activity
         info.setText(Html.fromHtml(infoBuffer.toString())); 
 
         StringBuilder footerBuffer = new StringBuilder();
-        footerBuffer.append("<b>Project:</b> <a href=\"http://code.google.com/p/i-jetty\">http://code.google.com/p/i-jetty</a> <br/>");
-        footerBuffer.append("<b>Server:</b> http://www.eclipse.org/jetty <br/>");
-        footerBuffer.append("<b>Support:</b> http://www.intalio.com/jetty/services <br/>");
+        footerBuffer.append("Share your Apps in <b>WIFI</b> or <b>2G/3G</b> network<br/>");
+        footerBuffer.append("Or you may launch a <b>WIFI hotspot</b><br/>");
+        footerBuffer.append("Let your friends scan your Apps <b>QR code</b>!!!<br/><br/>");
         footer.setText(Html.fromHtml(footerBuffer.toString()));
     }
 
@@ -598,9 +666,19 @@ public class TrendBox extends Activity
             // - the previous version does not match the current version
             // - we're not already doing the update
 
-            if (isUpdateNeeded())
+            SharedPreferences sp = getSharedPreferences("Setting",Context.MODE_PRIVATE);
+            boolean setupOnce = sp.getBoolean("SetupOnce", false);
+            if (!setupOnce || isUpdateNeeded ())
             {
                 setupJetty();
+                setupOnce = true;
+                Editor editor = sp.edit();
+                editor.putBoolean("SetupOnce",setupOnce);
+                editor.commit();
+            }
+            else if (!TrendBoxService.isRunning())
+            {
+                startJettyServer();
             }
         }
         
@@ -618,8 +696,10 @@ public class TrendBox extends Activity
             stopButton.setEnabled(false);
         }
         super.onResume();
+
     }
     
+    boolean mSetupOnce = false;
     
 
     @Override

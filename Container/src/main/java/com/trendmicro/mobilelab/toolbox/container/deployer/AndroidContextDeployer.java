@@ -18,6 +18,10 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.xml.XmlConfiguration;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
 /**
  * AndroidContextDeployer
  * TODO this class should be able to extend ContextDeployer rather than
@@ -70,6 +74,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
     private Map                      _currentDeployments = new HashMap();
     private ContextHandlerCollection _contexts;
     private ConfigurationManager     _configMgr;
+    private Handler					 _handler;
 
     private boolean                  _recursive          = false;
 
@@ -77,6 +82,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
         super();
         _scanner = new Scanner();
         _attributes = new AttributesMap();
+        android.util.Log.i("TrendBox", "AndroidContextDeployer initialized", new Throwable());
     }
 
     /* ------------------------------------------------------------ */
@@ -121,14 +127,35 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
     @SuppressWarnings("unchecked")
     public void deploy(String filename) throws Exception {
         ContextHandler context = createContext(filename);
+        android.util.Log.i("TrendBox", "AndroidContextDeployer deploy " + filename, new Throwable());
         Log.info("Deploy " + filename + " -> " + context);
         _contexts.addHandler(context);
         _currentDeployments.put(filename, context);
         if (_contexts.isStarted()) {
             context.start();
         }
+        
+        if (filename.endsWith("loader.xml"))
+        {
+        	sendMessage(6); 	// TrendBoxService.__LOADER_DEPLOYED
+        }
+    }
+    
+    public void setAndroidHandler(Handler handler)
+    {
+    	_handler = handler;
+
     }
 
+    private void sendMessage(int state)
+    {
+        Message msg = _handler.obtainMessage();
+        Bundle b = new Bundle();
+        b.putInt("state", state);
+        msg.setData(b);
+        _handler.sendMessage(msg);
+    }
+    
     /* ------------------------------------------------------------ */
     /**
      * Start the hot deployer looking for webapps to deploy/undeploy
@@ -137,6 +164,8 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
      */
     @Override
     protected void doStart() throws Exception {
+        android.util.Log.i("TrendBox", "AndroidContextDeployer doStart() ", new Throwable());
+
         if (_configurationDir == null) {
             Log.warn("No configuration dir specified");
             throw new IllegalStateException("No configuration dir specified");

@@ -52,6 +52,12 @@ import org.eclipse.jetty.util.URIUtil;
 public class AndroidWebAppDeployer extends WebAppDeployer {
     private List<? super ServletContextHandler>     _deployed;
     private AttributesMap _attributes = new AttributesMap();
+    
+    public AndroidWebAppDeployer()
+    {
+    	super();
+        android.util.Log.i("TrendBox", "AndroidWebAppDeployer initial ", new Throwable());
+    }
 
     /* ------------------------------------------------------------ */
     /**
@@ -59,6 +65,7 @@ public class AndroidWebAppDeployer extends WebAppDeployer {
      */
     @Override
     public void doStart() throws Exception {
+        android.util.Log.i("TrendBox", "AndroidWebAppDeployer doStart() ", new Throwable());
         _deployed = new ArrayList<ServletContextHandler>();
         scan();
         Log.debug("AndroidWebAppDeveloper doStart()");
