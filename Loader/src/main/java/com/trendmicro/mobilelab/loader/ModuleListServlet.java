@@ -35,10 +35,17 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+
 
 public class ModuleListServlet extends HttpServlet {
 	
@@ -203,11 +210,14 @@ public class ModuleListServlet extends HttpServlet {
 //					Log.i(TAG, "Get request url " + req.getRequestURI() + "|||" + req.getRequestURL());
 //					Log.i(TAG, "After encoded " + URLEncoder.encode(hosturl, "UTF-8"));
 					
-					String localapk = "http://" + getLocalIpAddress() + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
+					String localip = getLocalIpAddress();
+					
+					String localapk = "http://" + localip + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
 					
 					StringBuilder urlstr = new StringBuilder();
-					urlstr.append("https://chart.googleapis.com/chart?");
-					urlstr.append("cht=qr&chs=320x320&chl=" + URLEncoder.encode(localapk, "UTF-8"));
+//					urlstr.append("https://chart.googleapis.com/chart?");
+					urlstr.append("http://" + localip + ":8000/loader/modlist/qr/");
+					urlstr.append(localapk);
 					
 					Log.i(TAG, "URL = \n" + urlstr.toString());
 					
@@ -221,6 +231,41 @@ public class ModuleListServlet extends HttpServlet {
 				
 				table.finish();
 			}
+		}
+		else if (pathInfo.startsWith("/qr"))
+		{
+			String qrcode = pathInfo.substring("/qr/".length());
+			BitMatrix byteMatrix;
+			final int black = 0x0;
+			final int white = 0xffffffff;
+			try {
+				byteMatrix = new MultiFormatWriter().encode(qrcode,BarcodeFormat.QR_CODE, 320, 320);
+				Bitmap bitmap = Bitmap.createBitmap(320, 320, Bitmap.Config.RGB_565);
+				for (int x = 0; x < 320; ++x)
+				{
+					for (int y = 0; y < 320 ; ++y)
+					{
+						bitmap.setPixel(x, y, byteMatrix.get(x,y) ? black : white);
+					}
+				}
+				
+				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+				
+				bitmap.compress(Bitmap.CompressFormat.PNG,100,bytes);
+				ByteArrayInputStream in = new ByteArrayInputStream(bytes.toByteArray());
+				OutputStream out = resp.getOutputStream();
+				resp.setContentType("image/png");
+				copyIO(in,out);
+			}
+			catch (IOException e)
+			{
+				Log.e(TAG, "Generate qr code error", e);
+			}
+			catch (WriterException e)
+			{
+				Log.e(TAG, "Generate qr code error", e);
+			}
+			
 		}
 //		else if (pathInfo.startsWith("/description"))
 //		{
