@@ -497,6 +497,8 @@ public class TrendBox extends Activity
                     
                     printNetworkInterfaces();
                     
+                    resetHelloButtonState();
+                    
                     try
                     {
                         File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
@@ -510,7 +512,7 @@ public class TrendBox extends Activity
                        
                             Installer.install(warStream, "/loader", webappDir, name, true);    
                             
-                            Log.i(TAG, "Loader installed");
+                            Log.i(TAG, "Loader installing");
                             
                             IJettyToast.showServiceToast(TrendBox.this,R.string.loader_installed);
                         }
@@ -529,13 +531,17 @@ public class TrendBox extends Activity
                     startButton.setEnabled(true);
                     configButton.setEnabled(true);
                     stopButton.setEnabled(false);
+                    resetHelloButtonState();
                     consolePrint("<br/> Jetty stopped at %s",new Date());
                 }
                 else if (__DEPLOY_ACTION.equalsIgnoreCase(intent.getAction()))
                 {
-                    helloButton.setEnabled(true);
                     helloButton.setText(R.string.hello_ready);
-                    startActivity(new Intent(TrendBox.this, WebUi.class));
+                    resetHelloButtonState();
+                    if (TrendBoxService.isRunning())
+                    {
+                        startActivity(new Intent(TrendBox.this, WebUi.class));
+                    }
                 }
             }
             
@@ -598,7 +604,7 @@ public class TrendBox extends Activity
             }
         });
         
-        helloButton.setEnabled(false);
+//        helloButton.setEnabled(false);
         
 //        launchButton.setOnClickListener(new OnClickListener()
 //        {
@@ -650,6 +656,26 @@ public class TrendBox extends Activity
         final Intent intent = new Intent(context,TrendBox.class);
         context.startActivity(intent);
     }
+    
+    private void resetHelloButtonState()
+    {
+        if (TrendBoxService.isRunning())
+        {
+            File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+            String name = "loader";
+            
+            File loader = new File(webappDir, name);
+
+            if (loader.exists())
+            {
+                helloButton.setEnabled(true);
+                return;
+            }
+        }
+        
+        helloButton.setEnabled(false);
+    }
+    
 
     @Override
     protected void onResume()
@@ -695,6 +721,8 @@ public class TrendBox extends Activity
             configButton.setEnabled(true);
             stopButton.setEnabled(false);
         }
+        
+        resetHelloButtonState();
         super.onResume();
 
     }

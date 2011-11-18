@@ -12,6 +12,7 @@
    <modules>
        <module>Container</module>
        <!--  <module>Webapp</module>  -->
+       <module>core</module>
        <module>Loader</module>
        <module>Panel</module>
    </modules>
