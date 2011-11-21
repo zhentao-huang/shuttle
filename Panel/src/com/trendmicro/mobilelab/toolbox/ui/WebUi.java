@@ -14,13 +14,59 @@ import android.webkit.WebViewClient;
 public class WebUi extends Activity
 {
     @Override
-    protected void onResume()
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
         // TODO Auto-generated method stub
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState == null)
+        {
+            Log.d(TAG, "WebUI.onRestoreInstanceState and no data found");
+            return;
+        }
+        Log.d(TAG, "WebUI.onRestoreInstanceState " + savedInstanceState.getString(SAVED_URL));
+        
+    }
+
+
+
+    private static final String SAVED_URL = "SAVED_URL";
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        String url = mWebView.getUrl();
+        outState.putString(SAVED_URL, url);
+        super.onSaveInstanceState(outState);
+        if (outState == null)
+        {
+            Log.d(TAG, "onSaveInstanceState and no data found");
+            return;
+        }
+        Log.d(TAG, "WebUI.onSaveInstanceState " + outState.getString(SAVED_URL));
+    }
+
+
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mWebView.canGoBack())
+        {
+            mWebView.goBack();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+
+
+
+    @Override
+    protected void onResume()
+    {
         super.onResume();
-        WebView webview = (WebView) findViewById(R.id.webview);
-        String uri = "http://127.0.0.1:8000/loader";
-        webview.loadUrl(uri);
+        Log.d(TAG, "WebUI.onResume");
     }
 
 
@@ -32,19 +78,39 @@ public class WebUi extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "Create WebUi");
+        Log.d(TAG, "WebUI.onCreate");
         
         setContentView(R.layout.webui);
         
-        WebView webView = (WebView) findViewById(R.id.webview);
-        WebSettings settings = webView.getSettings();
+        if (mWebView == null)
+        {
+            mWebView = (WebView) findViewById(R.id.webview);
+        }
+        
+        WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setBlockNetworkImage(false);
         settings.setBlockNetworkLoads(false);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLoadWithOverviewMode(false);
-        webView.setWebViewClient(new WebViewClientDemo());
+        mWebView.setWebViewClient(new WebViewClientDemo());
+        
+        String url = "http://127.0.0.1:8000/loader";
+        
+        if (savedInstanceState != null && savedInstanceState.getString(SAVED_URL) != null)
+        {
+            url = savedInstanceState.getString(SAVED_URL);
+        }
+        else if (savedInstanceState == null)
+        {
+            Log.d(TAG, "savedInstaceState = null");
+        }
+        else 
+        {
+            Log.d(TAG, "No saved url can be found");
+        }
+        mWebView.loadUrl(url);
     }
     
     
@@ -97,9 +163,9 @@ public class WebUi extends Activity
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
-//            view.loadUrl(url);
             return false;
         }
     }
-
+    
+    private WebView mWebView;
 }

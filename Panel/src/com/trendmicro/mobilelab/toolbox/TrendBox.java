@@ -536,7 +536,7 @@ public class TrendBox extends Activity
                 }
                 else if (__DEPLOY_ACTION.equalsIgnoreCase(intent.getAction()))
                 {
-                    helloButton.setText(R.string.hello_ready);
+//                    helloButton.setText(R.string.hello_ready);
                     resetHelloButtonState();
                     if (TrendBoxService.isRunning())
                     {
