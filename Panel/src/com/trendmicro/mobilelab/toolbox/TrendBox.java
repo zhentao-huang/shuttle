@@ -49,6 +49,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -645,9 +646,10 @@ public class TrendBox extends Activity
         info.setText(Html.fromHtml(infoBuffer.toString())); 
 
         StringBuilder footerBuffer = new StringBuilder();
-        footerBuffer.append("Share your Apps in <b>WIFI</b> or <b>2G/3G</b> network<br/>");
-        footerBuffer.append("Or you may launch a <b>WIFI hotspot</b><br/>");
-        footerBuffer.append("Let your friends scan your Apps <b>QR code</b>!!!<br/><br/>");
+//        footerBuffer.append("Share Apps to your friends<br/>");
+        Resources res = getResources();
+        footerBuffer.append(res.getString(R.string.first_statement));
+        footerBuffer.append(res.getString(R.string.next_statement));
         footer.setText(Html.fromHtml(footerBuffer.toString()));
     }
 

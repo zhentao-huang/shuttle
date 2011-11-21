@@ -87,6 +87,9 @@
     <string name="hello">Wait for a while ...</string>
     <string name="hello_ready">Share your Apps</string>
     <string name="launch_any">Launch!</string>
+    <string name="first_statement">First, make sure devices connect in same network:&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Wifi network&lt;br/>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Portable WIFI hotspot on your device&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 2G/3G network&lt;/small&gt;&lt;br/&gt;</string>
+    <!-- <string name="first_statement">hello</string>  -->
+    <string name="next_statement">Next, \"Share your Apps\" via &lt;b&gt;QR code&lt;/b&gt;&lt;br/&gt;</string>
     
     <!-- External Storage State Messages -->
     <string name="header_sd_media"><b>External Media Unavailable</b>\n\nThe SD Card is a required part of i-jetty, and needs to be present, formatted, mounted, <u>not</u> read-only, and with sufficient space to hold the temporary files that i-jetty needs.\n\nPlease correct your SD-Card state.</string>
