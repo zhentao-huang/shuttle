@@ -1,10 +1,10 @@
 package com.trendmicro.mobilelab.loader;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 public class TagWriter extends PrintWriter
 {
@@ -12,6 +12,7 @@ public class TagWriter extends PrintWriter
     {
         TagWriter top;
         TagWriter last;
+        Stack<TagWriter> stack;
         boolean finished;
     }
     
@@ -22,6 +23,7 @@ public class TagWriter extends PrintWriter
         mCursor.top = this;
         mCursor.last = this;
         mCursor.finished = false;
+        mCursor.stack = new Stack<TagWriter>();
         mParent = null;
         mAttrs = new HashMap<String, String>();
         mChildren = new ArrayList<Object>();
@@ -188,6 +190,18 @@ public class TagWriter extends PrintWriter
     {
         mIndent = indent;
         return this;
+    }
+    
+    public TagWriter push()
+    {
+    	mCursor.stack.push(mCursor.last);
+    	return mCursor.last;
+    }
+    
+    public TagWriter pop()
+    {
+    	mCursor.last = mCursor.stack.pop();
+    	return mCursor.last;
     }
     
     public static void main(String[] args)

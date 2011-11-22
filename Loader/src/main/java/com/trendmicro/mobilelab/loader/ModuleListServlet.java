@@ -189,14 +189,20 @@ public class ModuleListServlet extends HttpServlet {
 				{
 					table
 					.addChild("tr")
-						.addChild("td")
+						.addChild("td").push();
 //							.addChild("a").addAttr("href", mPath + "start/" +data.mPackageName)
 //								.addChild("img").addAttr("src", mPath + "icon/" + data.mPackageName).end()
 //								.end()
-							.addChild("a").addAttr("href", mPath + "down/" +data.mPackageName)
-								.addChild("img").addAttr("src", mPath + "icon/" + data.mPackageName).end()
-								.end()
-							.end()
+					
+					boolean readable = isSourceReadable(data.mSourceApk);
+					if (readable)
+					{
+						table.last().addChild("a").addAttr("href", mPath + "down/" +data.mPackageName);
+					}
+					table.last().addChild("img").addAttr("src", mPath + "icon/" + data.mPackageName)
+							.addAttr("height", "72").addAttr("width", "72").end();
+							
+					table.pop()
 						.addChild("td")
 							.addText(data.mLabel).end()
 						.addChild("td");
@@ -210,23 +216,31 @@ public class ModuleListServlet extends HttpServlet {
 //					Log.i(TAG, "Get request url " + req.getRequestURI() + "|||" + req.getRequestURL());
 //					Log.i(TAG, "After encoded " + URLEncoder.encode(hosturl, "UTF-8"));
 					
-					String localip = getLocalIpAddress();
-					
-					String localapk = "http://" + localip + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
-					
-					StringBuilder urlstr = new StringBuilder();
-//					urlstr.append("https://chart.googleapis.com/chart?");
-					urlstr.append("http://" + localip + ":8000/loader/modlist/qr/");
-					urlstr.append(localapk);
-					
-					Log.i(TAG, "URL = \n" + urlstr.toString());
-					
-					table.last()
-							.addChild("a").addAttr("href", urlstr.toString())
-								.addText("QR code")
+					if (readable)
+					{
+						String localip = getLocalIpAddress();
+						
+						String localapk = "http://" + localip + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
+						
+						StringBuilder urlstr = new StringBuilder();
+	//					urlstr.append("https://chart.googleapis.com/chart?");
+						urlstr.append("http://" + localip + ":8000/loader/modlist/qr/");
+						urlstr.append(localapk);
+						
+						Log.i(TAG, "URL = \n" + urlstr.toString());
+						
+						table.last()
+								.addChild("a").addAttr("href", urlstr.toString())
+									.addText("QR code")
+									.end()
 								.end()
-							.end()
-						.end();
+							.end();
+					}
+					else
+					{
+						table.last().addText("Locked");
+						Log.d(TAG, "Get locked source " + data.mSourceApk);
+					}
 				}
 				
 				table.finish();
@@ -306,7 +320,16 @@ public class ModuleListServlet extends HttpServlet {
 	
 	private static final String ANDROID_CONTEXT_NAME = "com.trendmicro.mobilelab.toolbox.context";
 	
-
+	private boolean isSourceReadable(String src)
+	{
+		if (src != null)
+		{
+			File file = new File(src);
+			return file.canRead();
+		}
+		return false;
+	}
+	
 	private void updateTrendPackages()
 	{
 		if (mPackageManager == null)
