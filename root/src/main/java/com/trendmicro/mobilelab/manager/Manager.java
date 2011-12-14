@@ -1,7 +1,11 @@
 package com.trendmicro.mobilelab.manager;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.os.IBinder;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
@@ -29,12 +33,14 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.trendmicro.mobilelab.common.JettyService;
 import com.trendmicro.mobilelab.common.NetUtil;
 import com.trendmicro.mobilelab.common.TagWriter;
 
 public class Manager extends HttpServlet {
 	
-    private static final String JETTY_SERVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.jetty";
+//    private static final String JETTY_SERVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.jetty";
+    private static final String ANDROID_CONTEXT_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.context";
     
 	private static final String TAG = "TrendBox";
 	
@@ -47,14 +53,32 @@ public class Manager extends HttpServlet {
 		// TODO Auto-generated method stub
 		super.init();
 		
-		mServer = (Server) getServletContext().getAttribute(JETTY_SERVER_ATTRIBUTE);
-		Handler[] handlers = mServer.getChildHandlersByClass(ContextHandler.class);
-		mHandlers = Arrays.copyOf(handlers, handlers.length, ContextHandler[].class);
+		Context context = (Context) getServletContext().getAttribute(ANDROID_CONTEXT_ATTRIBUTE);
+		context.bindService(new Intent("com.trendmicro.mobilelab.TrendBoxService"), new ServiceConnection() {
+			
+			public void onServiceDisconnected(ComponentName arg0) {
+				mServer = null;
+				mHandlers = null;
+			}
+			
+			public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+				JettyService js  = (JettyService) arg1;
+				mServer = js.getServer();
+				Handler[] handlers = mServer.getChildHandlersByClass(ContextHandler.class);
+				mHandlers = Arrays.copyOf(handlers, handlers.length, ContextHandler[].class);
+			}
+		}, 0);
+		//mServer = (Server) getServletContext().getAttribute(JETTY_SERVER_ATTRIBUTE);
 	}
-
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		if (mServer == null)
+		{
+			return;
+		}
 		
 		String pathInfo = req.getPathInfo();
 		

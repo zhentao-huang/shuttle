@@ -151,7 +151,7 @@ public class TrendBoxService extends Service
     private static Resources __resources;
     private static final String CONTENT_RESOLVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.contentResolver";
     private static final String ANDROID_CONTEXT_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.context";
-    private static final String JETTY_SERVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.jetty";
+//    private static final String JETTY_SERVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.jetty";
     
     public static final int __START_PROGRESS_DIALOG = 0;
     public static final int __STARTED = 0;
@@ -673,7 +673,7 @@ public class TrendBoxService extends Service
                 staticDeployer.setContexts(contexts);
                 staticDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
                 staticDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);
-                staticDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
+//                staticDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
                 staticDeployer.setConfigurationClasses(__configurationClasses);
                 staticDeployer.setAllowDuplicates(false);
             }          
@@ -685,7 +685,7 @@ public class TrendBoxService extends Service
                 contextDeployer.setConfigurationDir(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__CONTEXTS_DIR);                
                 contextDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
                 contextDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);             
-                contextDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
+//                contextDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
                 contextDeployer.setContexts(contexts);
                 contextDeployer.setAndroidHandler(_handler);
             }

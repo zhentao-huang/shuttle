@@ -60,7 +60,12 @@
       android:configChanges="orientation"
       android:theme="@style/Theme.IJetty"/>
   	<service 
-  	  android:name=".TrendBoxService"/>
+  	  android:name=".TrendBoxService">
+  	  <intent-filter>
+  	     <action
+  	       android:name="com.trendmicro.mobilelab.TrendBoxService"/>
+  	  </intent-filter>
+  	</service>
   </application>
 
   <!-- 

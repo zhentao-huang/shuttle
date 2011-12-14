@@ -85,14 +85,14 @@
     <string name="loading">Loading ... </string>
     <string name="context_path">Context Path</string>
     <string name="hello">Wait for a while ...</string>
-    <string name="hello_ready">Share your Apps</string>
-    <string name="scan">Scan App\'s QR</string>
+    <string name="hello_ready">Share</string>
+    <string name="scan">Acquire</string>
     <string name="launch_any">Launch!</string>
     <string name="first_statement">First, make sure devices connect in same network:&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Wifi network&lt;br/>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Portable WIFI hotspot on your device&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 2G/3G network&lt;/small&gt;&lt;br/&gt;</string>
     <!-- <string name="first_statement">hello</string>  -->
-    <string name="next_statement">Next, \"Share your Apps\" via &lt;b&gt;QR code&lt;/b&gt;&lt;br/&gt;</string>
+    <string name="next_statement">Click \"Share\" to &lt;b&gt;launch web share&lt;/b&gt;&lt;br/&gt;</string>
 
-    <string name="last_statement">To get shared App, click \"&lt;b&gt;Scan App\'s QR&lt;/b&gt;\"</string>
+    <string name="last_statement">Click \"Acquire\" to get stuff by &lt;b&gt;QR code scan &lt;/b&gt;&lt;br/&gt;</string>
 
     
     <!-- External Storage State Messages -->
