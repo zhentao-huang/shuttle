@@ -91,12 +91,12 @@ public class WebUi extends Activity
         settings.setJavaScriptEnabled(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setBlockNetworkImage(false);
-        settings.setBlockNetworkLoads(false);
+//        settings.setBlockNetworkLoads(false);                 //Only for API Level 8
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLoadWithOverviewMode(false);
         mWebView.setWebViewClient(new WebViewClientDemo());
         
-        String url = "http://127.0.0.1:8000/loader";
+        String url = "http://127.0.0.1:8000/";
         
         if (savedInstanceState != null && savedInstanceState.getString(SAVED_URL) != null)
         {

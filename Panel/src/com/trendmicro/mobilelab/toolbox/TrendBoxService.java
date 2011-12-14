@@ -40,6 +40,7 @@ import com.trendmicro.mobilelab.toolbox.handler.DefaultHandler;
 import com.trendmicro.mobilelab.toolbox.util.AndroidInfo;
 import com.trendmicro.mobilelab.toolbox.util.IJettyToast;
 
+import com.trendmicro.mobilelab.common.JettyService;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -149,7 +150,8 @@ public class TrendBoxService extends Service
     
     private static Resources __resources;
     private static final String CONTENT_RESOLVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.contentResolver";
-    private static final String ANDROID_CONTEXT_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.context"; 
+    private static final String ANDROID_CONTEXT_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.context";
+    private static final String JETTY_SERVER_ATTRIBUTE = "com.trendmicro.mobilelab.toolbox.jetty";
     
     public static final int __START_PROGRESS_DIALOG = 0;
     public static final int __STARTED = 0;
@@ -201,10 +203,16 @@ public class TrendBoxService extends Service
     /**
      * IJettyService always runs in-process with the IJetty activity.
      */
-    public class LocalBinder extends Binder {
+    public class LocalBinder extends Binder implements JettyService{
         TrendBoxService getService() {
             // Return this instance of LocalService so clients can call public methods
             return TrendBoxService.this;
+        }
+        
+        @Override
+        public Server getServer()
+        {
+            return TrendBoxService.this.getServer();
         }
     }
     
@@ -337,7 +345,7 @@ public class TrendBoxService extends Service
 
                         CharSequence text = getText(R.string.manage_jetty);
 
-                        Notification notification = new Notification(R.drawable.ijetty_stat, 
+                        Notification notification = new Notification(R.drawable.stat, 
                                 text, 
                                 System.currentTimeMillis());
 
@@ -643,6 +651,7 @@ public class TrendBoxService extends Service
             HandlerCollection handlers = new HandlerCollection();
             contexts = new ContextHandlerCollection();
             handlers.setHandlers(new Handler[] {contexts, new DefaultHandler()});
+//            handlers.setHandlers(new Handler[] {contexts});
             server.setHandler(handlers);
         }
     }
@@ -664,6 +673,7 @@ public class TrendBoxService extends Service
                 staticDeployer.setContexts(contexts);
                 staticDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
                 staticDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);
+                staticDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
                 staticDeployer.setConfigurationClasses(__configurationClasses);
                 staticDeployer.setAllowDuplicates(false);
             }          
@@ -675,6 +685,7 @@ public class TrendBoxService extends Service
                 contextDeployer.setConfigurationDir(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__CONTEXTS_DIR);                
                 contextDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
                 contextDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);             
+                contextDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
                 contextDeployer.setContexts(contexts);
                 contextDeployer.setAndroidHandler(_handler);
             }

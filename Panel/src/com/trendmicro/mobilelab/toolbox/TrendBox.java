@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import org.eclipse.jetty.util.IO;
+
+import com.trendmicro.mobilelab.qrscanner.QReaderActivity;
 import com.trendmicro.mobilelab.toolbox.R;
 
 import com.trendmicro.mobilelab.toolbox.container.log.AndroidLog;
@@ -56,6 +58,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -72,6 +77,33 @@ import android.widget.Toast;
  */
 public class TrendBox extends Activity
 {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.console, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+        case R.id.download:
+        {
+            TrendBoxDownloader.show(this);
+            break;
+        }
+        case R.id.config:
+        {
+            TrendBoxEditor.show(TrendBox.this);
+            break;
+        }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private static final String TAG = "TrendBox";
     
@@ -107,6 +139,7 @@ public class TrendBox extends Activity
     private Button stopButton;
     private Button configButton;
     private Button helloButton;
+    private Button scanButton;
 //    private Button launchButton;
     private TextView footer;
     private TextView info;
@@ -466,6 +499,7 @@ public class TrendBox extends Activity
         stopButton = (Button)findViewById(R.id.stop);
         configButton = (Button)findViewById(R.id.config);
         helloButton = (Button)findViewById(R.id.hello);
+        scanButton = (Button)findViewById(R.id.scan);
 //        launchButton = (Button)findViewById(R.id.launch_any);
         
         final Button downloadButton = (Button)findViewById(R.id.download);
@@ -502,20 +536,31 @@ public class TrendBox extends Activity
                     
                     try
                     {
-                        File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
-                        String name = "loader";
-                        
-                        File loader = new File(webappDir, name);
-
-                        if (!loader.exists())
+                        String[] names = new String[]{"root", "loader", "webdav"};
+                        for (String name : names)
                         {
-                            InputStream warStream = getResources().openRawResource(R.raw.loader);
-                       
-                            Installer.install(warStream, "/loader", webappDir, name, true);    
+                            File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
                             
-                            Log.i(TAG, "Loader installing");
-                            
-                            IJettyToast.showServiceToast(TrendBox.this,R.string.loader_installed);
+                            File appDir = new File(webappDir, name);
+    
+                            if (!appDir.exists())
+                            {
+                                int resId = getResources().getIdentifier(name,"raw",getPackageName());
+                                InputStream warStream = getResources().openRawResource(resId);
+                           
+                                if (name.equals("root"))
+                                {
+                                    Installer.install(warStream, "/" ,webappDir, name , true);
+                                }
+                                else
+                                {
+                                    Installer.install(warStream, "/" + name, webappDir, name, true);
+                                }
+                                
+                                Log.i(TAG, "Loader installing");
+                                
+                                IJettyToast.showServiceToast(TrendBox.this, getResources().getString(R.string.loader_installed, name) );
+                            }
                         }
                         
                     }
@@ -587,7 +632,7 @@ public class TrendBox extends Activity
                 TrendBoxEditor.show(TrendBox.this);
             }
         });
-
+        configButton.setVisibility(View.GONE);
  
         downloadButton.setOnClickListener(new OnClickListener()
         {
@@ -596,6 +641,7 @@ public class TrendBox extends Activity
                 TrendBoxDownloader.show(TrendBox.this);
             }
         });
+        downloadButton.setVisibility(View.GONE);
         
         helloButton.setOnClickListener(new OnClickListener()
         {
@@ -605,6 +651,14 @@ public class TrendBox extends Activity
             }
         });
         
+        scanButton.setOnClickListener(new OnClickListener()
+        {
+            
+            public void onClick(View arg0)
+            {
+               startActivity(new Intent(TrendBox.this, QReaderActivity.class)); 
+            }
+        });
 //        helloButton.setEnabled(false);
         
 //        launchButton.setOnClickListener(new OnClickListener()
@@ -631,7 +685,7 @@ public class TrendBox extends Activity
         footer = (TextView)findViewById(R.id.footer);
         console = (TextView)findViewById(R.id.console);
         consoleScroller = (ScrollView)findViewById(R.id.consoleScroller);
-
+        
         StringBuilder infoBuffer = new StringBuilder(); 
         try
         {
@@ -650,6 +704,7 @@ public class TrendBox extends Activity
         Resources res = getResources();
         footerBuffer.append(res.getString(R.string.first_statement));
         footerBuffer.append(res.getString(R.string.next_statement));
+        footerBuffer.append(res.getString(R.string.last_statement));
         footer.setText(Html.fromHtml(footerBuffer.toString()));
     }
 

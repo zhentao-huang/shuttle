@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+   <item android:id="@+id/download"
+         android:title="@string/download_webapp"
+         />
+   <item android:id="@+id/config"
+         android:title="@string/config_jetty"
+         />
+</menu>

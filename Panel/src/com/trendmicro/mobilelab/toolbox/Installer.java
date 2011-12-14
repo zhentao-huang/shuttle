@@ -115,7 +115,7 @@ public class Installer
     {
         Log.i(TAG, "Installing "+webappName+".xml");
         contextPath = contextPath == null ? webappName : contextPath;           
-        contextPath = contextPath.equals("/") ? "root" : contextPath;
+        contextPath = contextPath.equals("/") ? "" : contextPath;
         contextPath = contextPath.startsWith("/") ? contextPath : "/"+contextPath;
         
         

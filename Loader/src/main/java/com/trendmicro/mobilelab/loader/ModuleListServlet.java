@@ -41,11 +41,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.common.BitMatrix;
-
+//import com.google.zxing.BarcodeFormat;
+//import com.google.zxing.WriterException;
+//import com.google.zxing.MultiFormatWriter;
+//import com.google.zxing.common.BitMatrix;
+import com.trendmicro.mobilelab.common.NetUtil;
+import com.trendmicro.mobilelab.common.TagWriter;
 
 public class ModuleListServlet extends HttpServlet {
 	
@@ -113,7 +114,7 @@ public class ModuleListServlet extends HttpServlet {
 				{
 					Log.i(TAG, "doGet write to stream");
 					data.mInputStream.reset();
-					copyIO(data.mInputStream,out);
+					NetUtil.copyIO(data.mInputStream,out);
 				}
 				else
 				{
@@ -130,6 +131,7 @@ public class ModuleListServlet extends HttpServlet {
 				getAndroidContext().startActivity(data.mStartIntent);
 			}
 		}
+		/*
 		else if (pathInfo.startsWith("/ip"))
 		{
 			resp.setContentType("text/plain");
@@ -142,6 +144,7 @@ public class ModuleListServlet extends HttpServlet {
 			PrintWriter out = resp.getWriter();
 			out.print("http://" + getLocalIpAddress() + ":8000/loader/index2.html");
 		}
+		*/
 		else if (pathInfo.startsWith("/down"))
 		{
 			String packageName = pathInfo.substring("/down/".length());
@@ -164,7 +167,7 @@ public class ModuleListServlet extends HttpServlet {
 					Log.i(TAG, "Set filename " + file.getName());
 					InputStream in = new BufferedInputStream(new FileInputStream(file));
 					OutputStream out = resp.getOutputStream();
-					copyIO(in, out);
+					NetUtil.copyIO(in, out);
 				}
 			}
 			Log.i(TAG, "Download end");
@@ -218,13 +221,13 @@ public class ModuleListServlet extends HttpServlet {
 					
 					if (readable)
 					{
-						String localip = getLocalIpAddress();
+						String localip = NetUtil.getLocalIpAddress();
 						
 						String localapk = "http://" + localip + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
 						
 						StringBuilder urlstr = new StringBuilder();
 	//					urlstr.append("https://chart.googleapis.com/chart?");
-						urlstr.append("http://" + localip + ":8000/loader/modlist/qr/");
+						urlstr.append("http://" + localip + ":8000/manager/qr/");
 						urlstr.append(localapk);
 						
 						Log.i(TAG, "URL = \n" + urlstr.toString());
@@ -246,6 +249,7 @@ public class ModuleListServlet extends HttpServlet {
 				table.finish();
 			}
 		}
+		/*
 		else if (pathInfo.startsWith("/qr"))
 		{
 			String qrcode = pathInfo.substring("/qr/".length());
@@ -281,6 +285,7 @@ public class ModuleListServlet extends HttpServlet {
 			}
 			
 		}
+		*/
 //		else if (pathInfo.startsWith("/description"))
 //		{
 //			synchronized (mTrendPackages) 
@@ -409,20 +414,6 @@ public class ModuleListServlet extends HttpServlet {
 		return context;
 	}
 	
-	private void copyIO(InputStream in, OutputStream out) throws IOException
-	{
-		int bufferSize = 64*1024;
-		byte[] buffer = new byte[bufferSize];
-		long len = 0;
-	    while (true)
-	    {
-	        len=in.read(buffer,0,bufferSize);
-	        if (len<0 )
-	            break;
-			out.write(buffer,0, (int) len);
-	    }
-	}
-	
 	private class PackageData
 	{
 		public String mLabel;
@@ -436,24 +427,7 @@ public class ModuleListServlet extends HttpServlet {
 		public String mSourceApk;
 	}
 	
-	public String getLocalIpAddress() {
-		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface
-					.getNetworkInterfaces(); en.hasMoreElements();) {
-				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf
-						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) {
-						return inetAddress.getHostAddress().toString();
-					}
-				}
-			}
-		} catch (SocketException ex) {
-			Log.e("WifiPreference IpAddress", ex.toString());
-		}
-		return null;
-	}
+
 	
 	PackageManager mPackageManager;
 	Hashtable<String, PackageData> mTrendPackages;

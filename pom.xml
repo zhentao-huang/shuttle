@@ -13,12 +13,15 @@
        <module>Container</module>
        <!--  <module>Webapp</module>  -->
        <module>core</module>
+       <module>common</module>
+       <module>root</module>
        <module>Loader</module>
+       <module>webdav</module>
        <module>Panel</module>
    </modules>
 
    <properties>
-     <android.version>2.2.1</android.version>
+     <android.version>2.1_r1</android.version>
      <jetty.version>7.5.0.RC0</jetty.version>
      <servlet.version>2.5-20081211</servlet.version>
      <android.sdk.version>8</android.sdk.version>

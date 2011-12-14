@@ -17,10 +17,14 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.util.ByteArrayISO8859Writer;
 import org.eclipse.jetty.util.StringUtil;
 
+import android.util.Log;
+
 
 public class DefaultHandler extends org.eclipse.jetty.server.handler.DefaultHandler
 {
 
+    public static final String TAG = "TrendBox";
+    
     public DefaultHandler()
     {
        super();
@@ -60,9 +64,9 @@ public class DefaultHandler extends org.eclipse.jetty.server.handler.DefaultHand
         uri=StringUtil.replace(uri,"<","&lt;");
         uri=StringUtil.replace(uri,">","&gt;");
 
-        writer.write("<HTML>\n<HEAD>\n<TITLE>Welcome to i-jetty");
-        writer.write("</TITLE>\n<BODY>\n<H2>Welcome to i-jetty</H2>\n");
-        writer.write("<p>i-jetty is running successfully.</p>");
+        writer.write("<HTML>\n<HEAD>\n<TITLE>Welcome to Shuttle");
+        writer.write("</TITLE>\n<BODY>\n<H2>Welcome to Shuttle</H2>\n");
+        writer.write("<p>Shuttle is running successfully.</p>");
 
         Server server = getServer();
         Handler[] handlers = server==null?null:server.getChildHandlersByClass(ContextHandler.class);
@@ -71,23 +75,40 @@ public class DefaultHandler extends org.eclipse.jetty.server.handler.DefaultHand
         for (;handlers!=null && i<handlers.length;i++)
         {
             if (i == 0)
-                writer.write("<p>Available contexts are: </p><ul>");
+            {
+                writer.write("<p>You had install " + handlers.length + " plugin(s)</p>");
+                writer.write("<p>So you can share : </p>");
+            }
 
             ContextHandler context = (ContextHandler)handlers[i];
             if (context.isRunning())
             {
-                writer.write("<li><a href=\"");
+                StringBuilder builder = new StringBuilder();
                 if (context.getVirtualHosts()!=null && context.getVirtualHosts().length>0)
-                    writer.write("http://"+context.getVirtualHosts()[0]+":"+request.getLocalPort());
-                writer.write(context.getContextPath());
+                {
+                    builder.append("http://"+context.getVirtualHosts()[0]+":"+request.getLocalPort());
+                }
+                String contextPath = context.getContextPath();
+                builder.append(contextPath);
+                Log.w(TAG, "ContextPath = " + contextPath);
+                if (contextPath.equals("/webdav"))
+                {
+                    writer.write("<li><img src=\"" + builder.toString() + "/trendbox/webapps/webdav/icon.png\" width=\"72\" height=\"72\"/><a href=\"");
+                }
+                else
+                {
+                    writer.write("<li><img src=\"" + builder.toString() + "/icon.png\" width=\"72\" height=\"72\"/><a href=\"");
+                }
+                writer.write(builder.toString());
                 if (context.getContextPath().length()>1 && context.getContextPath().endsWith("/"))
                     writer.write("/");
                 writer.write("\">");
-                writer.write(context.getContextPath());
-                if (context.getVirtualHosts()!=null && context.getVirtualHosts().length>0)
-                    writer.write("&nbsp;@&nbsp;"+context.getVirtualHosts()[0]+":"+request.getLocalPort());
-                writer.write("&nbsp;--->&nbsp;");
-                writer.write(context.toString());
+                writer.write(context.getDisplayName());
+//                writer.write(context.getContextPath());
+//                if (context.getVirtualHosts()!=null && context.getVirtualHosts().length>0)
+//                    writer.write("&nbsp;@&nbsp;"+context.getVirtualHosts()[0]+":"+request.getLocalPort());
+//                writer.write("&nbsp;--->&nbsp;");
+//                writer.write(context.toString());
                 writer.write("</a></li>\n");
             }
             else

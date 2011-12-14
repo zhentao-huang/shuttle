@@ -17,8 +17,8 @@
     <string name="config_jetty">Configure</string>
     <string name="start_download">Download</string>
     <string name="download_webapp">Download</string>
-    <string name="loader_installed">Loader installed</string>
-    <string name="loader_deployed">Loader deployed</string>
+    <string name="loader_installed">%s installed</string>
+    <string name="loader_deployed">Shuttles deployed</string>
     <string name="retry">Retry</string>
     <string name="url">URL</string>
     <string name="console">Console</string>
@@ -86,10 +86,14 @@
     <string name="context_path">Context Path</string>
     <string name="hello">Wait for a while ...</string>
     <string name="hello_ready">Share your Apps</string>
+    <string name="scan">Scan App\'s QR</string>
     <string name="launch_any">Launch!</string>
     <string name="first_statement">First, make sure devices connect in same network:&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Wifi network&lt;br/>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Portable WIFI hotspot on your device&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 2G/3G network&lt;/small&gt;&lt;br/&gt;</string>
     <!-- <string name="first_statement">hello</string>  -->
     <string name="next_statement">Next, \"Share your Apps\" via &lt;b&gt;QR code&lt;/b&gt;&lt;br/&gt;</string>
+
+    <string name="last_statement">To get shared App, click \"&lt;b&gt;Scan App\'s QR&lt;/b&gt;\"</string>
+
     
     <!-- External Storage State Messages -->
     <string name="header_sd_media"><b>External Media Unavailable</b>\n\nThe SD Card is a required part of i-jetty, and needs to be present, formatted, mounted, <u>not</u> read-only, and with sufficient space to hold the temporary files that i-jetty needs.\n\nPlease correct your SD-Card state.</string>
@@ -103,4 +107,10 @@
     <string name="sd_media_unmountable"><b>MEDIA_UNMOUNTABLE</b>\n\nMedia is present, but the Android OS cannot mount it.\nThis typically happens if the filesystem or media is bad or corrupted.\nReplace media and try again.</string>
     <string name="sd_unknown"><b>UNHANDLED ERROR</b>\n\nMedia state cannot be determined.\nState being reported by Android is <u>%s</u></string>
     <string name="sd_not_available">SD Not (yet) Available</string>
+
+    <string name="msg_default_status">Place a QR code inside the viewfinder rectangle to scan it</string>
+    <string name="msg_intent_failed">Sorry, the requested application could not be launched. The barcode contents may be invalid.</string>
+    <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
+
+
 </resources>

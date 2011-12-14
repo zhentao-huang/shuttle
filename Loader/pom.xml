@@ -43,6 +43,12 @@
       <version>2.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency> 
+    <dependency>
+        <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+        <artifactId>common</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -68,7 +74,7 @@
             </goals>
             <configuration>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
-              <excludeArtifactIds>servlet-api,android</excludeArtifactIds>
+              <excludeArtifactIds>servlet-api,android,core,common</excludeArtifactIds>
               <excludeTransitive>true</excludeTransitive>
               <outputDirectory>${project.build.directory}/generated-classes</outputDirectory>
             </configuration>
@@ -99,7 +105,7 @@
                 <argument>--output=${project.build.directory}/classes.dex</argument>
                 <argument>--positions=lines</argument>
                 <argument>${project.build.directory}/classes/</argument>
-                <argument>${project.build.directory}/generated-classes/</argument>
+                <!--  <argument>${project.build.directory}/generated-classes/</argument> -->
               </arguments>
             </configuration>
           </execution>
