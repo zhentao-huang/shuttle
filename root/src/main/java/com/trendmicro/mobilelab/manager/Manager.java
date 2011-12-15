@@ -65,7 +65,14 @@ public class Manager extends HttpServlet {
 				JettyService js  = (JettyService) arg1;
 				mServer = js.getServer();
 				Handler[] handlers = mServer.getChildHandlersByClass(ContextHandler.class);
-				mHandlers = Arrays.copyOf(handlers, handlers.length, ContextHandler[].class);
+				
+				mHandlers = new ContextHandler[handlers.length];
+				
+				int i = 0;
+				for (Handler handler : handlers)
+				{
+					mHandlers[i++] = (ContextHandler) handler;
+				}
 			}
 		}, 0);
 		//mServer = (Server) getServletContext().getAttribute(JETTY_SERVER_ATTRIBUTE);
