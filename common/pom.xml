@@ -54,7 +54,7 @@
      -->
   </dependencies>
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <!-- <sourceDirectory>src</sourceDirectory>  -->
     <outputDirectory>build</outputDirectory>
     <plugins>
       <plugin>

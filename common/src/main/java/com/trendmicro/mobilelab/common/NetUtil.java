@@ -3,6 +3,8 @@ package com.trendmicro.mobilelab.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -12,6 +14,8 @@ import android.util.Log;
 
 public class NetUtil 
 {
+	private static final int bufferSize = 64*1024;
+	
 	public static String getLocalIpAddress() {
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface
@@ -33,7 +37,6 @@ public class NetUtil
 	
 	public static void copyIO(InputStream in, OutputStream out) throws IOException
 	{
-		int bufferSize = 64*1024;
 		byte[] buffer = new byte[bufferSize];
 		long len = 0;
 	    while (true)
@@ -43,5 +46,20 @@ public class NetUtil
 	            break;
 			out.write(buffer,0, (int) len);
 	    }
+	}
+	
+	public static void copyText(Reader reader, Writer writer) throws IOException
+	{
+		char[] buffer = new char[bufferSize];
+		long len = 0;
+		while (true)
+		{
+			len = reader.read(buffer, 0, bufferSize);
+			if (len < 0)
+			{
+				break;
+			}
+			writer.write(buffer,  0, (int) len);
+		}
 	}
 }

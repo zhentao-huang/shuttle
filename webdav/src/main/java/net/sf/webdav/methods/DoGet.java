@@ -17,11 +17,19 @@ package net.sf.webdav.methods;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,18 +40,23 @@ import net.sf.webdav.StoredObject;
 import net.sf.webdav.WebdavStatus;
 import net.sf.webdav.locking.ResourceLocks;
 
+import android.util.Log;
+import com.trendmicro.mobilelab.common.NetUtil;
+
 public class DoGet extends DoHead {
 
 //    private static org.slf4j.Logger LOG = org.slf4j.LoggerFactory
 //            .getLogger(DoGet.class);
     private static net.sf.webdav.Logger LOG = net.sf.webdav.Logger.getInstance();
+    
+    private ServletContext mContext;
 
     public DoGet(IWebdavStore store, String dftIndexFile, String insteadOf404,
             ResourceLocks resourceLocks, IMimeTyper mimeTyper,
-            int contentLengthHeader) {
+            int contentLengthHeader, ServletContext context) {
         super(store, dftIndexFile, insteadOf404, resourceLocks, mimeTyper,
                 contentLengthHeader);
-
+        mContext = context;
     }
 
     @Override
@@ -96,6 +109,7 @@ public class DoGet extends DoHead {
             throws IOException {
 
         StoredObject so = _store.getStoredObject(transaction, path);
+        Log.i("TrendBox", "folderBody:" + path);
         if (so == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, req
                     .getRequestURI());
@@ -112,77 +126,112 @@ public class DoGet extends DoHead {
             if (so.isFolder()) {
                 // TODO some folder response (for browsers, DAV tools
                 // use propfind) in html?
-                DateFormat shortDF= getDateTimeFormat(req.getLocale());
-                resp.setContentType("text/html");
-                resp.setCharacterEncoding("UTF8");
-                OutputStream out = resp.getOutputStream();
-                String[] children = _store.getChildrenNames(transaction, path);
-                children = children == null ? new String[] {} : children;
-                StringBuilder childrenTemp = new StringBuilder();
-                childrenTemp.append("<html><head><title>Content of folder");
-                childrenTemp.append(path);
-                childrenTemp.append("</title><style type=\"text/css\">");
-                childrenTemp.append(getCSS());
-                childrenTemp.append("</style></head>");
-                childrenTemp.append("<body>");
-                childrenTemp.append(getHeader(transaction, path, resp, req));
-                childrenTemp.append("<table>");
-                childrenTemp.append("<tr><th>Name</th><th>Size</th><th>Created</th><th>Modified</th></tr>");
-                childrenTemp.append("<tr>");
-                childrenTemp.append("<td colspan=\"4\"><a href=\"../\">Parent</a></td></tr>");
-                boolean isEven= false;
-                for (String child : children) {
-                    isEven= !isEven;
-                    childrenTemp.append("<tr class=\"");
-                    childrenTemp.append(isEven ? "even" : "odd");
-                    childrenTemp.append("\">");
-                    childrenTemp.append("<td>");
-                    childrenTemp.append("<a href=\"");
-                    childrenTemp.append(child);
-                    StoredObject obj= _store.getStoredObject(transaction, path+"/"+child);
-                    if (obj.isFolder())
-                    {
-                        childrenTemp.append("/");
-                    }
-                    childrenTemp.append("\">");
-                    childrenTemp.append(child);
-                    childrenTemp.append("</a></td>");
-                    if (obj.isFolder())
-                    {
-                        childrenTemp.append("<td>Folder</td>");
-                    }
-                    else
-                    {
-                        childrenTemp.append("<td>");
-                        childrenTemp.append(obj.getResourceLength());
-                        childrenTemp.append(" Bytes</td>");
-                    }
-                    if (obj.getCreationDate() != null)
-                    {
-                        childrenTemp.append("<td>");
-                        childrenTemp.append(shortDF.format(obj.getCreationDate()));
-                        childrenTemp.append("</td>");
-                    }
-                    else
-                    {
-                        childrenTemp.append("<td></td>");
-                    }
-                    if (obj.getLastModified() != null)
-                    {
-                        childrenTemp.append("<td>");
-                        childrenTemp.append(shortDF.format(obj.getLastModified()));
-                        childrenTemp.append("</td>");
-                    }
-                    else
-                    {
-                        childrenTemp.append("<td></td>");
-                    }
-                    childrenTemp.append("</tr>");
-                }
-                childrenTemp.append("</table>");
-                childrenTemp.append(getFooter(transaction, path, resp, req));
-                childrenTemp.append("</body></html>");
-                out.write(childrenTemp.toString().getBytes("UTF-8"));
+            	
+            	InputStream in = mContext.getResourceAsStream("/index.html");
+            	if (in != null)
+            	{
+            		InputStreamReader reader = new InputStreamReader(in);
+            		StringWriter writer = new StringWriter();
+            		NetUtil.copyText(reader, writer);
+            		String buf = writer.getBuffer().toString();
+            		
+            		Pattern p = Pattern.compile("<%(.*)%>");
+            		Matcher  m = p.matcher(buf);
+            		int start = 0;
+
+            		resp.setContentType("text/html;charset=UTF-8");
+            		PrintWriter out = resp.getWriter();
+            		
+            		while (m.find())
+            		{
+            			MatchResult mr = m.toMatchResult();
+            			String rep = "";
+            			if (mr.group(1).equals("path"))
+            			{
+            				rep = path;
+            			}
+            			
+            			out.print(buf.substring(start, mr.start()));
+            			out.print(rep);
+            			start = mr.end();
+            		} 
+            		
+            		out.print(buf.substring(start));
+            	}
+            	
+            	
+            	
+//                DateFormat shortDF= getDateTimeFormat(req.getLocale());
+//                resp.setContentType("text/html");
+//                resp.setCharacterEncoding("UTF8");
+//                OutputStream out = resp.getOutputStream();
+//                String[] children = _store.getChildrenNames(transaction, path);
+//                children = children == null ? new String[] {} : children;
+//                StringBuilder childrenTemp = new StringBuilder();
+//                childrenTemp.append("<html><head><title>Content of folder");
+//                childrenTemp.append(path);
+//                childrenTemp.append("</title><style type=\"text/css\">");
+//                childrenTemp.append(getCSS());
+//                childrenTemp.append("</style></head>");
+//                childrenTemp.append("<body>");
+//                childrenTemp.append(getHeader(transaction, path, resp, req));
+//                childrenTemp.append("<table>");
+//                childrenTemp.append("<tr><th>Name</th><th>Size</th><th>Created</th><th>Modified</th></tr>");
+//                childrenTemp.append("<tr>");
+//                childrenTemp.append("<td colspan=\"4\"><a href=\"../\">Parent</a></td></tr>");
+//                boolean isEven= false;
+//                for (String child : children) {
+//                    isEven= !isEven;
+//                    childrenTemp.append("<tr class=\"");
+//                    childrenTemp.append(isEven ? "even" : "odd");
+//                    childrenTemp.append("\">");
+//                    childrenTemp.append("<td>");
+//                    childrenTemp.append("<a href=\"");
+//                    childrenTemp.append(child);
+//                    StoredObject obj= _store.getStoredObject(transaction, path+"/"+child);
+//                    if (obj.isFolder())
+//                    {
+//                        childrenTemp.append("/");
+//                    }
+//                    childrenTemp.append("\">");
+//                    childrenTemp.append(child);
+//                    childrenTemp.append("</a></td>");
+//                    if (obj.isFolder())
+//                    {
+//                        childrenTemp.append("<td>Folder</td>");
+//                    }
+//                    else
+//                    {
+//                        childrenTemp.append("<td>");
+//                        childrenTemp.append(obj.getResourceLength());
+//                        childrenTemp.append(" Bytes</td>");
+//                    }
+//                    if (obj.getCreationDate() != null)
+//                    {
+//                        childrenTemp.append("<td>");
+//                        childrenTemp.append(shortDF.format(obj.getCreationDate()));
+//                        childrenTemp.append("</td>");
+//                    }
+//                    else
+//                    {
+//                        childrenTemp.append("<td></td>");
+//                    }
+//                    if (obj.getLastModified() != null)
+//                    {
+//                        childrenTemp.append("<td>");
+//                        childrenTemp.append(shortDF.format(obj.getLastModified()));
+//                        childrenTemp.append("</td>");
+//                    }
+//                    else
+//                    {
+//                        childrenTemp.append("<td></td>");
+//                    }
+//                    childrenTemp.append("</tr>");
+//                }
+//                childrenTemp.append("</table>");
+//                childrenTemp.append(getFooter(transaction, path, resp, req));
+//                childrenTemp.append("</body></html>");
+//                out.write(childrenTemp.toString().getBytes("UTF-8"));
             }
         }
     }

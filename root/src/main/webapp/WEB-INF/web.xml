@@ -12,6 +12,10 @@
 		<servlet-class>com.trendmicro.mobilelab.manager.Manager</servlet-class>
 	</servlet>
 	
+	<servlet>
+	   <servlet-name>FolderList</servlet-name>
+	   <servlet-class>com.trendmicro.mobilelab.manager.FolderList</servlet-class>
+	</servlet>
 
 	<!-- 
 	<servlet>
@@ -37,6 +41,11 @@
     <servlet-mapping>
         <servlet-name>Manager</servlet-name>
         <url-pattern>/manager/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FolderList</servlet-name>
+        <url-pattern>/flist/*</url-pattern>
     </servlet-mapping>
 	
 	<!-- 

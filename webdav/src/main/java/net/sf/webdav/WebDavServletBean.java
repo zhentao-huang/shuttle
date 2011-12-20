@@ -74,7 +74,7 @@ public class WebDavServletBean extends HttpServlet {
         };
 
         register("GET", new DoGet(store, dftIndexFile, insteadOf404, _resLocks,
-                mimeTyper, nocontentLenghHeaders));
+                mimeTyper, nocontentLenghHeaders, getServletContext()));
         register("HEAD", new DoHead(store, dftIndexFile, insteadOf404,
                 _resLocks, mimeTyper, nocontentLenghHeaders));
         DoDelete doDelete = (DoDelete) register("DELETE", new DoDelete(store,

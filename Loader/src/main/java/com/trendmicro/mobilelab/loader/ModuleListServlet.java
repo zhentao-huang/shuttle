@@ -85,7 +85,7 @@ public class ModuleListServlet extends HttpServlet {
 				{
 					updateTrendPackages();
 				}
-				resp.setContentType("text/text");
+				resp.setContentType("text/plain");
 				resp.getWriter().print(mTrendPackages.size());
 			}
 		}

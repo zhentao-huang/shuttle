@@ -26,6 +26,13 @@
       <version>${android.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+        <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+        <artifactId>common</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+    </dependency>
+    
     <!--
     <dependency>
       <groupId>tomcat</groupId>
