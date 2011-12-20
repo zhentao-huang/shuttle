@@ -12,10 +12,11 @@
 	$(document).ready(function() 
 		{
 	    	$("#cwd").text(path)
-			$("#fnum").load("/flist/count" + path);
-			$("#flist").load("/flist/list" + path);
-			$("#ip").load("/manager/ip/webdav" + path);
-            $.get("/manager/qrip/webdav" + path, {}, function(data)
+	    	
+			$("#fnum").load("/flist/count" + encodeURI(path));
+			$("#flist").load("/flist/list" + encodeURI(path));
+			$("#ip").load("/manager/ip/webdav" + encodeURI(path));
+            $.get("/manager/qrip/webdav" + encodeURI(path), {}, function(data)
                     {$("#qrip").attr("href",data)});
         }
 	// ]]>

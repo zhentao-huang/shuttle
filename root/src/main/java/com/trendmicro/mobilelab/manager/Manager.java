@@ -36,6 +36,7 @@ import com.google.zxing.common.BitMatrix;
 import com.trendmicro.mobilelab.common.JettyService;
 import com.trendmicro.mobilelab.common.NetUtil;
 import com.trendmicro.mobilelab.common.TagWriter;
+import com.trendmicro.mobilelab.common.URLEncoder;
 
 public class Manager extends HttpServlet {
 	
@@ -88,6 +89,7 @@ public class Manager extends HttpServlet {
 		}
 		
 		String pathInfo = req.getPathInfo();
+		URLEncoder encoder = new URLEncoder();
 		
 		if (pathInfo == null || pathInfo.equals("/"))
 		{
@@ -151,14 +153,14 @@ public class Manager extends HttpServlet {
 		{
 			resp.setContentType("text/plain");
 			PrintWriter out = resp.getWriter();
-			String url = "http://" + NetUtil.getLocalIpAddress() + ":8000" + pathInfo.substring("/ip".length()); 
+			String url = "http://" + NetUtil.getLocalIpAddress() + ":8000" + encoder.encode(pathInfo.substring("/ip".length())); 
 			out.print(url);
 		}
 		else if (pathInfo.startsWith("/qrip"))
 		{
 			resp.setContentType("text/plain");
 			PrintWriter out = resp.getWriter();
-			String url = "http://" + NetUtil.getLocalIpAddress() + ":8000" + pathInfo.substring("/qrip".length()); 
+			String url = "http://" + NetUtil.getLocalIpAddress() + ":8000" + encoder.encode(encoder.encode(pathInfo.substring("/qrip".length()))); 
 			out.print("http://" + NetUtil.getLocalIpAddress() + ":8000/manager/qr/" + url);
 		}
 		else if (pathInfo.startsWith("/qr"))

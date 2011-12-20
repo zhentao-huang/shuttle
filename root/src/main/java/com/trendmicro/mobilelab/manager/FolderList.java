@@ -15,11 +15,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import android.util.Log;
+
 import com.trendmicro.mobilelab.common.NetUtil;
 import com.trendmicro.mobilelab.common.TagWriter;
+import com.trendmicro.mobilelab.common.URLEncoder;
 
 @SuppressWarnings("serial")
 public class FolderList extends HttpServlet {
+	
+	private static final String TAG = "TrendBox";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -39,15 +44,19 @@ public class FolderList extends HttpServlet {
 		}
 		else if (pathInfo.startsWith("/list"))
 		{
-			String path = pathInfo.substring("/list/".length());
+			String path = pathInfo.substring("/list".length());
 			File[] files = getChildren(path);
 			resp.setContentType("text/html;charset=UTF-8");
 			TagWriter table = new TagWriter(resp.getWriter(), "table");
 			table.setIndent(2);
 			for (File file : files)
 			{
-				String url = "/webdav" + path + "/" + file.getName();
-				String down = "/flist/down" + path + "/" + file.getName();
+				URLEncoder encoder = new URLEncoder();
+				String pad = path.equals("/")? path : path + "/";
+				String url = encoder.encode("/webdav" + pad + file.getName());
+				String down = encoder.encode("/flist/down" + pad + file.getName());
+				Log.i(TAG, "endcoded url = " + url);
+				Log.i(TAG, "endcoded down = " + down);
 				String localip = NetUtil.getLocalIpAddress();
 				
 				table
@@ -64,7 +73,7 @@ public class FolderList extends HttpServlet {
 					table.last().addText("Folder")
 				 			.end()
 				 		.addChild("td").addText("&nbsp;");
-					String target = "http://" + localip + ":8000" + down;
+					String target = "http://" + localip + ":8000" + encoder.encode(url);
 					String qr = "http://" + localip + ":8000/manager/qr/" + target;
 					
 					table.last()
@@ -75,7 +84,7 @@ public class FolderList extends HttpServlet {
 				{
 					table.last().addText("" + file.length())
 						.end();
-					String target = "http://" + localip + ":8000" + url;
+					String target = "http://" + localip + ":8000" + encoder.encode(down);
 					String qr = "http://" + localip + ":8000/manager/qr/" + target;
 					
 					table.last()
