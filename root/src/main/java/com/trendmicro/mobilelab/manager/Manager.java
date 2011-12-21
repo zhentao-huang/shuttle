@@ -54,7 +54,7 @@ public class Manager extends HttpServlet {
 		// TODO Auto-generated method stub
 		super.init();
 		
-		Context context = (Context) getServletContext().getAttribute(ANDROID_CONTEXT_ATTRIBUTE);
+		final Context context = (Context) getServletContext().getAttribute(ANDROID_CONTEXT_ATTRIBUTE);
 		context.bindService(new Intent("com.trendmicro.mobilelab.TrendBoxService"), new ServiceConnection() {
 			
 			public void onServiceDisconnected(ComponentName arg0) {
@@ -74,6 +74,7 @@ public class Manager extends HttpServlet {
 				{
 					mHandlers[i++] = (ContextHandler) handler;
 				}
+				context.unbindService(this);
 			}
 		}, 0);
 		//mServer = (Server) getServletContext().getAttribute(JETTY_SERVER_ATTRIBUTE);

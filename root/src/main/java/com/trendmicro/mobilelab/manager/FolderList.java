@@ -71,8 +71,7 @@ public class FolderList extends HttpServlet {
 				if (file.isDirectory())
 				{
 					table.last().addText("Folder")
-				 			.end()
-				 		.addChild("td").addText("&nbsp;");
+				 			.end();
 					String target = "http://" + localip + ":8000" + encoder.encode(url);
 					String qr = "http://" + localip + ":8000/manager/qr/" + target;
 					
