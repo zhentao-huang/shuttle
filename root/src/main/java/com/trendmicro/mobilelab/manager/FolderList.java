@@ -142,11 +142,14 @@ public class FolderList extends HttpServlet {
 		if (folder.isDirectory())
 		{
 			File[] l = folder.listFiles();
-			Arrays.sort(l, fc);
-			return l;
+			if (l != null)
+			{
+				Arrays.sort(l, fc);
+				return l;
+			}
 		}
 		
-		return null; 
+		return new File[0];
 	}
 	
 	private FileComparator fc = new FileComparator();

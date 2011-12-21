@@ -375,7 +375,7 @@ public abstract class AbstractMethod implements IMethodExecutor {
             generatedXML.writeElement("DAV::response", XMLWriter.OPENING);
 
             generatedXML.writeElement("DAV::href", XMLWriter.OPENING);
-            String toAppend = null;
+            String toAppend = "";
             if (absoluteUri.endsWith(errorPath)) {
                 toAppend = absoluteUri;
 
