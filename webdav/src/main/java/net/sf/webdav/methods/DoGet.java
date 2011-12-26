@@ -40,6 +40,7 @@ import net.sf.webdav.StoredObject;
 import net.sf.webdav.WebdavStatus;
 import net.sf.webdav.locking.ResourceLocks;
 
+import android.os.Environment;
 import android.util.Log;
 import com.trendmicro.mobilelab.common.NetUtil;
 
@@ -149,6 +150,10 @@ public class DoGet extends DoHead {
             			if (mr.group(1).equals("path"))
             			{
             				rep = path;
+            			}
+            			else if (mr.group(1).equals("root"))
+            			{
+            				rep = Environment.getExternalStorageDirectory().getAbsolutePath();
             			}
             			
             			out.print(buf.substring(start, mr.start()));

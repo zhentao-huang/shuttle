@@ -1,11 +1,18 @@
 package com.trendmicro.mobilelab.toolbox.ui;
 
 import com.trendmicro.mobilelab.toolbox.R;
+import com.trendmicro.mobilelab.toolbox.TrendBox;
+import com.trendmicro.mobilelab.toolbox.TrendBoxDownloader;
+import com.trendmicro.mobilelab.toolbox.TrendBoxEditor;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,6 +20,7 @@ import android.webkit.WebViewClient;
 
 public class WebUi extends Activity
 {
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
@@ -168,4 +176,49 @@ public class WebUi extends Activity
     }
     
     private WebView mWebView;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.webui, menu);
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+        case R.id.forward:
+        {
+            mWebView.goForward();
+            break;
+        }
+        case R.id.refresh:
+        {
+            mWebView.clearCache(false);
+            mWebView.reload();
+            break;
+        }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem item = menu.findItem(R.id.forward);
+        if (item != null)
+        {
+            boolean canGoForward = mWebView.canGoForward();
+            item.setEnabled(canGoForward);
+        }
+        return true;
+    }
+
+
+
 }

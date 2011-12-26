@@ -88,6 +88,8 @@
     <string name="hello_ready">Share</string>
     <string name="scan">Acquire</string>
     <string name="launch_any">Launch!</string>
+    <string name="forward">Forward</string>
+    <string name="refresh">Refresh</string>
     <string name="first_statement">First, make sure devices connect in same network:&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Wifi network&lt;br/>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Portable WIFI hotspot on your device&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 2G/3G network&lt;/small&gt;&lt;br/&gt;</string>
     <!-- <string name="first_statement">hello</string>  -->
     <string name="next_statement">Click \"Share\" to &lt;b&gt;launch web share&lt;/b&gt;&lt;br/&gt;</string>

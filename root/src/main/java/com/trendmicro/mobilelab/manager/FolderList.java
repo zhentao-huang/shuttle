@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.util.Log;
+import android.os.Environment;
 
 import com.trendmicro.mobilelab.common.NetUtil;
 import com.trendmicro.mobilelab.common.TagWriter;
@@ -24,7 +25,19 @@ import com.trendmicro.mobilelab.common.URLEncoder;
 @SuppressWarnings("serial")
 public class FolderList extends HttpServlet {
 	
+	@Override
+	public void init() throws ServletException {
+		// TODO Auto-generated method stub
+		super.init();
+		mRootPath = Environment.getExternalStorageDirectory();
+		if (mRootPath == null)
+		{
+			mRootPath = new File("/mnt/sdcard");
+		}
+	}
+
 	private static final String TAG = "TrendBox";
+	private File mRootPath;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -96,7 +109,7 @@ public class FolderList extends HttpServlet {
 		}
 		else if (pathInfo.startsWith("/down"))
 		{
-			String filename = "/mnt/sdcard" + pathInfo.substring("/down".length());
+			String filename = mRootPath.getAbsolutePath() + pathInfo.substring("/down".length());
 			
 			File file = new File(filename);
 			if (file.exists() && file.isFile())
@@ -137,7 +150,7 @@ public class FolderList extends HttpServlet {
 	{
 		ArrayList<File> files = new ArrayList<File>();
 		
-		File folder = new File("/mnt/sdcard", path);
+		File folder = new File(mRootPath, path);
 		
 		if (folder.isDirectory())
 		{

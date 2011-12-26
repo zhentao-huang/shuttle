@@ -23,6 +23,8 @@ import javax.servlet.ServletException;
 
 import net.sf.webdav.exceptions.WebdavException;
 
+import android.os.Environment;
+
 /**
  * Servlet which provides support for WebDAV level 2.
  * 
@@ -86,30 +88,36 @@ public class WebdavServlet extends WebDavServletBean {
     }
 
     private File getFileRoot() {
-        String rootPath = getInitParameter(ROOTPATH_PARAMETER);
-        if (rootPath == null) {
-            throw new WebdavException("missing parameter: "
-                    + ROOTPATH_PARAMETER);
-        }
-        if (rootPath.equals("*WAR-FILE-ROOT*")) {
-            String file = LocalFileSystemStore.class.getProtectionDomain()
-                    .getCodeSource().getLocation().getFile().replace('\\', '/');
-            if (file.charAt(0) == '/'
-                    && System.getProperty("os.name").indexOf("Windows") != -1) {
-                file = file.substring(1, file.length());
-            }
-
-            int ix = file.indexOf("/WEB-INF/");
-            if (ix != -1) {
-                rootPath = file.substring(0, ix).replace('/',
-                        File.separatorChar);
-            } else {
-                throw new WebdavException(
-                        "Could not determine root of war file. Can't extract from path '"
-                                + file + "' for this web container");
-            }
-        }
-        return new File(rootPath);
+//        String rootPath = getInitParameter(ROOTPATH_PARAMETER);
+//        if (rootPath == null) {
+//            throw new WebdavException("missing parameter: "
+//                    + ROOTPATH_PARAMETER);
+//        }
+//        if (rootPath.equals("*WAR-FILE-ROOT*")) {
+//            String file = LocalFileSystemStore.class.getProtectionDomain()
+//                    .getCodeSource().getLocation().getFile().replace('\\', '/');
+//            if (file.charAt(0) == '/'
+//                    && System.getProperty("os.name").indexOf("Windows") != -1) {
+//                file = file.substring(1, file.length());
+//            }
+//
+//            int ix = file.indexOf("/WEB-INF/");
+//            if (ix != -1) {
+//                rootPath = file.substring(0, ix).replace('/',
+//                        File.separatorChar);
+//            } else {
+//                throw new WebdavException(
+//                        "Could not determine root of war file. Can't extract from path '"
+//                                + file + "' for this web container");
+//            }
+//        }
+//        return new File(rootPath);
+    	File rootPath = Environment.getExternalStorageDirectory();
+    	if (rootPath == null)
+    	{
+    		rootPath = new File("/mnt/sdcard");
+    	}
+        return rootPath;
     }
 
 }
