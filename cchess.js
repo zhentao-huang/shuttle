@@ -22,7 +22,7 @@ function picmap()
         "rma" : "rma.png",
         "rxiang" : "rxiang.png",
         "rshi" : "rshi.png",
-        "rshuai" : "rshuai.png",
+        "rshuai" : "rshuai.png"
     }
 
     this.get = function(type)
@@ -90,32 +90,56 @@ function composition()
     }
 }
 
-function board(pic, origX, origY, gapX, gapY, cmW, cmH)
+function board(pic)
 {
     this.pic = pic
-    this.origX = origX
-    this.origY = origY
-    this.gapX = gapX
-    this.gapY = gapY
-    this.cmW = cmW
-    this.cmH = cmH
+
+    this.setOrigXnY = function(origX, origY)
+    {
+        this.origX = origX
+        this.origY = origY
+        return this
+    }
+
+    this.setGapXnY = function(gapX, gapY)
+    {
+        this.gapX = gapX
+        this.gapY = gapY
+        return this
+    }
+
+    this.setChessmanWnH = function(cmW, cmH)
+    {
+        this.cmW = cmW
+        this.cmH = cmH
+        return this
+    }
 }
 
-function chessmatch(comp, pmap, bd)
+function chessmatch(comp, pmap, bd, aw)
 {
     this.comp = comp
     this.pmap = pmap
     this.bd = bd
+    this.aw = aw
 
     this.drawBoard = function(context)
     {
-        this.bg = new Image()
+        this.bg = document.createElement("image");//new Image()
         this.bg.src = this.bd.pic
-        this.bg.width = 550
-        this.bg.height = 600
+        this.bg.setAttribute("style", "position:absolute;display:block;top:0px;left:0px;z-index:0");
+        context.appendChild(this.bg);
+        this.bg.draggable = false;
+//        this.bg.ondragover = function(e){e.preventDefault();}
+//        this.bg.ondragdrop = function(e){e.preventDefault();}
         this.bg.onload = function()
         {
-            context.drawImage(this, 0, 0);
+            var canvas = $("canvas")[0];
+            canvas.width = this.width;
+            canvas.width = this.height;
+            context.width = this.width;
+            context.height = this.height;
+//            context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight);
         }
     }
 
@@ -140,9 +164,11 @@ function chessmatch(comp, pmap, bd)
         if (cm.alive)
         {
             var cimg = new Image()
+            cimg.draggable = true;
             cimg.src = this.pmap.get(cm.type)
             cimg.width = this.bd.cmW
             cimg.height = this.bd.cmH
+
 
             var centX = this.bd.origX + this.bd.gapX * x
             var centY = this.bd.origY + this.bd.gapY * y
@@ -150,10 +176,21 @@ function chessmatch(comp, pmap, bd)
             var x = centX - this.bd.cmW/2
             var y = centY - this.bd.cmH/2
 
+            cimg.setAttribute("style", "position:absolute;display:block;top:" + y + "px;left:" + x + "px;z-index:100");
+            context.appendChild(cimg);
+
             cimg.onload = function()
             {
-                context.drawImage(this, x, y);
+//                context.drawImage(this, x, y, cimg.width, cimg.height);
             }
+
+            match.aw.setPointDownHandler(cimg, function(ev)
+            {
+                var p = match.aw.getEventXnY(ev);
+//                context.fillText(ev.srcElement.tag, 20, 20);
+            })
+
+            cm.img = cimg;
         }
     }
 
@@ -164,6 +201,50 @@ function chessmatch(comp, pmap, bd)
 
 }
 
+function pointDownHandler(ev)
+{
+    var mXY = match.aw.getEventXnY(ev);
+
+    var canvas = $("#canvas")[0];
+//    var context = canvas.getContext("2d");
+
+//    context.fillText("mX = " + mXY.x + " my = " + mXY.y, 20, 20);
+}
+
+function ActionWrapper(obj)
+{
+    this.setPointDownHandler = function(obj, func)
+    {
+        obj.addEventListener("mousedown", func, false);
+        obj.onmousedown = func;
+        obj.ontouchstart = func;
+    }
+
+    this.getEventXnY = function(ev)
+    {
+        var mX = ev.layerX;
+        if (!mX)
+        {
+            mX = ev.x;
+        }
+
+        if (!mX)
+        {
+            mX = ev.touches[0].clientX
+            mY = ev.touches[0].clientY
+            return {x:mX, y:mY}
+        }
+
+        var mY = ev.layerY;
+        if (!mY)
+        {
+            mY = ev.y;
+        }
+
+        return {x:mX, y:mY}
+    }
+}
+
 var match;
 
 function start()
@@ -171,16 +252,28 @@ function start()
     var pmap = new picmap();
     var comp = new composition();
     comp.begin();
-    var bd = new board("board.png", 40, 40, 59, 59, 55, 55);
+    var bd = new board("board.png") 
+        .setOrigXnY(40, 40)         
+        .setGapXnY(59, 58)          
+        .setChessmanWnH(55, 55);
 
-    match = new chessmatch(comp, pmap, bd);
+    var aw = new ActionWrapper();
+    match = new chessmatch(comp, pmap, bd, aw);
 
-    var canvas = $("canvas");
-    var context = canvas[0].getContext("2d");
+    var canvas = $("#canvas")[0];
+    var context = canvas;
+//    var context = canvas.getContext("2d");
+    /*
+    document.ondragover = function(e){e.preventDefault();}
+    document.ondragdrop = function(e){e.preventDefault();}
+    document.onmouseover = function(e){e.preventDefault();}
+
+
+    canvas.ondragover = function(e){e.preventDefault();}
+    canvas.ondragdrop = function(e){e.preventDefault();}
+*/
+    aw.setPointDownHandler(canvas, pointDownHandler);
 
     match.drawBoard(context)
     match.drawChessmans(context)
-    var size = match.getImageSize()
-    canvas.attr("width", size.x);
-    canvas.attr("height", size.y);
 }

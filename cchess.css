@@ -1,8 +1,9 @@
-/*
 body {
-    background-image:url(board.png);
-    background-repeat:no-repeat;
-    background-size: 480px 550px;
+  margin:0px
 }
-*/
+#canvas {
+    position:absolute;
+    width:100%;
+    height:100%;
+}
 
