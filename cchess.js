@@ -53,6 +53,8 @@ function composition()
         var cm = new cchessman(id, type)
         this.ps[y][x] = cm
         ts[id] = cm
+        cm.x = x
+        cm.y = y
     }
 
     this.deploy = function (map)
@@ -114,6 +116,31 @@ function board(pic)
         this.cmH = cmH
         return this
     }
+
+    this.setBoardSize = function(width, height)
+    {
+        this.bW = width
+        this.bH = height
+        return this
+    }
+
+    this.setRealSize = function(width, height)
+    {
+        this.rW = width
+        this.rH = height
+        return this
+    }
+
+    this.setupRatio = function(context, imageWidth, imageHeight)
+    {
+        this.setBoardSize(imageWidth, imageHeight)
+        this.ratio = imageWidth/imageHeight;
+        var clientWidth = context.canvas.clientWidth
+        var height = clientWidth / this.ratio;
+        this.scale = imageWidth / clientWidth;
+        context.canvas.setAttribute("style","height:" + height + "px");
+        this.setRealSize(clientWidth, height);
+    }
 }
 
 function chessmatch(comp, pmap, bd, aw)
@@ -123,23 +150,25 @@ function chessmatch(comp, pmap, bd, aw)
     this.bd = bd
     this.aw = aw
 
+    this.setContext = function(context)
+    {
+        this.context = context
+    }
+
     this.drawBoard = function(context)
     {
-        this.bg = document.createElement("image");//new Image()
+        this.bg = new Image()
         this.bg.src = this.bd.pic
-        this.bg.setAttribute("style", "position:absolute;display:block;top:0px;left:0px;z-index:0");
-        context.appendChild(this.bg);
         this.bg.draggable = false;
-//        this.bg.ondragover = function(e){e.preventDefault();}
-//        this.bg.ondragdrop = function(e){e.preventDefault();}
         this.bg.onload = function()
         {
-            var canvas = $("canvas")[0];
-            canvas.width = this.width;
-            canvas.width = this.height;
-            context.width = this.width;
-            context.height = this.height;
-//            context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight);
+            // Initial for match.bd
+            context.canvas.width = this.width;
+            context.canvas.height = this.height;
+            match.bd.setupRatio(context, this.width, this.height)
+
+            context.drawImage(this, 0, 0, this.width, this.height)
+            context.fillText("" + match.bd.ratio+";" + match.bd.rH, 20,90) 
         }
     }
 
@@ -176,18 +205,14 @@ function chessmatch(comp, pmap, bd, aw)
             var x = centX - this.bd.cmW/2
             var y = centY - this.bd.cmH/2
 
-            cimg.setAttribute("style", "position:absolute;display:block;top:" + y + "px;left:" + x + "px;z-index:100");
-            context.appendChild(cimg);
-
             cimg.onload = function()
             {
-//                context.drawImage(this, x, y, cimg.width, cimg.height);
+                context.drawImage(this, x, y, cimg.width, cimg.height);
             }
 
             match.aw.setPointDownHandler(cimg, function(ev)
             {
                 var p = match.aw.getEventXnY(ev);
-//                context.fillText(ev.srcElement.tag, 20, 20);
             })
 
             cm.img = cimg;
@@ -199,16 +224,52 @@ function chessmatch(comp, pmap, bd, aw)
         return {x:this.bg.width, y:this.bg.height};
     }
 
+    this.getChessmanByXnY = function(offx, offy)
+    {
+        var bx = offx * this.bd.scale
+        var by = offy * this.bd.scale
+
+        var ix = (bx - this.bd.origX)/this.bd.gapX
+        var iy = (by - this.bd.origY)/this.bd.gapY
+
+        ix = Math.round(ix);
+        iy = Math.round(iy);
+
+        if (ix < 0) ix = 0
+        if (ix > 8) ix = 8
+        if (iy < 0) iy = 0
+        if (iy > 9) iy = 9
+
+        px = this.bd.origX + this.bd.gapX * ix
+        py = this.bd.origY + this.bd.gapY * iy
+
+        if ((px-offx)*(px-offx) + (py-offy)*(py-offy) <= (this.bg.cW/2)^2)
+        {
+            return this.comp.ps[iy][ix];
+        }
+        return undefined;
+    }
 }
+
+var pos = 20;
 
 function pointDownHandler(ev)
 {
     var mXY = match.aw.getEventXnY(ev);
 
-    var canvas = $("#canvas")[0];
-//    var context = canvas.getContext("2d");
-
-//    context.fillText("mX = " + mXY.x + " my = " + mXY.y, 20, 20);
+    var cm = match.getChessmanByXnY(mXY.x, mXY.y)
+    
+    if (cm)
+    {
+        var txt = "" + cm.type + cm.id;
+        var w = match.context.measureText(txt)
+        match.context.fillText(txt, pos, 100, w)
+        pos += w.width
+    }
+    else
+    {
+        match.context.fillText("cm = " + cm, 20, 110);
+    }
 }
 
 function ActionWrapper(obj)
@@ -261,8 +322,8 @@ function start()
     match = new chessmatch(comp, pmap, bd, aw);
 
     var canvas = $("#canvas")[0];
-    var context = canvas;
-//    var context = canvas.getContext("2d");
+    var context = canvas.getContext("2d");
+    match.setContext(context)
     /*
     document.ondragover = function(e){e.preventDefault();}
     document.ondragdrop = function(e){e.preventDefault();}
