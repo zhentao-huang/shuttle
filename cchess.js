@@ -149,6 +149,7 @@ function chessmatch(comp, pmap, bd, aw)
     this.pmap = pmap
     this.bd = bd
     this.aw = aw
+    this.bgColor = "#f3bf6c"
 
     this.setContext = function(context)
     {
@@ -166,8 +167,10 @@ function chessmatch(comp, pmap, bd, aw)
             context.canvas.width = this.width;
             context.canvas.height = this.height;
             match.bd.setupRatio(context, this.width, this.height)
+            context.fillstyle = this.bgColor
+            context.fill()
 
-            context.drawImage(this, 0, 0, this.width, this.height)
+            context.drawImage(this, 0, 0, this.width + 1, this.height + 1)
         }
     }
 
