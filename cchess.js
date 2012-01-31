@@ -168,7 +168,6 @@ function chessmatch(comp, pmap, bd, aw)
             match.bd.setupRatio(context, this.width, this.height)
 
             context.drawImage(this, 0, 0, this.width, this.height)
-            context.fillText("" + match.bd.ratio+";" + match.bd.rH, 20,90) 
         }
     }
 
@@ -195,8 +194,8 @@ function chessmatch(comp, pmap, bd, aw)
             var cimg = new Image()
             cimg.draggable = true;
             cimg.src = this.pmap.get(cm.type)
-            cimg.width = this.bd.cmW
-            cimg.height = this.bd.cmH
+            var width = this.bd.cmW
+            var height = this.bd.cmH
 
 
             var centX = this.bd.origX + this.bd.gapX * x
@@ -207,13 +206,10 @@ function chessmatch(comp, pmap, bd, aw)
 
             cimg.onload = function()
             {
-                context.drawImage(this, x, y, cimg.width, cimg.height);
+                cm.savedImg = context.getImageData(x, y, width + 2, height + 2);
+                cm.savedPos = {"x":x,"y":y,"w":width,"h":height};
+                context.drawImage(this, x, y, width, height);
             }
-
-            match.aw.setPointDownHandler(cimg, function(ev)
-            {
-                var p = match.aw.getEventXnY(ev);
-            })
 
             cm.img = cimg;
         }
@@ -224,11 +220,31 @@ function chessmatch(comp, pmap, bd, aw)
         return {x:this.bg.width, y:this.bg.height};
     }
 
-    this.getChessmanByXnY = function(offx, offy)
+    this.setupMovingChessman = function(pos, bx, by)
     {
-        var bx = offx * this.bd.scale
-        var by = offy * this.bd.scale
+        if ((pos.px-bx)*(pos.px-bx) + (pos.py-by)*(pos.py-by) <= (this.bd.cmW/2)*(this.bd.cmW/2))
+        {
+            var cm = this.comp.ps[pos.iy][pos.ix];
+            if (cm)
+            {
+                var x = pos.px - this.bd.cmW/2;
+                var y = pos.py - this.bd.cmH/2;
+                cm.pointOff = {"x": bx - x,"y": by - y}
+                this.dcm = cm
+            }
+        }
+    }
 
+    this.attractChessman = function()
+    {
+        if (this.dcm)
+        {
+            this.dcm.pointOff = {"x": 0, "y": 0}
+        }
+    }
+
+    this.getChessmanPosByXnY = function(bx, by)
+    {
         var ix = (bx - this.bd.origX)/this.bd.gapX
         var iy = (by - this.bd.origY)/this.bd.gapY
 
@@ -243,32 +259,112 @@ function chessmatch(comp, pmap, bd, aw)
         px = this.bd.origX + this.bd.gapX * ix
         py = this.bd.origY + this.bd.gapY * iy
 
-        if ((px-offx)*(px-offx) + (py-offy)*(py-offy) <= (this.bg.cW/2)^2)
+        return {"ix":ix,"iy":iy,"px":px,"py":py}
+    }
+
+    this.deploy = function(cm, x, y)
+    {
+        this.comp.ps[cm.y][cm.x] = undefined
+        this.comp.ps[y][x] = cm
+        cm.x = x
+        cm.y = y
+    }
+
+    this.takeChessman = function(cm)
+    {
+        cm.alive = false;
+        this.context.putImageData(this.dcm.savedImg, this.dcm.savedPos.x, this.dcm.savedPos.y);
+        this.context.putImageData(cm.savedImg, cm.savedPos.x, cm.savedPos.y);
+        this.dcm.savedImg = this.context.getImageData(this.dcm.savedPos.x, this.dcm.savedPos.y, this.dcm.savedPos.w + 2, this.dcm.savedPos.h + 2)
+    }
+
+    this.convert = function(off)
+    {
+        return off * this.bd.scale
+    }
+
+    this.moveChessman = function(x, y)
+    {
+        var cm = this.dcm
+        this.context.putImageData(cm.savedImg, cm.savedPos.x, cm.savedPos.y);
+        cm.savedPos.x = x - cm.pointOff.x
+        cm.savedPos.y = y - cm.pointOff.y
+        cm.savedImg = this.context.getImageData(cm.savedPos.x, cm.savedPos.y, cm.savedPos.w + 2, cm.savedPos.h + 2);
+        this.context.drawImage(cm.img, cm.savedPos.x, cm.savedPos.y, cm.savedPos.w, cm.savedPos.h);
+    }
+
+    this.pickupChessman = function(x, y)
+    {
+        var pos = this.getChessmanPosByXnY(x, y);
+        this.setupMovingChessman(pos, x, y)
+    }
+
+    this.putdownChessman = function(bx, by)
+    {
+        var pos = match.getChessmanPosByXnY(bx, by);
+        
+        var prev = this.comp.ps[pos.iy][pos.ix]
+        if (prev)
         {
-            return this.comp.ps[iy][ix];
+            this.takeChessman(prev)
         }
-        return undefined;
+
+        var x = pos.px - match.bd.cmW/2
+        var y = pos.py - match.bd.cmH/2
+
+        match.attractChessman();
+        match.moveChessman(x, y);
+        match.deploy(match.dcm, pos.ix, pos.iy);
+        match.dcm = undefined;
+    }
+
+    this.isMoving = function()
+    {
+        return this.dcm
     }
 }
 
 var pos = 20;
+var line = 90;
+var gap = 20
 
 function pointDownHandler(ev)
 {
     var mXY = match.aw.getEventXnY(ev);
 
-    var cm = match.getChessmanByXnY(mXY.x, mXY.y)
-    
-    if (cm)
+    var x = match.convert(mXY.x)
+    var y = match.convert(mXY.y)
+
+    match.pickupChessman(x, y)
+}
+
+function pointMoveHandler(ev)
+{
+    if (match.isMoving())
     {
-        var txt = "" + cm.type + cm.id;
-        var w = match.context.measureText(txt)
-        match.context.fillText(txt, pos, 100, w)
-        pos += w.width
+        var mXY = match.aw.getEventXnY(ev);
+        var x = match.convert(mXY.x);
+        var y = match.convert(mXY.y);
+        match.moveChessman(x, y);
     }
-    else
+}
+
+function log(txt)
+{
+    var m = match.context.measureText(txt);
+    match.context.fillText(txt, pos, line);
+    line += gap
+}
+
+function pointUpHandler(ev)
+{
+    if (match.isMoving())
     {
-        match.context.fillText("cm = " + cm, 20, 110);
+        var mXY = match.aw.getEventXnY(ev);
+        var x = match.convert(mXY.x);
+        var y = match.convert(mXY.y);
+        
+        match.putdownChessman(x, y);
     }
 }
 
@@ -277,8 +373,19 @@ function ActionWrapper(obj)
     this.setPointDownHandler = function(obj, func)
     {
         obj.addEventListener("mousedown", func, false);
-        obj.onmousedown = func;
-        obj.ontouchstart = func;
+        obj.addEventListener("touchstart", func, false);
+    }
+
+    this.setPointMoveHandler = function(obj, func)
+    {
+        obj.addEventListener("mousemove", func, false);
+        obj.addEventListener("touchmove", func, false);
+    }
+
+    this.setPointUpHandler = function(obj, func)
+    {
+        obj.addEventListener("mouseup", func, false);
+        obj.addEventListener("touchend", func, false);
     }
 
     this.getEventXnY = function(ev)
@@ -291,9 +398,18 @@ function ActionWrapper(obj)
 
         if (!mX)
         {
-            mX = ev.touches[0].clientX
-            mY = ev.touches[0].clientY
-            return {x:mX, y:mY}
+            if (ev.touches && ev.touches.length > 0)
+            {
+                mX = ev.touches[0].clientX
+                mY = ev.touches[0].clientY
+                return {x:mX, y:mY}
+            }
+            if (ev.changedTouches && ev.changedTouches.length > 0)
+            {
+                mX = ev.changedTouches[0].clientX;
+                mY = ev.changedTouches[0].clientY;
+                return {x:mX, y:mY}
+            }
         }
 
         var mY = ev.layerY;
@@ -307,6 +423,11 @@ function ActionWrapper(obj)
 }
 
 var match;
+
+function nodefault(ev)
+{
+    ev.preventDefault()
+}
 
 function start()
 {
@@ -324,16 +445,14 @@ function start()
     var canvas = $("#canvas")[0];
     var context = canvas.getContext("2d");
     match.setContext(context)
-    /*
-    document.ondragover = function(e){e.preventDefault();}
-    document.ondragdrop = function(e){e.preventDefault();}
-    document.onmouseover = function(e){e.preventDefault();}
 
+    document.addEventListener("touchmove", nodefault, false);
+    document.addEventListener("touchend", nodefault, false);
+    document.addEventListener("touchstart", nodefault, false);
 
-    canvas.ondragover = function(e){e.preventDefault();}
-    canvas.ondragdrop = function(e){e.preventDefault();}
-*/
     aw.setPointDownHandler(canvas, pointDownHandler);
+    aw.setPointMoveHandler(canvas, pointMoveHandler);
+    aw.setPointUpHandler(canvas, pointUpHandler);
 
     match.drawBoard(context)
     match.drawChessmans(context)
