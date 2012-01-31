@@ -1,8 +1,14 @@
 body {
-  margin:0px
+  margin:0px;
+  padding:0px;
+  background-color:#f3bf6c
 }
 
 #canvas {
+    margin:0px;
+    padding:0px;
+    border-width:0px;
+
     width:100%;
 }
 
