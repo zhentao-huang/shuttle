@@ -536,7 +536,7 @@ public class TrendBox extends Activity
                     
                     try
                     {
-                        String[] names = new String[]{"root", "loader", "webdav"};
+                        String[] names = new String[]{"root", "loader", "webdav","cchess"};
                         for (String name : names)
                         {
                             File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
@@ -557,7 +557,7 @@ public class TrendBox extends Activity
                                     Installer.install(warStream, "/" + name, webappDir, name, true);
                                 }
                                 
-                                Log.i(TAG, "Loader installing");
+                                Log.i(TAG, "Plugin \"" + name + "\" installing");
                                 
                                 IJettyToast.showServiceToast(TrendBox.this, getResources().getString(R.string.loader_installed, name) );
                             }

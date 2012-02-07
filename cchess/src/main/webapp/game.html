@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Trend Chinese Chess</title>
+    <base href="/cchess/game.html"></base>
+    <link rel="stylesheet" type="text/css" media="screen" href="/console.css" />
+    <META name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
+    <META http-equiv="Pragma" content="no-cache"/>
+    <script src="/jquery.js"></script>
+    <script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() 
+		{
+        }
+	// ]]>
+	);
+	
+	</script>
+    <META http-equiv="Cache-Control" content="no-cache,no-store"/>
+</head>
+<body>
+     
+    <div id="page">
+        <h1 class="pageheader">Chinese Chess</h1>
+        <div id="content">
+            <h2>Welcome to the Chinese Chess!</h2>
+            <img src="/cchess/icon.png" alt="Logo" width="96" height="96" style="float: right;" />
+            <p>Please let your opponent choose side by scanning QR code</p>
+            <p>Then click the icon of the another side to enter game</p>
+            <p/>           
+            <p>The home url is <a href="<%qrip%>"><%url%></a></p>
+        </div>
+        
+    </div>
+    
+    <div>
+        <table>
+            <tr>
+                <td><a href="<%red%>"><img src="rshuai.png" width="55" height="55"></img></a></td>
+                <td> Move first </td>
+                <td><a href="<%redqr%>">QR code</a></td>
+            </tr>
+            <tr>
+                <td><a href="<%black%>"><img src="bjiang.png" width="55" height="55"></img></a></td>
+                <td> Move later </td>
+                <td><a href="<%blackqr%>">QR code</a></td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="footer">
+        Served up by i-Jetty.<br />Now with 100% more awesome.
+    </div>
+</body>
+</html>

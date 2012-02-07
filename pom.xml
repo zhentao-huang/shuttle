@@ -16,6 +16,7 @@
        <module>common</module>
        <module>root</module>
        <module>Loader</module>
+       <module>cchess</module>
        <module>webdav</module>
        <module>Panel</module>
    </modules>
