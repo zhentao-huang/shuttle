@@ -109,7 +109,7 @@ function composition(side)
         this.deploy(map)
     }
 
-}
+} //end of composition
 
 function board(pic)
 {
@@ -170,6 +170,8 @@ function chessmatch(comp, pmap, bd, aw)
     this.aw = aw
     this.bgColor = "#f3bf6c"
 
+    this.play = new cchessplay(comp);
+
     this.setContext = function(context)
     {
         this.context = context
@@ -180,6 +182,7 @@ function chessmatch(comp, pmap, bd, aw)
         this.bg = new Image()
         this.bg.src = this.bd.pic
         this.bg.draggable = false;
+        var match = this
         this.bg.onload = function()
         {
             // Initial for match.bd
@@ -252,11 +255,15 @@ function chessmatch(comp, pmap, bd, aw)
         if ((pos.px-bx)*(pos.px-bx) + (pos.py-by)*(pos.py-by) <= (this.bd.cmW/2)*(this.bd.cmW/2))
         {
             this.pickup(pos)
-            if (this.dcm)
+            if ( this.dcm && this.play.isMyTurn() && this.play.isMyChess(this.dcm))
             {
                 var x = pos.px - this.bd.cmW/2;
                 var y = pos.py - this.bd.cmH/2;
                 this.dcm.pointOff = {"x": bx - x,"y": by - y}
+            }
+            else
+            {
+                this.dcm = undefined;
             }
         }
     }
@@ -309,7 +316,7 @@ function chessmatch(comp, pmap, bd, aw)
         {
             return false;
         }
-        var isMine = (cm.type.charAt(0) === this.comp.side.charAt(0))
+        var isMine = this.play.isMyChess(cm)
         ret = {oldX:cm.x,oldY:cm.y,newX:x, newY:y, isMine:isMine}
         this.comp.ps[cm.y][cm.x] = undefined
         this.comp.ps[y][x] = cm
@@ -367,7 +374,11 @@ function chessmatch(comp, pmap, bd, aw)
     this.putdownChessman = function(bx, by)
     {
         var pos = this.getChessmanPosByXnY(bx, by);
-        this.putdown(pos); 
+        if (!this.play.isMoveable(this.dcm, pos.ix, pos.iy))
+        {
+            pos = this.getChessmanPosByPoint(this.dcm.x, this.dcm.y);
+        }
+        this.putdown(pos)
     }
 
     this.putdown = function(pos)
@@ -417,7 +428,7 @@ function chessmatch(comp, pmap, bd, aw)
         return this.comp.side;
     }
 
-    this.performOpponentAction = function(turn)
+    this.performMove = function(turn)
     {
         oldpos = this.rotate(turn.oldX, turn.oldY)
         newpos = this.rotate(turn.newX, turn.newY)
@@ -428,32 +439,61 @@ function chessmatch(comp, pmap, bd, aw)
         this.pickup(oldpos)
         this.putdown(newpos) 
     }
+
+    this.pointDownHandler = function(ev)
+    {
+        if (this.play.isMyTurn())
+        {
+            var mXY = this.aw.getEventXnY(ev);
+
+            var x = this.convert(mXY.x)
+            var y = this.convert(mXY.y)
+
+            this.pickupChessman(x, y)
+        }
+    }
+
+    this.pointMoveHandler = function(ev)
+    {
+        if (this.isMoving())
+        {
+            var mXY = this.aw.getEventXnY(ev);
+            var x = this.convert(mXY.x);
+            var y = this.convert(mXY.y);
+            this.moveChessman(x, y);
+        }
+    }
+
+    this.pointUpHandler = function(ev)
+    {
+        if (this.isMoving())
+        {
+            var mXY = this.aw.getEventXnY(ev);
+            var x = this.convert(mXY.x);
+            var y = this.convert(mXY.y);
+            
+            this.putdownChessman(x, y);
+        }
+    }
+
+    this.enableEventHandlers = function()
+    {
+        document.addEventListener("touchmove", nodefault, false);
+        document.addEventListener("touchend", nodefault, false);
+        document.addEventListener("touchstart", nodefault, false);
+
+        var canvas = this.context.canvas
+        this.aw.setPointDownHandler(canvas, this.callback("pointDownHandler"));
+        this.aw.setPointMoveHandler(canvas, this.callback("pointMoveHandler"));
+        this.aw.setPointUpHandler(canvas, this.callback("pointUpHandler"));
+    }
 }
+
+applyCallback(chessmatch)
 
 var pos = 20;
 var line = 90;
 var gap = 20
-
-function pointDownHandler(ev)
-{
-    var mXY = match.aw.getEventXnY(ev);
-
-    var x = match.convert(mXY.x)
-    var y = match.convert(mXY.y)
-
-    match.pickupChessman(x, y)
-}
-
-function pointMoveHandler(ev)
-{
-    if (match.isMoving())
-    {
-        var mXY = match.aw.getEventXnY(ev);
-        var x = match.convert(mXY.x);
-        var y = match.convert(mXY.y);
-        match.moveChessman(x, y);
-    }
-}
 
 function log(txt)
 {
@@ -462,19 +502,7 @@ function log(txt)
     line += gap
 }
 
-function pointUpHandler(ev)
-{
-    if (match.isMoving())
-    {
-        var mXY = match.aw.getEventXnY(ev);
-        var x = match.convert(mXY.x);
-        var y = match.convert(mXY.y);
-        
-        match.putdownChessman(x, y);
-    }
-}
-
-function ActionWrapper(obj)
+function EventWrapper()
 {
     this.setPointDownHandler = function(obj, func)
     {
@@ -528,8 +556,6 @@ function ActionWrapper(obj)
     }
 }
 
-var match;
-
 function nodefault(ev)
 {
     ev.preventDefault()
@@ -545,20 +571,13 @@ function startGame(side, map)
         .setGapXnY(59, 58)          
         .setChessmanWnH(55, 55);
 
-    var aw = new ActionWrapper();
+    var aw = new EventWrapper();
     match = new chessmatch(comp, pmap, bd, aw);
 
     var canvas = $("#canvas")[0];
     var context = canvas.getContext("2d");
     match.setContext(context)
-
-    document.addEventListener("touchmove", nodefault, false);
-    document.addEventListener("touchend", nodefault, false);
-    document.addEventListener("touchstart", nodefault, false);
-
-    aw.setPointDownHandler(canvas, pointDownHandler);
-    aw.setPointMoveHandler(canvas, pointMoveHandler);
-    aw.setPointUpHandler(canvas, pointUpHandler);
+    match.enableEventHandlers()
 
     match.drawBoard(context)
 

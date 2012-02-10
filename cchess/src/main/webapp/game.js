@@ -4,22 +4,6 @@ function perform(match, comm)
     set.launch()
 }
 
-function callbackObj(obj, action)
-{
-    this.call = function(data, ret)
-    {
-        if (obj && jQuery.isFunction(obj[action]))
-        {
-            obj[action](data, ret);
-        }
-    }
-}
-
-function nothing()
-{
-
-}
-
 function communicator(comm, role)
 {
     this.comm = comm + "?role=" + role + "&"
@@ -65,16 +49,6 @@ function game(match, comm)
     this.comm = new communicator(comm, this.match.getMySide())
     this.timeout = 60
 
-    this.callback = function(action)
-    {
-        if (jQuery.isFunction(this[action]))
-        {
-            return new callbackObj(this, action).call
-        }
-        alert("No action " + action + " for this obj" + this)
-        return nothing;
-    }
-
     this.launch = function()
     {
         this.comm.unregister(this.callback("sayHello"));
@@ -115,7 +89,8 @@ function game(match, comm)
             else
             {
                 var turn = obj.content
-                this.match.performOpponentAction(turn)
+                turn.isMine = false
+                this.match.performMove(turn)
                 this.comm.receive(this.callback("watch"), this.timeout); 
             }
         }
@@ -136,10 +111,11 @@ function game(match, comm)
             var str = JSON.stringify(step);
             this.comm.send(this.callback("ok"), str);
         }
-        else
-        {
-        }
+
+        this.match.play.toggleTurn();
     }
 
     this.match.setTurnHandler(this.callback("onestep"));
 }
+
+applyCallback(game)

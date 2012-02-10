@@ -6,6 +6,8 @@
     <base href="/cchess/chess.html"></base>
     <link rel="stylesheet" type="text/css" media="screen" href="cchess.css" />
     <script type="text/javascript" src="/jquery.js"></script>
+    <script type="text/javascript" src="callback.js"></script>
+    <script type="text/javascript" src="play.js"></script>
     <script type="text/javascript" src="cchess.js"></script>
     <script type="text/javascript" src="game.js"></script>
     <script type="text/javascript">
@@ -14,7 +16,7 @@
                 {
 		    var side = "<%side%>"
 		    var comm = "/comm"
-                    var match=startGame("<%side%>");
+                    var match=startGame(side);
 		    perform(match, comm)
                 }
         );
