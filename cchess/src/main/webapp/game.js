@@ -2,6 +2,7 @@ function perform(match, comm)
 {
     var set = new game(match, comm)
     set.launch()
+    return set
 }
 
 function communicator(comm, role)
@@ -86,6 +87,13 @@ function game(match, comm)
             {
                 this.comm.receive(this.callback("watch"), this.timeout);
             }
+            /*
+            else if (obj.content === "yell")
+            {
+                yell()
+                this.comm.receive(this.callback("watch"), this.timeout);
+            }
+            */
             else
             {
                 var turn = obj.content
@@ -113,6 +121,7 @@ function game(match, comm)
         }
 
         this.match.play.toggleTurn();
+        updateTitle()
     }
 
     this.match.setTurnHandler(this.callback("onestep"));

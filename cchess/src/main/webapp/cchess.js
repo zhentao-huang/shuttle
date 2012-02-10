@@ -1,10 +1,20 @@
+// Define a chessman
+// This object is a combination of chessman's attributes
+//    id    : integer, the index of the chessman in composition.cms array
+//    type  : string, the first char is "r"(red) or "b"(black), the
+//            following are the name of the chess. Type is also an index
+//            map to picture of chessman
+//    alive : is the cchess is still alive
 function cchessman(id, type)
 {
     this.id =id
     this.type = type
     this.alive = true
-}
+} // end of function cchessman
 
+// Define a map of chessman.type to picture
+//    pmap      : a map of data
+//    get(type) : Get a picture file by specified type
 function picmap()
 {
     this.pmap = {
@@ -29,8 +39,11 @@ function picmap()
     {
         return this.pmap[type];
     }
-}
+} // end of function pic map
 
+// Define a composition of chessmans, setup chessmans' position in the board
+//    ps            : the 2D array of chessmans
+//    cms           : the map of chassmans, you can get any array of a type of chessman
 function composition(side)
 {
     this.ps= new Array(10)
@@ -92,6 +105,8 @@ function composition(side)
         }
     }
 
+    // Begin deploy chessman, with or without a specified map of 
+    // chessmans's location
     this.begin = function(map)
     {
         if (!map)
@@ -111,6 +126,15 @@ function composition(side)
 
 } //end of composition
 
+// Define a board, keep properties of a picture of board
+//   origX, origY : the offset of left top corner of the board
+//   gapX , gapY  : the gap between points of the board
+//   cmW  , cmH   : the preferred chessman's width and height
+//   bW   , bH    : the width and height of board
+//   rW   , rH    : the real size of width and height in a screen
+//   ratio        : the scale of width and height of the board
+//   scale        : the scale of zoom of image original size and real
+//                  device screen size
 function board(pic)
 {
     this.pic = pic
@@ -160,8 +184,19 @@ function board(pic)
         context.canvas.setAttribute("style","height:" + height + "px");
         this.setRealSize(clientWidth, height);
     }
-}
+} // end of function board
 
+// Define a chess match
+// This object define a combination of all match stuffs
+//    comp     : composition of the match
+//    pmap     : picmap
+//    bd       : board
+//    aw       : action wrapper
+//    bgColor  : background color, should be move to bd!!
+//    play     : rule and turn's check
+//    context  : 2d context of canvas
+//    dcm      : current moving chessman
+//
 function chessmatch(comp, pmap, bd, aw)
 {
     this.comp = comp
@@ -487,8 +522,9 @@ function chessmatch(comp, pmap, bd, aw)
         this.aw.setPointMoveHandler(canvas, this.callback("pointMoveHandler"));
         this.aw.setPointUpHandler(canvas, this.callback("pointUpHandler"));
     }
-}
+} // end of function chessmanmatch
 
+// Add callback function to chessmatch object
 applyCallback(chessmatch)
 
 var pos = 20;
@@ -502,6 +538,9 @@ function log(txt)
     line += gap
 }
 
+// Define a wrapper to enable over mobile device browser and
+// Chrome browser acton well and similar
+//    getEventXnY(event) : get point position from event object
 function EventWrapper()
 {
     this.setPointDownHandler = function(obj, func)
@@ -554,12 +593,12 @@ function EventWrapper()
 
         return {x:mX, y:mY}
     }
-}
+}  // end of function EventWrapper;
 
 function nodefault(ev)
 {
     ev.preventDefault()
-}
+}  // end of function nodefault
 
 function startGame(side, map)
 {
@@ -582,4 +621,4 @@ function startGame(side, map)
     match.drawBoard(context)
 
     return match
-}
+}  // end of function startGame
