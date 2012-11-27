@@ -603,14 +603,14 @@ public class TrendBoxService extends Service
                 nioConnector.setUseDirectBuffers(false);
                 nioConnector.setPort(_port);
                 server.addConnector(nioConnector);
-                Log.i(TAG, "Configured "+SelectChannelConnector.class.getName()+" on port "+_port);
+                Log.i(TAG, "Nio Configured "+SelectChannelConnector.class.getName()+" on localhost port "+_port);
             }
             else
             {
                 SocketConnector bioConnector = new SocketConnector();
                 bioConnector.setPort(_port);
                 server.addConnector(bioConnector);
-                Log.i(TAG, "Configured "+SocketConnector.class.getName()+" on port "+_port);
+                Log.i(TAG, "bio Configured "+SocketConnector.class.getName()+" on localhost port "+_port);
             }
 
             if (_useSSL)

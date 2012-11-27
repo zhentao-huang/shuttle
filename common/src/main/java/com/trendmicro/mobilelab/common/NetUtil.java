@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.InetAddress;
+import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -15,24 +16,30 @@ import android.util.Log;
 public class NetUtil 
 {
 	private static final int bufferSize = 64*1024;
+	private static final String tag = "NetUtil";
 	
 	public static String getLocalIpAddress() {
+		String localip = null;
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface
 					.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
+				Log.i(tag, intf.getDisplayName());
 				for (Enumeration<InetAddress> enumIpAddr = intf
 						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) {
-						return inetAddress.getHostAddress().toString();
+					if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress()) {
+						localip = inetAddress.getHostAddress().toString();
+						return localip;
 					}
+					Log.i(tag, "ip = " + inetAddress.getHostAddress().toString() + "; local = " + inetAddress.isLoopbackAddress() + "; str = " + inetAddress);
+					
 				}
 			}
 		} catch (SocketException ex) {
 			Log.e("WifiPreference IpAddress", ex.toString());
 		}
-		return null;
+		return localip;
 	}
 	
 	public static void copyIO(InputStream in, OutputStream out) throws IOException

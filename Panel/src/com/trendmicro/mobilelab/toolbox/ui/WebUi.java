@@ -1,5 +1,6 @@
 package com.trendmicro.mobilelab.toolbox.ui;
 
+import com.trendmicro.mobilelab.common.NetUtil;
 import com.trendmicro.mobilelab.toolbox.R;
 import com.trendmicro.mobilelab.toolbox.TrendBox;
 import com.trendmicro.mobilelab.toolbox.TrendBoxDownloader;
@@ -104,7 +105,7 @@ public class WebUi extends Activity
         settings.setLoadWithOverviewMode(false);
         mWebView.setWebViewClient(new WebViewClientDemo());
         
-        String url = "http://127.0.0.1:8000/";
+        String url = "http://" + NetUtil.getLocalIpAddress() + ":8000/";
         
         if (savedInstanceState != null && savedInstanceState.getString(SAVED_URL) != null)
         {
