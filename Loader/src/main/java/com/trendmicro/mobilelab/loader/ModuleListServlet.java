@@ -221,7 +221,7 @@ public class ModuleListServlet extends HttpServlet {
 					
 					if (readable)
 					{
-						String localip = NetUtil.getLocalIpAddress();
+						String localip = NetUtil.getLocalIpAddress(getAndroidContext());
 						
 						String localapk = "http://" + localip + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
 						

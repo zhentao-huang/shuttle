@@ -118,7 +118,7 @@ public class Manager extends HttpServlet {
 				String contextPath = handler.getContextPath();
 				StringBuilder builder = new StringBuilder();
 				String img = null;
-				builder.append("http://" + NetUtil.getLocalIpAddress() + ":8000");
+				builder.append("http://" + NetUtil.getLocalIpAddress(mContext) + ":8000");
 				String base = builder.toString();
 				builder.append(contextPath);
 				if (contextPath.equals("/"))
@@ -154,15 +154,15 @@ public class Manager extends HttpServlet {
 		{
 			resp.setContentType("text/plain");
 			PrintWriter out = resp.getWriter();
-			String url = "http://" + NetUtil.getLocalIpAddress() + ":8000" + encoder.encode(pathInfo.substring("/ip".length())); 
+			String url = "http://" + NetUtil.getLocalIpAddress(mContext) + ":8000" + encoder.encode(pathInfo.substring("/ip".length())); 
 			out.print(url);
 		}
 		else if (pathInfo.startsWith("/qrip"))
 		{
 			resp.setContentType("text/plain");
 			PrintWriter out = resp.getWriter();
-			String url = "http://" + NetUtil.getLocalIpAddress() + ":8000" + encoder.encode(encoder.encode(pathInfo.substring("/qrip".length()))); 
-			out.print("http://" + NetUtil.getLocalIpAddress() + ":8000/manager/qr/" + url);
+			String url = "http://" + NetUtil.getLocalIpAddress(mContext) + ":8000" + encoder.encode(encoder.encode(pathInfo.substring("/qrip".length()))); 
+			out.print("http://" + NetUtil.getLocalIpAddress(mContext) + ":8000/manager/qr/" + url);
 		}
 		else if (pathInfo.startsWith("/qr"))
 		{

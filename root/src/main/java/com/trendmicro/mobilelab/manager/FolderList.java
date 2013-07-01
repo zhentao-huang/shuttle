@@ -10,11 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import android.content.Context;
 import android.util.Log;
 import android.os.Environment;
 
@@ -38,6 +40,7 @@ public class FolderList extends HttpServlet {
 
 	private static final String TAG = "TrendBox";
 	private File mRootPath;
+	private static final String ANDROID_CONTEXT_NAME = "com.trendmicro.mobilelab.toolbox.context";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -70,7 +73,10 @@ public class FolderList extends HttpServlet {
 				String down = encoder.encode("/flist/down" + pad + file.getName());
 				Log.i(TAG, "endcoded url = " + url);
 				Log.i(TAG, "endcoded down = " + down);
-				String localip = NetUtil.getLocalIpAddress();
+                                
+                                ServletContext sc = getServletContext();
+                                Context context = (Context) sc.getAttribute(ANDROID_CONTEXT_NAME);
+				String localip = NetUtil.getLocalIpAddress(context);
 				
 				table
 					.addChild("tr")

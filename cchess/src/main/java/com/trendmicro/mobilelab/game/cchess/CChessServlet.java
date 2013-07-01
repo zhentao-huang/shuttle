@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.util.Log;
+import android.content.Context;
 
 import com.trendmicro.mobilelab.common.HtmlComplement;
 import com.trendmicro.mobilelab.common.NetUtil;
@@ -28,6 +29,8 @@ public class CChessServlet extends HttpServlet {
 	private static final String TAG = "TrendBox";
 	private ServletContext mContext;
 
+	private static final String ANDROID_CONTEXT_NAME = "com.trendmicro.mobilelab.toolbox.context";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -41,7 +44,8 @@ public class CChessServlet extends HttpServlet {
 	    		Log.i(TAG, "Find index.html");
 	    		InputStreamReader reader = new InputStreamReader(in);
         		PrintWriter out = resp.getWriter();
-				final String localip = NetUtil.getLocalIpAddress();
+                        Context context = (Context) mContext.getAttribute(ANDROID_CONTEXT_NAME);
+				final String localip = NetUtil.getLocalIpAddress(context);
 				final URLEncoder encoder = new URLEncoder();
         		HtmlComplement.process(reader, out, new HtmlComplement.Complement() {
 					

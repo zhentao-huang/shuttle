@@ -105,7 +105,7 @@ public class WebUi extends Activity
         settings.setLoadWithOverviewMode(false);
         mWebView.setWebViewClient(new WebViewClientDemo());
         
-        String url = "http://" + NetUtil.getLocalIpAddress() + ":8000/";
+        String url = "http://" + NetUtil.getLocalIpAddress(this)+ ":8000/";
         
         if (savedInstanceState != null && savedInstanceState.getString(SAVED_URL) != null)
         {
