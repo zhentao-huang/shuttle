@@ -2,17 +2,17 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-    <artifactId>trendbox</artifactId>
+    <groupId>net.shuttleplay.shuttle</groupId>
+    <artifactId>shuttle</artifactId>
     <version>1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-  <artifactId>container</artifactId>
+  <groupId>net.shuttleplay.shuttle</groupId>
+  <artifactId>web</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
-  <name>Trend :: Toolbox web container</name>
-  <description>Jetty Adaptations for Trend tool box</description>
+  <name>ShuttlePlay :: Web container</name>
+  <description>Jetty Adaptations</description>
   <properties>
     <assembly.directory>target/assembly</assembly.directory>
   </properties>

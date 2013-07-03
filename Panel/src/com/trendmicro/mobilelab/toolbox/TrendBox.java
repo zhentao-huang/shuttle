@@ -536,7 +536,7 @@ public class TrendBox extends Activity
                     
                     try
                     {
-                        String[] names = new String[]{"root", "loader", "webdav","cchess"};
+                        String[] names = new String[]{"webroot", "appshare", "webdav"};
                         for (String name : names)
                         {
                             File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
@@ -548,7 +548,7 @@ public class TrendBox extends Activity
                                 int resId = getResources().getIdentifier(name,"raw",getPackageName());
                                 InputStream warStream = getResources().openRawResource(resId);
                            
-                                if (name.equals("root"))
+                                if (name.equals("webroot"))
                                 {
                                     Installer.install(warStream, "/" ,webappDir, name , true);
                                 }

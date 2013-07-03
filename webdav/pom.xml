@@ -3,13 +3,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <parent>
-    <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-    <artifactId>trendbox</artifactId>
+    <groupId>net.shuttleplay.shuttle</groupId>
+    <artifactId>shuttle</artifactId>
     <version>1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>webdav</artifactId>
-  <name>TrendBox :: Webdav</name>
+  <name>ShuttlePlay :: SD card WebDAV share</name>
   <packaging>war</packaging>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -27,7 +27,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+        <groupId>net.shuttleplay.shuttle</groupId>
         <artifactId>common</artifactId>
         <version>1.0</version>
         <scope>provided</scope>

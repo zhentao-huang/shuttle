@@ -2,16 +2,16 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
-     <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-     <artifactId>trendbox</artifactId>
+     <groupId>net.shuttleplay.shuttle</groupId>
+     <artifactId>shuttle</artifactId>
      <version>1.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
-   <artifactId>panel</artifactId>
+   <artifactId>shuttleapp</artifactId>
    <version>1.0</version>
    <packaging>apk</packaging>
-   <name>Trend :: Toolbox Android Application</name>
-   <description>Trend Toolbox Android Package</description>
+   <name>ShuttlePlay :: Shuttle Application</name>
+   <description>Shuttle Android Application</description>
    <properties>
      <dep.classes.dir>${project.build.directory}/dependency-classes</dep.classes.dir>
      <war.classes.dir>${project.build.directory}/included-wars</war.classes.dir>
@@ -44,43 +44,45 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+      <groupId>net.shuttleplay.shuttle</groupId>
       <artifactId>common</artifactId>
       <type>jar</type>
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-      <artifactId>container</artifactId>
+      <groupId>net.shuttleplay.shuttle</groupId>
+      <artifactId>web</artifactId>
       <type>jar</type>
       <version>${project.version}</version>
       <exclusions>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-      <artifactId>root</artifactId>
+      <groupId>net.shuttleplay.shuttle</groupId>
+      <artifactId>webroot</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-      <artifactId>loader</artifactId>
+      <groupId>net.shuttleplay.shuttle</groupId>
+      <artifactId>appshare</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+      <groupId>net.shuttleplay.shuttle</groupId>
       <artifactId>webdav</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
+    <!--
     <dependency>
       <groupId>com.trendmicro.mobilelab.toolbox</groupId>
       <artifactId>cchess</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
+    -->
     <dependency>
       <groupId>com.google.zxing</groupId>
       <artifactId>core</artifactId>
@@ -108,7 +110,7 @@
                 <overWriteIfNewer>true</overWriteIfNewer>
                 <excludeTransitive>true</excludeTransitive>
                 <stripVersion>true</stripVersion>
-                <includeArtifactIds>root,loader,webdav,cchess</includeArtifactIds>
+                <includeArtifactIds>webroot,appshare,webdav</includeArtifactIds>
       	      </configuration>
       	    </execution>
       	  </executions>

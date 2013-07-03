@@ -2,12 +2,12 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <groupId>com.trendmicro.mobilelab.toolbox</groupId>
-   <artifactId>trendbox</artifactId>
+   <groupId>net.shuttleplay.shuttle</groupId>
+   <artifactId>shuttle</artifactId>
    <version>1.0</version>
    <packaging>pom</packaging>
-   <name>Trend :: ToolBox </name>
-   <description>Trend Tool Box</description>
+   <name>ShuttlePlay :: Shuttle </name>
+   <description>Mobile Web Server, Mobile web application platform</description>
 
    <modules>
        <module>Container</module>
@@ -16,7 +16,7 @@
        <module>common</module>
        <module>root</module>
        <module>Loader</module>
-       <module>cchess</module>
+       <!-- <module>cchess</module> -->
        <module>webdav</module>
        <module>Panel</module>
    </modules>
