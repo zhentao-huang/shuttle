@@ -10,15 +10,15 @@
    <description>Mobile Web Server, Mobile web application platform</description>
 
    <modules>
-       <module>Container</module>
+       <module>webcontainer</module>
        <!--  <module>Webapp</module>  -->
        <module>core</module>
        <module>common</module>
-       <module>root</module>
-       <module>Loader</module>
+       <module>webroot</module>
+       <module>appshare</module>
        <!-- <module>cchess</module> -->
        <module>webdav</module>
-       <module>Panel</module>
+       <module>shuttleapp</module>
    </modules>
 
    <properties>
