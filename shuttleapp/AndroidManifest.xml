@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.trendmicro.mobilelab.toolbox"
+  package="net.shuttleplay.shuttle"
   android:versionCode="1"
   android:versionName="1.0">
 
@@ -14,7 +14,7 @@
   <application
     android:icon="@drawable/icon" android:label="@string/app_name">
 
-        <activity android:name="com.trendmicro.mobilelab.qrscanner.QReaderActivity"
+        <activity android:name="net.shuttleplay.shuttle.qrscanner.QReaderActivity"
                   android:label="@string/app_name"
                   android:screenOrientation="landscape"
                   android:clearTaskOnLaunch="true"
@@ -31,7 +31,7 @@
         </activity>
     
     <activity
-      android:name=".TrendBox"
+      android:name=".app.TrendBox"
       android:label="@string/app_name"
       android:icon="@drawable/icon"
       android:theme="@style/Theme.IJetty"

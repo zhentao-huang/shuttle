@@ -42,7 +42,7 @@ import net.sf.webdav.locking.ResourceLocks;
 
 import android.os.Environment;
 import android.util.Log;
-import com.trendmicro.mobilelab.common.NetUtil;
+import net.shuttleplay.shuttle.common.NetUtil;
 
 public class DoGet extends DoHead {
 
