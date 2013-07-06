@@ -9,19 +9,19 @@
   	
 	<servlet>
 		<servlet-name>Manager</servlet-name>
-		<servlet-class>com.trendmicro.mobilelab.manager.Manager</servlet-class>
+		<servlet-class>net.shuttleplay.shuttle.manager.Manager</servlet-class>
 	</servlet>
 	
 	<servlet>
 	   <servlet-name>FolderList</servlet-name>
-	   <servlet-class>com.trendmicro.mobilelab.manager.FolderList</servlet-class>
+	   <servlet-class>net.shuttleplay.shuttle.manager.FolderList</servlet-class>
 	</servlet>
 
+        <!--
         <servlet>
 	   <servlet-name>Communicator</servlet-name>
-	   <servlet-class>com.trendmicro.mobilelab.manager.Communicator</servlet-class>
+	   <servlet-class>net.shuttleplay.shuttle.manager.Communicator</servlet-class>
 	</servlet>
-	<!-- 
 	<servlet>
 		<servlet-name>ModuleListServlet2</servlet-name>
 		<servlet-class>com.trendmicro.mobilelab.loader.ModuleListServlet</servlet-class>
@@ -52,12 +52,12 @@
         <url-pattern>/flist/*</url-pattern>
     </servlet-mapping>
 
+	<!-- 
     <servlet-mapping>
         <servlet-name>Communicator</servlet-name>
         <url-pattern>/comm</url-pattern>
     </servlet-mapping>
 	
-	<!-- 
     <security-constraint>
       <web-resource-collection>
         <web-resource-name>I-Jetty Console</web-resource-name>

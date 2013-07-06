@@ -10,7 +10,7 @@
 	
 	<servlet>
 		<servlet-name>ModuleListServlet</servlet-name>
-		<servlet-class>com.trendmicro.mobilelab.loader.ModuleListServlet</servlet-class>
+		<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>
 		<init-param>
 			<param-name>Non-Trend</param-name>
 			<param-value>0</param-value>
@@ -19,7 +19,7 @@
 	
 	<servlet>
 		<servlet-name>ModuleListServlet2</servlet-name>
-		<servlet-class>com.trendmicro.mobilelab.loader.ModuleListServlet</servlet-class>
+		<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>
 		<init-param>
 			<param-name>Non-Trend</param-name>
 			<param-value>1</param-value>

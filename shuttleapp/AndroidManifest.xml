@@ -47,23 +47,23 @@
     </activity>
 
     <activity
-      android:name=".TrendBoxEditor"
+      android:name=".app.TrendBoxEditor"
       android:theme="@style/Theme.IJetty" />
     <activity
-      android:name=".TrendBoxDownloader"
+      android:name=".app.TrendBoxDownloader"
       android:theme="@style/Theme.IJetty" />
     <activity
       android:name=".SdCardUnavailableActivity"
       android:theme="@style/Theme.IJetty" />
     <activity
-      android:name=".ui.WebUi" 
+      android:name=".app.ui.WebUi" 
       android:configChanges="orientation"
       android:theme="@style/Theme.IJetty"/>
   	<service 
-  	  android:name=".TrendBoxService">
+  	  android:name=".app.TrendBoxService">
   	  <intent-filter>
   	     <action
-  	       android:name="com.trendmicro.mobilelab.TrendBoxService"/>
+  	       android:name="net.shuttleplay.shuttle.app.TrendBoxService"/>
   	  </intent-filter>
   	</service>
   </application>

@@ -719,7 +719,7 @@ public class TrendBox extends Activity
         if (TrendBoxService.isRunning())
         {
             File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
-            String name = "loader";
+            String name = "appshare";
             
             File loader = new File(webappDir, name);
 

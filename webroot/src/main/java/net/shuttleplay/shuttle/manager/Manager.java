@@ -54,7 +54,7 @@ public class Manager extends HttpServlet {
 		super.init();
 		
 		final Context context = (Context) getServletContext().getAttribute(ANDROID_CONTEXT_ATTRIBUTE);
-		context.bindService(new Intent("net.shuttleplay.shuttle.ShuttleService"), new ServiceConnection() {
+		context.bindService(new Intent("net.shuttleplay.shuttle.app.TrendBoxService"), new ServiceConnection() {
 			
 			public void onServiceDisconnected(ComponentName arg0) {
 				mServer = null;

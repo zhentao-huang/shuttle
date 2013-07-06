@@ -149,8 +149,8 @@ public class TrendBoxService extends Service
     private static final String TAG = "TrendBox";
     
     private static Resources __resources;
-    private static final String CONTENT_RESOLVER_ATTRIBUTE = "net.shuttleplay.shuttle.app.contentResolver";
-    private static final String ANDROID_CONTEXT_ATTRIBUTE = "net.shuttleplay.shuttle.app.context";
+    private static final String CONTENT_RESOLVER_ATTRIBUTE = "net.shuttleplay.shuttle.contentResolver";
+    private static final String ANDROID_CONTEXT_ATTRIBUTE = "net.shuttleplay.shuttle.context";
 //    private static final String JETTY_SERVER_ATTRIBUTE = "net.shuttleplay.shuttle.app.jetty";
     
     public static final int __START_PROGRESS_DIALOG = 0;
@@ -165,7 +165,7 @@ public class TrendBoxService extends Service
     public static final String[] __configurationClasses = 
         new String[]
         {
-            "net.shuttleplay.shuttle.app.container.webapp.AndroidWebInfConfiguration",
+            "net.shuttleplay.shuttle.webcontainer.webapp.AndroidWebInfConfiguration",
             "org.eclipse.jetty.webapp.WebXmlConfiguration",
             "org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
             "org.eclipse.jetty.webapp.TagLibConfiguration" 

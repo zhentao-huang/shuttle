@@ -30,7 +30,7 @@ public class AndroidLog implements Logger
 
     public AndroidLog()
     {
-        this ("com.trendmicro.mobilelab.toolbox.AndroidLog");
+        this ("net.shuttleplay.shuttle.webcontainer.log.AndroidLog");
     }
     
     public AndroidLog(String name)
