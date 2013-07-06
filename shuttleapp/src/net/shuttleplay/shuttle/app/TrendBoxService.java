@@ -332,6 +332,7 @@ public class TrendBoxService extends Service
         super();
         _handler = new android.os.Handler ()
         {
+            private int deployed = 0;
             public void handleMessage(Message msg) {
                 switch (msg.getData().getInt("state"))
                 {
@@ -407,10 +408,13 @@ public class TrendBoxService extends Service
                     }
                     case __LOADER_DEPLOYED:
                     {
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.loader_deployed);
-                        Intent deployIntent = new Intent(TrendBox.__DEPLOY_ACTION);
-                        deployIntent.addCategory("default");
-                        sendBroadcast(deployIntent);
+                        if (++deployed == 3)
+                        {
+                            IJettyToast.showServiceToast(TrendBoxService.this,R.string.loader_deployed);
+                            Intent deployIntent = new Intent(TrendBox.__DEPLOY_ACTION);
+                            deployIntent.addCategory("default");
+                            sendBroadcast(deployIntent);
+                        }
                         break;
                     }
                 }

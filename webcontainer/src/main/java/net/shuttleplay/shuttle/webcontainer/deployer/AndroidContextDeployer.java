@@ -135,10 +135,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
             context.start();
         }
         
-        if (filename.endsWith("loader.xml"))
-        {
-        	sendMessage(6); 	// TrendBoxService.__LOADER_DEPLOYED
-        }
+        sendMessage(6); 	// TrendBoxService.__LOADER_DEPLOYED
     }
     
     public void setAndroidHandler(Handler handler)
