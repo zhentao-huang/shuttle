@@ -10,10 +10,10 @@
 	// <![CDATA[
 	$(document).ready(function() 
 		{
-			$("#apknum").load("/loader/modlist2/");
-			$("#applist").load("/loader/modlist2/view");
-			$("#ip").load("/manager/ip/loader/index2.html");
-            $.get("/manager/qrip/loader/index2.html", {}, function(data)
+			$("#apknum").load("/appshare/modlist2/");
+			$("#applist").load("/appshare/modlist2/view");
+			$("#ip").load("/manager/ip/appshare/index2.html");
+            $.get("/manager/qrip/appshare/index2.html", {}, function(data)
                     {$("#qrip").attr("href",data)});
         }
 	// ]]>
@@ -40,7 +40,7 @@
         <h1 class="pageheader">Share Non-Trend APPs</h1>
         <div id="content">
             <h2>Welcome to the Non-Trend APP Shuttle!</h2>
-            <img src="/loader/icon.png" alt="Logo" width="96" height="96" style="float: right;" />
+            <img src="/appshare/icon.png" alt="Logo" width="96" height="96" style="float: right;" />
             <p>We total found <span id="apknum"> </span> Non-Trend APPs in your mobile phone</p>
             <p>The home url is <a id="qrip"><span id="ip"></span></a></p>
         </div>

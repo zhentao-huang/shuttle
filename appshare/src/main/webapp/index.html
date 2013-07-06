@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>Trend APK Shuttle</title>
+    <title>Application Shuttle</title>
     <link rel="stylesheet" type="text/css" media="screen" href="/console.css" />
     <META name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
     <META http-equiv="Pragma" content="no-cache"/>
@@ -10,10 +10,10 @@
 	// <![CDATA[
 	$(document).ready(function() 
 		{
-			$("#apknum").load("/loader/modlist");
-			$("#applist").load("/loader/modlist/view");
-			$("#ip").load("/manager/ip/loader");
-            $.get("/manager/qrip/loader", {}, function(data)
+			$("#apknum").load("/appshare/modlist");
+			$("#applist").load("/appshare/modlist/view");
+			$("#ip").load("/manager/ip/appshare");
+            $.get("/manager/qrip/appshare", {}, function(data)
                     {$("#qrip").attr("href",data)});
         }
 	// ]]>
@@ -40,9 +40,9 @@
         <h1 class="pageheader">Share Trend APPs</h1>
         <div id="content">
             <h2>Welcome to the Trend APP Shuttle!</h2>
-            <img src="/loader/icon.png" alt="Logo" width="96" height="96" style="float: right;" />
+            <img src="/appshare/icon.png" alt="Logo" width="96" height="96" style="float: right;" />
             <p>We total found <span id="apknum"> </span> Trend APPs in your mobile phone</p>
-            <p>If you'd like to share other apps please click <a href="/loader/index2.html">here</a></p>
+            <p>If you'd like to share other apps please click <a href="/appshare/index2.html">here</a></p>
             <p>The home url is <a id="qrip"><span id="ip"></span></a></p>
         </div>
         

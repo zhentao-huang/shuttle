@@ -72,7 +72,7 @@ public class ModuleListServlet extends HttpServlet {
 		if (!mInited)
 		{
 			mNonTrend = "1".equals(getServletConfig().getInitParameter("Non-Trend"));
-			mPath = mNonTrend ? "/loader/modlist2/" : "/loader/modlist/";
+			mPath = mNonTrend ? "/appshare/modlist2/" : "/appshare/modlist/";
 			mInited = true;
 		}
 		String pathInfo = req.getPathInfo();
@@ -136,13 +136,13 @@ public class ModuleListServlet extends HttpServlet {
 		{
 			resp.setContentType("text/plain");
 			PrintWriter out = resp.getWriter();
-			out.print("http://" + getLocalIpAddress() + ":8000/loader");
+			out.print("http://" + getLocalIpAddress() + ":8000/appshare");
 		}
 		else if (pathInfo.startsWith("/ip2"))
 		{
 			resp.setContentType("text/plain");
 			PrintWriter out = resp.getWriter();
-			out.print("http://" + getLocalIpAddress() + ":8000/loader/index2.html");
+			out.print("http://" + getLocalIpAddress() + ":8000/appshare/index2.html");
 		}
 		*/
 		else if (pathInfo.startsWith("/down"))
@@ -223,7 +223,7 @@ public class ModuleListServlet extends HttpServlet {
 					{
 						String localip = NetUtil.getLocalIpAddress(getAndroidContext());
 						
-						String localapk = "http://" + localip + ":8000/loader/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
+						String localapk = "http://" + localip + ":8000/appshare/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
 						
 						StringBuilder urlstr = new StringBuilder();
 	//					urlstr.append("https://chart.googleapis.com/chart?");
