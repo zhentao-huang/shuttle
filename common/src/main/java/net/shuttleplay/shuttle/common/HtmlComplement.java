@@ -45,7 +45,7 @@ public class HtmlComplement
     		}
     		catch (IOException e)
     		{
-    			Log.e("TrendBox", "Read input error", e);
+    			Log.e("Shuttle", "Read input error", e);
     		}
     	}
 	}

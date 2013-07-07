@@ -23,7 +23,7 @@ import android.util.Log;
 public class DefaultHandler extends org.eclipse.jetty.server.handler.DefaultHandler
 {
 
-    public static final String TAG = "TrendBox";
+    public static final String TAG = "Shuttle";
     
     public DefaultHandler()
     {
@@ -93,7 +93,7 @@ public class DefaultHandler extends org.eclipse.jetty.server.handler.DefaultHand
                 Log.w(TAG, "ContextPath = " + contextPath);
                 if (contextPath.equals("/webdav"))
                 {
-                    writer.write("<li><img src=\"" + builder.toString() + "/trendbox/webapps/webdav/icon.png\" width=\"72\" height=\"72\"/><a href=\"");
+                    writer.write("<li><img src=\"" + builder.toString() + "/Shuttle/webapps/webdav/icon.png\" width=\"72\" height=\"72\"/><a href=\"");
                 }
                 else
                 {

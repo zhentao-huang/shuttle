@@ -18,7 +18,6 @@ package net.shuttleplay.shuttle.app;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -66,7 +65,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * IJetty
@@ -75,7 +73,7 @@ import android.widget.Toast;
  * 
  * Can start/stop services: + IJettyService
  */
-public class TrendBox extends Activity
+public class Shuttle extends Activity
 {
 
     @Override
@@ -93,19 +91,19 @@ public class TrendBox extends Activity
         {
         case R.id.download:
         {
-            TrendBoxDownloader.show(this);
+            ShuttleDownloader.show(this);
             break;
         }
         case R.id.config:
         {
-            TrendBoxEditor.show(TrendBox.this);
+            ShuttleEditor.show(Shuttle.this);
             break;
         }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private static final String TAG = "TrendBox";
+    private static final String TAG = "Shuttle";
     
     public static final String __START_ACTION = "net.shuttleplay.shuttle.app.start";
     public static final String __STOP_ACTION = "net.shuttleplay.shuttle.app.stop";
@@ -134,7 +132,7 @@ public class TrendBox extends Activity
     public static final int __SETUP_NOTDONE = 0;
 
     
-    public static final File __TRENDBOX_DIR;
+    public static final File __SHUTTLE_DIR;
     private Button startButton;
     private Button stopButton;
     private Button configButton;
@@ -194,12 +192,12 @@ public class TrendBox extends Activity
         {
             boolean updateNeeded = isUpdateNeeded();
             
-            stopService(new Intent(TrendBox.this,TrendBoxService.class));
+            stopService(new Intent(Shuttle.this,ShuttleService.class));
             
             //create the jetty dir structure
-            File jettyDir = __TRENDBOX_DIR;
+            File jettyDir = __SHUTTLE_DIR;
             
-            Log.w(TAG, "ProgressThread.run(), first delete " + __TRENDBOX_DIR.getAbsolutePath());
+            Log.w(TAG, "ProgressThread.run(), first delete " + __SHUTTLE_DIR.getAbsolutePath());
             
             if (jettyDir.exists())
             {
@@ -210,11 +208,11 @@ public class TrendBox extends Activity
             if (!jettyDir.exists())
             {
                 boolean made = jettyDir.mkdirs();
-                Log.i(TAG,"Made " + __TRENDBOX_DIR + ": " + made);
+                Log.i(TAG,"Made " + __SHUTTLE_DIR + ": " + made);
             }
             else
             {
-                Log.i(TAG,__TRENDBOX_DIR + " exists");
+                Log.i(TAG, __SHUTTLE_DIR + " exists");
                 
 //
 //                // Always update if ${jetty.home}/.update exists (DEBUG)
@@ -363,7 +361,7 @@ public class TrendBox extends Activity
     
     private void startJettyServer()
     {
-        Intent intent = new Intent(TrendBox.this,TrendBoxService.class);
+        Intent intent = new Intent(Shuttle.this,ShuttleService.class);
         intent.putExtra(__PORT,__PORT_DEFAULT);
         intent.putExtra(__NIO,__NIO_DEFAULT);
         intent.putExtra(__SSL,__SSL_DEFAULT);
@@ -373,7 +371,7 @@ public class TrendBox extends Activity
     
     static
     {
-        __TRENDBOX_DIR = new File(Environment.getExternalStorageDirectory(),"trendbox"); 
+        __SHUTTLE_DIR = new File(Environment.getExternalStorageDirectory(),"Shuttle");
         // Ensure parsing is not validating - does not work with android
         System.setProperty("org.eclipse.jetty.xml.XmlParser.Validating","false");
 
@@ -382,7 +380,7 @@ public class TrendBox extends Activity
         org.eclipse.jetty.util.log.Log.setLog(new AndroidLog());
     }
     
-    public TrendBox ()
+    public Shuttle()
     {
         super();    
         
@@ -436,7 +434,7 @@ public class TrendBox extends Activity
 
     protected int getStoredJettyVersion()
     {
-        File jettyDir = __TRENDBOX_DIR;
+        File jettyDir = __SHUTTLE_DIR;
         if (!jettyDir.exists())
         {
             return -1;
@@ -539,7 +537,7 @@ public class TrendBox extends Activity
                         String[] names = new String[]{"webroot", "appshare", "webdav"};
                         for (String name : names)
                         {
-                            File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+                            File webappDir = new File (__SHUTTLE_DIR +"/"+__WEBAPP_DIR);
                             
                             File appDir = new File(webappDir, name);
     
@@ -559,7 +557,7 @@ public class TrendBox extends Activity
                                 
                                 Log.i(TAG, "Plugin \"" + name + "\" installing");
                                 
-                                IJettyToast.showServiceToast(TrendBox.this, getResources().getString(R.string.loader_installed, name) );
+                                IJettyToast.showServiceToast(Shuttle.this, getResources().getString(R.string.loader_installed, name) );
                             }
                         }
                         
@@ -569,7 +567,7 @@ public class TrendBox extends Activity
                         Log.e(TAG, "Bad resource", e);
                     }
                     
-                    if (AndroidInfo.isOnEmulator(TrendBox.this))
+                    if (AndroidInfo.isOnEmulator(Shuttle.this))
                         consolePrint("Set up port forwarding to see i-jetty outside of the emulator.");
                 }
                 else if (__STOP_ACTION.equalsIgnoreCase(intent.getAction()))
@@ -584,9 +582,9 @@ public class TrendBox extends Activity
                 {
 //                    helloButton.setText(R.string.hello_ready);
                     resetHelloButtonState();
-                    if (TrendBoxService.isRunning())
+                    if (ShuttleService.isRunning())
                     {
-                        startActivity(new Intent(TrendBox.this, WebUi.class));
+                        startActivity(new Intent(Shuttle.this, WebUi.class));
                     }
                 }
             }
@@ -602,11 +600,11 @@ public class TrendBox extends Activity
             public void onClick(View v)
             {
                 if (isUpdateNeeded())
-                    IJettyToast.showQuickToast(TrendBox.this,R.string.loading);
+                    IJettyToast.showQuickToast(Shuttle.this,R.string.loading);
                 else 
                 {
                     //TODO get these values from editable UI elements
-                    Intent intent = new Intent(TrendBox.this,TrendBoxService.class);
+                    Intent intent = new Intent(Shuttle.this,ShuttleService.class);
                     intent.putExtra(__PORT,__PORT_DEFAULT);
                     intent.putExtra(__NIO,__NIO_DEFAULT);
                     intent.putExtra(__SSL,__SSL_DEFAULT);
@@ -620,7 +618,7 @@ public class TrendBox extends Activity
         {
             public void onClick(View v)
             {
-                stopService(new Intent(TrendBox.this,TrendBoxService.class));
+                stopService(new Intent(Shuttle.this,ShuttleService.class));
             }
         });
 
@@ -629,7 +627,7 @@ public class TrendBox extends Activity
         {
             public void onClick(View v)
             {
-                TrendBoxEditor.show(TrendBox.this);
+                ShuttleEditor.show(Shuttle.this);
             }
         });
         configButton.setVisibility(View.GONE);
@@ -638,7 +636,7 @@ public class TrendBox extends Activity
         {
             public void onClick(View v)
             {
-                TrendBoxDownloader.show(TrendBox.this);
+                ShuttleDownloader.show(Shuttle.this);
             }
         });
         downloadButton.setVisibility(View.GONE);
@@ -647,7 +645,7 @@ public class TrendBox extends Activity
         {
             public void onClick(View v)
             {
-                startActivity(new Intent(TrendBox.this, WebUi.class));
+                startActivity(new Intent(Shuttle.this, WebUi.class));
             }
         });
         
@@ -656,7 +654,7 @@ public class TrendBox extends Activity
             
             public void onClick(View arg0)
             {
-               startActivity(new Intent(TrendBox.this, QReaderActivity.class)); 
+               startActivity(new Intent(Shuttle.this, QReaderActivity.class));
             }
         });
 //        helloButton.setEnabled(false);
@@ -667,7 +665,7 @@ public class TrendBox extends Activity
 //            {
 //                try
 //                {
-//                    File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+//                    File webappDir = new File (__SHUTTLE_DIR+"/"+__WEBAPP_DIR);
 //                    String name = "loader";
 //                    
 //                    InputStream warStream = getResources().openRawResource(R.raw.loader);
@@ -710,15 +708,15 @@ public class TrendBox extends Activity
 
     public static void show(Context context)
     {
-        final Intent intent = new Intent(context,TrendBox.class);
+        final Intent intent = new Intent(context,Shuttle.class);
         context.startActivity(intent);
     }
     
     private void resetHelloButtonState()
     {
-        if (TrendBoxService.isRunning())
+        if (ShuttleService.isRunning())
         {
-            File webappDir = new File (__TRENDBOX_DIR+"/"+__WEBAPP_DIR);
+            File webappDir = new File (__SHUTTLE_DIR +"/"+__WEBAPP_DIR);
             String name = "appshare";
             
             File loader = new File(webappDir, name);
@@ -759,14 +757,14 @@ public class TrendBox extends Activity
                 editor.putBoolean("SetupOnce",setupOnce);
                 editor.commit();
             }
-            else if (!TrendBoxService.isRunning())
+            else if (!ShuttleService.isRunning())
             {
                 startJettyServer();
             }
         }
         
         
-        if (TrendBoxService.isRunning())
+        if (ShuttleService.isRunning())
         {
             startButton.setEnabled(false);
             configButton.setEnabled(false);
@@ -794,7 +792,7 @@ public class TrendBox extends Activity
         {
             case __SETUP_PROGRESS_DIALOG:
             {
-                progressDialog = new ProgressDialog(TrendBox.this);
+                progressDialog = new ProgressDialog(Shuttle.this);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDialog.setMessage("Finishing initial install ...");
 
@@ -829,7 +827,7 @@ public class TrendBox extends Activity
 
     protected void setStoredJettyVersion(int version)
     {
-        File jettyDir = __TRENDBOX_DIR;
+        File jettyDir = __SHUTTLE_DIR;
         if (!jettyDir.exists())
         {
             return;

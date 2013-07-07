@@ -82,7 +82,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
         super();
         _scanner = new Scanner();
         _attributes = new AttributesMap();
-        android.util.Log.i("TrendBox", "AndroidContextDeployer initialized", new Throwable());
+        android.util.Log.i("Shuttle", "AndroidContextDeployer initialized", new Throwable());
     }
 
     /* ------------------------------------------------------------ */
@@ -127,7 +127,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
     @SuppressWarnings("unchecked")
     public void deploy(String filename) throws Exception {
         ContextHandler context = createContext(filename);
-        android.util.Log.i("TrendBox", "AndroidContextDeployer deploy " + filename, new Throwable());
+        android.util.Log.i("Shuttle", "AndroidContextDeployer deploy " + filename, new Throwable());
         Log.info("Deploy " + filename + " -> " + context);
         _contexts.addHandler(context);
         _currentDeployments.put(filename, context);
@@ -135,7 +135,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
             context.start();
         }
         
-        sendMessage(6); 	// TrendBoxService.__LOADER_DEPLOYED
+        sendMessage(6); 	// ShuttleService.__LOADER_DEPLOYED
     }
     
     public void setAndroidHandler(Handler handler)
@@ -161,7 +161,7 @@ public class AndroidContextDeployer extends AbstractLifeCycle {
      */
     @Override
     protected void doStart() throws Exception {
-        android.util.Log.i("TrendBox", "AndroidContextDeployer doStart() ", new Throwable());
+        android.util.Log.i("Shuttle", "AndroidContextDeployer doStart() ", new Throwable());
 
         if (_configurationDir == null) {
             Log.warn("No configuration dir specified");

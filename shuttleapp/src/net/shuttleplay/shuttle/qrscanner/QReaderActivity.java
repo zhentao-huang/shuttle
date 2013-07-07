@@ -35,7 +35,7 @@ import android.view.WindowManager;
 
 
 public class QReaderActivity extends Activity implements Callback {
-	private static final String TAG = "TrendBox";
+	private static final String TAG = "Shuttle";
 
 	/** Called when the activity is first created. */
 	@Override

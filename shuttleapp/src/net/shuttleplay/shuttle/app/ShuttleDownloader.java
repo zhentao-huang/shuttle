@@ -48,7 +48,7 @@ import android.widget.TextView;
  *
  * Download and install new webapp
  */
-public class TrendBoxDownloader extends Activity
+public class ShuttleDownloader extends Activity
 {
     public static final int __MSG_DOWNLOAD_SUCCEEDED = 0;
     public static final int __MSG_DOWNLOAD_FAILED = 1;
@@ -74,7 +74,7 @@ public class TrendBoxDownloader extends Activity
                     ((EditText)findViewById(R.id.download_url)).setText("");
                     ((EditText)findViewById(R.id.context_path)).setText("");
                     fileInProgress = null;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TrendBoxDownloader.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ShuttleDownloader.this);
                     builder.setCancelable(true);
                     builder.setMessage(R.string.download_success);
                     builder.setTitle(R.string.success);
@@ -87,7 +87,7 @@ public class TrendBoxDownloader extends Activity
                     _progressBar.setVisibility(ProgressBar.INVISIBLE);
                     ((TextView)findViewById(R.id.loading)).setVisibility(TextView.INVISIBLE);
                     fileInProgress = null;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TrendBoxDownloader.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ShuttleDownloader.this);
                     builder.setCancelable(true);
                     builder.setMessage((String)msg.obj);
                     builder.setTitle(R.string.download_fail);
@@ -110,9 +110,9 @@ public class TrendBoxDownloader extends Activity
     /**
      * IJettyDownloader
      */
-    public TrendBoxDownloader()
+    public ShuttleDownloader()
     {
-        tmpDir = new File(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__TMP_DIR);
+        tmpDir = new File(Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__TMP_DIR);
     }
     
     /** 
@@ -423,7 +423,7 @@ public class TrendBoxDownloader extends Activity
     {
         try
         {
-            File webappDir = new File (TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__WEBAPP_DIR);
+            File webappDir = new File (Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__WEBAPP_DIR);
             String name = file.getName();
             if (name.endsWith(".war") || name.endsWith(".jar"))
                 name = name.substring(0, name.length()-4);
@@ -439,7 +439,7 @@ public class TrendBoxDownloader extends Activity
     }
     
     public static void show(Context context) {
-        final Intent intent = new Intent(context, TrendBoxDownloader.class);
+        final Intent intent = new Intent(context, ShuttleDownloader.class);
         context.startActivity(intent);
     }
 }

@@ -12,7 +12,7 @@
 		<servlet-name>ModuleListServlet</servlet-name>
 		<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>
 		<init-param>
-			<param-name>Non-Trend</param-name>
+			<param-name>Non-Shuttle</param-name>
 			<param-value>0</param-value>
 		</init-param>
 	</servlet>
@@ -21,7 +21,7 @@
 		<servlet-name>ModuleListServlet2</servlet-name>
 		<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>
 		<init-param>
-			<param-name>Non-Trend</param-name>
+			<param-name>Non-Shuttle</param-name>
 			<param-value>1</param-value>
 		</init-param>
 	</servlet>

@@ -56,7 +56,7 @@ public class AndroidWebAppDeployer extends WebAppDeployer {
     public AndroidWebAppDeployer()
     {
     	super();
-        android.util.Log.i("TrendBox", "AndroidWebAppDeployer initial ", new Throwable());
+        android.util.Log.i("Shuttle", "AndroidWebAppDeployer initial ", new Throwable());
     }
 
     /* ------------------------------------------------------------ */
@@ -65,7 +65,7 @@ public class AndroidWebAppDeployer extends WebAppDeployer {
      */
     @Override
     public void doStart() throws Exception {
-        android.util.Log.i("TrendBox", "AndroidWebAppDeployer doStart() ", new Throwable());
+        android.util.Log.i("Shuttle", "AndroidWebAppDeployer doStart() ", new Throwable());
         _deployed = new ArrayList<ServletContextHandler>();
         scan();
         Log.debug("AndroidWebAppDeveloper doStart()");

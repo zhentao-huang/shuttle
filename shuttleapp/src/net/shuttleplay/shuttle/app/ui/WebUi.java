@@ -2,9 +2,6 @@ package net.shuttleplay.shuttle.app.ui;
 
 import net.shuttleplay.shuttle.common.NetUtil;
 import net.shuttleplay.shuttle.R;
-import net.shuttleplay.shuttle.app.TrendBox;
-import net.shuttleplay.shuttle.app.TrendBoxDownloader;
-import net.shuttleplay.shuttle.app.TrendBoxEditor;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -80,7 +77,7 @@ public class WebUi extends Activity
 
 
 
-    private static final String TAG = "TrendBox";
+    private static final String TAG = "Shuttle";
     
     @Override
     protected void onCreate(Bundle savedInstanceState)

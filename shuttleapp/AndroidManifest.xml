@@ -31,7 +31,7 @@
         </activity>
     
     <activity
-      android:name=".app.TrendBox"
+      android:name=".app.Shuttle"
       android:label="@string/app_name"
       android:icon="@drawable/icon"
       android:theme="@style/Theme.IJetty"
@@ -47,23 +47,23 @@
     </activity>
 
     <activity
-      android:name=".app.TrendBoxEditor"
+      android:name=".app.ShuttleEditor"
       android:theme="@style/Theme.IJetty" />
     <activity
-      android:name=".app.TrendBoxDownloader"
+      android:name=".app.ShuttleDownloader"
       android:theme="@style/Theme.IJetty" />
     <activity
-      android:name=".SdCardUnavailableActivity"
+      android:name=".app.SdCardUnavailableActivity"
       android:theme="@style/Theme.IJetty" />
     <activity
       android:name=".app.ui.WebUi" 
       android:configChanges="orientation"
       android:theme="@style/Theme.IJetty"/>
   	<service 
-  	  android:name=".app.TrendBoxService">
+  	  android:name=".app.ShuttleService">
   	  <intent-filter>
   	     <action
-  	       android:name="net.shuttleplay.shuttle.app.TrendBoxService"/>
+  	       android:name="net.shuttleplay.shuttle.app.ShuttleService"/>
   	  </intent-filter>
   	</service>
   </application>

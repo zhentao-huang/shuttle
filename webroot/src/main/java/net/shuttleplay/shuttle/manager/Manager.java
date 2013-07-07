@@ -42,7 +42,7 @@ public class Manager extends HttpServlet {
 	
     private static final String ANDROID_CONTEXT_ATTRIBUTE = "net.shuttleplay.shuttle.context";
     
-	private static final String TAG = "TrendBox";
+	private static final String TAG = "Shuttle";
 	
     private Server mServer;
     private ContextHandler[] mHandlers;
@@ -54,7 +54,7 @@ public class Manager extends HttpServlet {
 		super.init();
 		
 		final Context context = (Context) getServletContext().getAttribute(ANDROID_CONTEXT_ATTRIBUTE);
-		context.bindService(new Intent("net.shuttleplay.shuttle.app.TrendBoxService"), new ServiceConnection() {
+		context.bindService(new Intent("net.shuttleplay.shuttle.app.ShuttleService"), new ServiceConnection() {
 			
 			public void onServiceDisconnected(ComponentName arg0) {
 				mServer = null;
@@ -126,7 +126,7 @@ public class Manager extends HttpServlet {
 				}
 				else if (contextPath.equals("/webdav"))
 				{
-					img = builder.toString() + "/trendbox/webapps/webdav/icon.png";
+					img = builder.toString() + "/Shuttle/webapps/webdav/icon.png";
 				}
 				else
 				{

@@ -110,7 +110,7 @@ public class DoGet extends DoHead {
             throws IOException {
 
         StoredObject so = _store.getStoredObject(transaction, path);
-        Log.i("TrendBox", "folderBody:" + path);
+        Log.i("Shuttle", "folderBody:" + path);
         if (so == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, req
                     .getRequestURI());

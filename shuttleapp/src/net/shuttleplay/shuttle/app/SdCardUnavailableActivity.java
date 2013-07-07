@@ -40,7 +40,7 @@ public class SdCardUnavailableActivity extends Activity
     
     public void doRetry(View v) {
         if(isExternalStorageAvailable()) {
-            TrendBox.show(this);
+            Shuttle.show(this);
             return;
         }
         

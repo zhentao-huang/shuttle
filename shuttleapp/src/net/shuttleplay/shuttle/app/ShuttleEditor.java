@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-public class TrendBoxEditor extends PreferenceActivity
+public class ShuttleEditor extends PreferenceActivity
 {
     public void onCreate(Bundle savedInstanceState)
     {
@@ -33,7 +33,7 @@ public class TrendBoxEditor extends PreferenceActivity
     }
     
     public static void show(Context context) {
-        final Intent intent = new Intent(context, TrendBoxEditor.class);
+        final Intent intent = new Intent(context, ShuttleEditor.class);
         context.startActivity(intent);
     }
 }

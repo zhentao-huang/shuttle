@@ -8,14 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -29,13 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -55,13 +45,13 @@ public class ModuleListServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 2686052244426469843L;
 	
-	private static final String TAG = "TrendBox";
+	private static final String TAG = "Shuttle";
 
 
 	public ModuleListServlet()
 	{
 		super();
-		mTrendPackages = new Hashtable<String, ModuleListServlet.PackageData>();
+		mShuttlePackages = new Hashtable<String, ModuleListServlet.PackageData>();
 		Log.i(TAG, "ModuleListServlet initialized");
 		mInited = false;
 	}
@@ -71,30 +61,30 @@ public class ModuleListServlet extends HttpServlet {
 			throws ServletException, IOException {
 		if (!mInited)
 		{
-			mNonTrend = "1".equals(getServletConfig().getInitParameter("Non-Trend"));
-			mPath = mNonTrend ? "/appshare/modlist2/" : "/appshare/modlist/";
+			mNonShuttle = "1".equals(getServletConfig().getInitParameter("Non-Shuttle"));
+			mPath = mNonShuttle ? "/appshare/modlist2/" : "/appshare/modlist/";
 			mInited = true;
 		}
 		String pathInfo = req.getPathInfo();
 		
 		if (pathInfo == null || pathInfo.equals("/"))
 		{
-			synchronized (mTrendPackages)
+			synchronized (mShuttlePackages)
 			{
-				if (mTrendPackages.isEmpty())
+				if (mShuttlePackages.isEmpty())
 				{
-					updateTrendPackages();
+					updateShuttlePackages();
 				}
 				resp.setContentType("text/plain");
-				resp.getWriter().print(mTrendPackages.size());
+				resp.getWriter().print(mShuttlePackages.size());
 			}
 		}
 		else if (pathInfo.startsWith("/icon"))
 		{
-//			synchronized (mTrendPackages)
+//			synchronized (mShuttlePackages)
 			{
 				String packageName = pathInfo.substring("/icon/".length());
-				PackageData data = mTrendPackages.get(packageName);
+				PackageData data = mShuttlePackages.get(packageName);
 				OutputStream out =resp.getOutputStream();
 				if (data != null && data.mInputStream == null)
 				{
@@ -125,7 +115,7 @@ public class ModuleListServlet extends HttpServlet {
 		else if (pathInfo.startsWith("/start"))
 		{
 			String packageName = pathInfo.substring("/start/".length());
-			PackageData data = mTrendPackages.get(packageName);
+			PackageData data = mShuttlePackages.get(packageName);
 			if (data.mStartIntent != null)
 			{
 				getAndroidContext().startActivity(data.mStartIntent);
@@ -148,7 +138,7 @@ public class ModuleListServlet extends HttpServlet {
 		else if (pathInfo.startsWith("/down"))
 		{
 			String packageName = pathInfo.substring("/down/".length());
-			PackageData data = mTrendPackages.get(packageName);
+			PackageData data = mShuttlePackages.get(packageName);
 			Log.i(TAG, "Begin download");
 			if (data.mSourceApk != null)
 			{
@@ -178,17 +168,17 @@ public class ModuleListServlet extends HttpServlet {
 		}
 		else if (pathInfo.startsWith("/view"))
 		{
-			synchronized (mTrendPackages) 
+			synchronized (mShuttlePackages)
 			{
-				if (mTrendPackages.isEmpty())
+				if (mShuttlePackages.isEmpty())
 				{
-					updateTrendPackages();
+					updateShuttlePackages();
 				}
 				
 				resp.setContentType("text/html;charset=UTF-8");
 				TagWriter table = new TagWriter(resp.getWriter(), "table");
 				table.setIndent(2);
-				for (PackageData data : new ArrayList<PackageData>(mTrendPackages.values()))
+				for (PackageData data : new ArrayList<PackageData>(mShuttlePackages.values()))
 				{
 					table
 					.addChild("tr")
@@ -223,7 +213,7 @@ public class ModuleListServlet extends HttpServlet {
 					{
 						String localip = NetUtil.getLocalIpAddress(getAndroidContext());
 						
-						String localapk = "http://" + localip + ":8000/appshare/modlist" + (mNonTrend?"2":"") + "/down/" + data.mPackageName;
+						String localapk = "http://" + localip + ":8000/appshare/modlist" + (mNonShuttle ?"2":"") + "/down/" + data.mPackageName;
 						
 						StringBuilder urlstr = new StringBuilder();
 	//					urlstr.append("https://chart.googleapis.com/chart?");
@@ -288,15 +278,15 @@ public class ModuleListServlet extends HttpServlet {
 		*/
 //		else if (pathInfo.startsWith("/description"))
 //		{
-//			synchronized (mTrendPackages) 
+//			synchronized (mShuttlePackages)
 //			{
-//				if (mTrendPackages.isEmpty())
+//				if (mShuttlePackages.isEmpty())
 //				{
-//					updateTrendPackages();
+//					updateShuttlePackages();
 //				}
 //				
 //				String name = pathInfo.substring("/description/".length());
-//				PackageData data = mTrendPackages.get(name);
+//				PackageData data = mShuttlePackages.get(name);
 //				ClassLoader loader = data.mContext.getClassLoader();
 //				try {
 //					Class<?> clazz = loader.loadClass(data.mPackageName+".R$string");
@@ -335,7 +325,7 @@ public class ModuleListServlet extends HttpServlet {
 		return false;
 	}
 	
-	private void updateTrendPackages()
+	private void updateShuttlePackages()
 	{
 		if (mPackageManager == null)
 		{
@@ -344,16 +334,16 @@ public class ModuleListServlet extends HttpServlet {
 		}
 
 		List<PackageInfo> packages = mPackageManager.getInstalledPackages(0);
-		mTrendPackages.clear();
+		mShuttlePackages.clear();
 		
 		
 		for (PackageInfo pinfo : packages)
 		{
 			Context context = getAndroidContext();
 			
-			if (!mNonTrend &&
+			if (!mNonShuttle &&
 				pinfo.packageName != null &&
-				pinfo.packageName.startsWith("com.trendmicro."))
+				pinfo.packageName.startsWith("net.shuttleplay."))
 			{
 				try {
 
@@ -367,7 +357,7 @@ public class ModuleListServlet extends HttpServlet {
 					{
 						data.mStartIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					}
-					mTrendPackages.put(data.mPackageName, data);
+					mShuttlePackages.put(data.mPackageName, data);
 					Log.i(TAG, "Get a drawable instance : " + data.mIcon.getClass().getName());
 					
 //					data.mContext = context.createPackageContext(data.mPackageName, Context.CONTEXT_INCLUDE_CODE);
@@ -376,12 +366,12 @@ public class ModuleListServlet extends HttpServlet {
 				} catch (NameNotFoundException e) {
 				}
 			}
-			else if (mNonTrend &&
+			else if (mNonShuttle &&
 				pinfo.packageName != null &&
 				pinfo.applicationInfo != null &&
 				pinfo.applicationInfo.sourceDir != null &&
 				!pinfo.applicationInfo.sourceDir.startsWith("/system/app/") &&
-				!pinfo.packageName.startsWith("com.trendmicro."))
+				!pinfo.packageName.startsWith("net.shuttleplay."))
 			{
 				try {
 
@@ -395,7 +385,7 @@ public class ModuleListServlet extends HttpServlet {
 					{
 						data.mStartIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					}
-					mTrendPackages.put(data.mPackageName, data);
+					mShuttlePackages.put(data.mPackageName, data);
 					Log.i(TAG, "Get a drawable instance : " + data.mIcon.getClass().getName());
 					
 //					data.mContext = context.createPackageContext(data.mPackageName, Context.CONTEXT_INCLUDE_CODE);
@@ -430,8 +420,8 @@ public class ModuleListServlet extends HttpServlet {
 
 	
 	PackageManager mPackageManager;
-	Hashtable<String, PackageData> mTrendPackages;
-	boolean mNonTrend;
+	Hashtable<String, PackageData> mShuttlePackages;
+	boolean mNonShuttle;
 	String mPath;
 	boolean mInited;
 }

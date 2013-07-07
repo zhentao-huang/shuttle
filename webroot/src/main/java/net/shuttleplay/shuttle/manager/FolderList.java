@@ -38,7 +38,7 @@ public class FolderList extends HttpServlet {
 		}
 	}
 
-	private static final String TAG = "TrendBox";
+	private static final String TAG = "Shuttle";
 	private File mRootPath;
 	private static final String ANDROID_CONTEXT_NAME = "net.shuttleplay.shuttle.context";
 

@@ -217,11 +217,11 @@ public class TagWriter extends PrintWriter
         html.setIndent(2)
             .addChild("head")
                 .addChild("title")
-                    .addText("Main view of Trend Box").end()
+                    .addText("Main view of Shuttle").end()
                 .end()
             .addChild("body").addAttr("id","bodyid").addAttr("class","classbody")
                 .addChild("B")
-                    .addText("Hello world for Trend Box!").end()
+                    .addText("Hello world for Shuttle!").end()
                 .addText("The second line")
                 .addChild("br").end();
         html.last()

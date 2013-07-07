@@ -33,7 +33,7 @@ import android.util.Log;
 
 public class Installer
 { 
-    private static final String TAG = "TrendBox";
+    private static final String TAG = "Shuttle";
     
 
                                         
@@ -120,13 +120,13 @@ public class Installer
         
         
         String configurationClassesXml =  "<Array type=\"java.lang.String\">";
-        for (int i=0; i < TrendBoxService.__configurationClasses.length;i++)
+        for (int i=0; i < ShuttleService.__configurationClasses.length;i++)
         {
-            configurationClassesXml +="<Item>"+TrendBoxService.__configurationClasses[i]+"</Item>";
+            configurationClassesXml +="<Item>"+ ShuttleService.__configurationClasses[i]+"</Item>";
         }
         configurationClassesXml += "</Array>";
         
-        File tmpDir = new File (TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__TMP_DIR);       
+        File tmpDir = new File (Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__TMP_DIR);
         File tmpContextFile = new File (tmpDir, webappName+".xml");
        
         PrintWriter writer = new PrintWriter(tmpContextFile);
@@ -142,7 +142,7 @@ public class Installer
         writer.println("</Configure>");
         writer.flush();
         writer.close();
-        File contextDir = new File (TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__CONTEXTS_DIR); 
+        File contextDir = new File (Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__CONTEXTS_DIR);
         File contextFile = new File (contextDir, webappName+".xml");
         if (!tmpContextFile.renameTo(contextFile))
             Log.e(TAG, "mv "+tmpContextFile.getAbsolutePath()+" "+contextFile.getAbsolutePath()+" failed");
@@ -156,24 +156,24 @@ public class Installer
             webappName = webappName.substring(0, webappName.length()-4);
 
         //delete any tmp context.xml file left over
-        File tmpDir = new File (TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__TMP_DIR);  
+        File tmpDir = new File (Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__TMP_DIR);
         File contextFile = new File (tmpDir, webappName+".xml");
         contextFile.delete();
-        Log.i(TAG, "deleted "+TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__TMP_DIR+"/"+webappName+".xml");
+        Log.i(TAG, "deleted "+ Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__TMP_DIR+"/"+webappName+".xml");
         
         //delete the real context.xml file (will cause an undeploy if jetty is running)
-        File contextDir = new File (TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__CONTEXTS_DIR); 
+        File contextDir = new File (Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__CONTEXTS_DIR);
         contextFile = new File (contextDir, webappName+".xml");
         contextFile.delete();
-        Log.i(TAG, "deleted "+TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__CONTEXTS_DIR+"/"+ webappName+".xml");
+        Log.i(TAG, "deleted "+ Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__CONTEXTS_DIR+"/"+ webappName+".xml");
         
         //delete the unpacked webapp
-        File webappsDir = new File (TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__WEBAPP_DIR);
+        File webappsDir = new File (Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__WEBAPP_DIR);
         File webapp = new File (webappsDir, webappName);
         
         if (webapp.exists())
             deleteWebapp(webapp);
-        Log.i(TAG, "deleted "+TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__WEBAPP_DIR+"/"+webappName);
+        Log.i(TAG, "deleted "+ Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__WEBAPP_DIR+"/"+webappName);
         
         warFile.delete();
         Log.i(TAG, "deleted "+warFile.getAbsolutePath());

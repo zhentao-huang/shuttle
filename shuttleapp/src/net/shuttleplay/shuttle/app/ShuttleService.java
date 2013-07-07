@@ -37,7 +37,6 @@ import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import net.shuttleplay.shuttle.webcontainer.deployer.AndroidContextDeployer;
 import net.shuttleplay.shuttle.webcontainer.deployer.AndroidWebAppDeployer;
 import net.shuttleplay.shuttle.app.handler.DefaultHandler;
-import net.shuttleplay.shuttle.app.util.AndroidInfo;
 import net.shuttleplay.shuttle.app.util.IJettyToast;
 
 import net.shuttleplay.shuttle.common.JettyService;
@@ -65,14 +64,14 @@ import android.util.Log;
  * Android Service which runs the Jetty server, maintaining it in the active Notifications so that
  * the user can return to the IJetty Activity to control it at any time.
  */
-public class TrendBoxService extends Service
+public class ShuttleService extends Service
 {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         if (server != null)
         {
-            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_already_started);
+            IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_already_started);
             return 0;
         }
 
@@ -139,14 +138,14 @@ public class TrendBoxService extends Service
         catch (Exception e)
         {
             Log.e(TAG, "Error starting jetty", e);
-            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_started);
+            IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_not_started);
             return 0;
         }
         
         return Service.START_REDELIVER_INTENT;
     }
 
-    private static final String TAG = "TrendBox";
+    private static final String TAG = "Shuttle";
     
     private static Resources __resources;
     private static final String CONTENT_RESOLVER_ATTRIBUTE = "net.shuttleplay.shuttle.contentResolver";
@@ -204,15 +203,15 @@ public class TrendBoxService extends Service
      * IJettyService always runs in-process with the IJetty activity.
      */
     public class LocalBinder extends Binder implements JettyService{
-        TrendBoxService getService() {
+        ShuttleService getService() {
             // Return this instance of LocalService so clients can call public methods
-            return TrendBoxService.this;
+            return ShuttleService.this;
         }
         
         @Override
         public Server getServer()
         {
-            return TrendBoxService.this.getServer();
+            return ShuttleService.this.getServer();
         }
     }
     
@@ -327,7 +326,7 @@ public class TrendBoxService extends Service
     /**
      * 
      */
-    public TrendBoxService()
+    public ShuttleService()
     {
         super();
         _handler = new android.os.Handler ()
@@ -338,11 +337,11 @@ public class TrendBoxService extends Service
                 {
                     case __STARTED:
                     {
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_started);
+                        IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_started);
 //                        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         // The PendingIntent to launch IJetty activity if the user selects this notification
-                        PendingIntent contentIntent = PendingIntent.getActivity(TrendBoxService.this, 0,
-                                new Intent(TrendBoxService.this, TrendBox.class), 0);
+                        PendingIntent contentIntent = PendingIntent.getActivity(ShuttleService.this, 0,
+                                new Intent(ShuttleService.this, Shuttle.class), 0);
 
                         CharSequence text = getText(R.string.manage_jetty);
 
@@ -350,13 +349,13 @@ public class TrendBoxService extends Service
                                 text, 
                                 System.currentTimeMillis());
 
-                        notification.setLatestEventInfo(TrendBoxService.this, getText(R.string.app_name),
+                        notification.setLatestEventInfo(ShuttleService.this, getText(R.string.app_name),
                                 text, contentIntent);
 
 //                        mNM.notify(R.string.jetty_started, notification);
                         startForeground(101, notification);
                         
-                        Intent startIntent = new Intent(TrendBox.__START_ACTION);
+                        Intent startIntent = new Intent(Shuttle.__START_ACTION);
                         startIntent.addCategory("default");
                         Connector[] connectors = server.getConnectors();
                         if (connectors != null)
@@ -374,7 +373,7 @@ public class TrendBoxService extends Service
                     }
                     case __NOT_STARTED:
                     {
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_started);
+                        IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_not_started);
                         break;
                     }
                     case __STOPPED:
@@ -384,8 +383,8 @@ public class TrendBoxService extends Service
 //                        mNM.cancel(R.string.jetty_started);
                         stopForeground(true);
                         // Tell the user we stopped.
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_stopped);
-                        Intent stopIntent = new Intent(TrendBox.__STOP_ACTION);
+                        IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_stopped);
+                        Intent stopIntent = new Intent(Shuttle.__STOP_ACTION);
                         stopIntent.addCategory("default");
                         sendBroadcast(stopIntent);
                         break;
@@ -393,25 +392,25 @@ public class TrendBoxService extends Service
                     
                     case __NOT_STOPPED:
                     {
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_stopped);
+                        IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_not_stopped);
                         break;
                     }
                     case __STARTING:
                     {
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_starting);
+                        IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_starting);
                         break;
                     }                    
                     case __STOPPING:
                     {
-                        IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_stopping);
+                        IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_stopping);
                         break;
                     }
                     case __LOADER_DEPLOYED:
                     {
                         if (++deployed == 3)
                         {
-                            IJettyToast.showServiceToast(TrendBoxService.this,R.string.loader_deployed);
-                            Intent deployIntent = new Intent(TrendBox.__DEPLOY_ACTION);
+                            IJettyToast.showServiceToast(ShuttleService.this,R.string.loader_deployed);
+                            Intent deployIntent = new Intent(Shuttle.__DEPLOY_ACTION);
                             deployIntent.addCategory("default");
                             sendBroadcast(deployIntent);
                         }
@@ -459,7 +458,7 @@ public class TrendBoxService extends Service
 //    {
 //        if (server != null)
 //        {
-//            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_already_started);
+//            IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_already_started);
 //            return;
 //        }
 //
@@ -526,7 +525,7 @@ public class TrendBoxService extends Service
 //        catch (Exception e)
 //        {
 //            Log.e(TAG, "Error starting jetty", e);
-//            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_started);
+//            IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_not_started);
 //        }
 //    }
 
@@ -553,13 +552,13 @@ public class TrendBoxService extends Service
             else
             {
                 Log.i(TAG, "Jetty not running");
-                IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_running);
+                IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_not_running);
             }
         }
         catch (Exception e)
         {
             Log.e(TAG, "Error stopping jetty", e);
-            IJettyToast.showServiceToast(TrendBoxService.this,R.string.jetty_not_stopped);
+            IJettyToast.showServiceToast(ShuttleService.this,R.string.jetty_not_stopped);
         }
     }
     
@@ -665,30 +664,30 @@ public class TrendBoxService extends Service
         AndroidWebAppDeployer staticDeployer =  new AndroidWebAppDeployer();
         AndroidContextDeployer contextDeployer = new AndroidContextDeployer();
      
-        File jettyDir = TrendBox.__TRENDBOX_DIR;
+        File jettyDir = Shuttle.__SHUTTLE_DIR;
         
         if (jettyDir.exists())
         {
             // If the webapps dir exists, start the static webapp deployer
-            if (new File(jettyDir, TrendBox.__WEBAPP_DIR).exists())
+            if (new File(jettyDir, Shuttle.__WEBAPP_DIR).exists())
             {
-                staticDeployer.setWebAppDir(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__WEBAPP_DIR);
-                staticDeployer.setDefaultsDescriptor(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__ETC_DIR+"/webdefault.xml");
+                staticDeployer.setWebAppDir(Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__WEBAPP_DIR);
+                staticDeployer.setDefaultsDescriptor(Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__ETC_DIR+"/webdefault.xml");
                 staticDeployer.setContexts(contexts);
                 staticDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
-                staticDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);
+                staticDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) ShuttleService.this);
 //                staticDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
                 staticDeployer.setConfigurationClasses(__configurationClasses);
                 staticDeployer.setAllowDuplicates(false);
             }          
            
             // Use a ContextDeploy so we can hot-deploy webapps and config at startup.
-            if (new File(jettyDir, TrendBox.__CONTEXTS_DIR).exists())
+            if (new File(jettyDir, Shuttle.__CONTEXTS_DIR).exists())
             {
                 contextDeployer.setScanInterval(10); // Don't eat the battery
-                contextDeployer.setConfigurationDir(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__CONTEXTS_DIR);                
+                contextDeployer.setConfigurationDir(Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__CONTEXTS_DIR);
                 contextDeployer.setAttribute(CONTENT_RESOLVER_ATTRIBUTE, getContentResolver());
-                contextDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) TrendBoxService.this);             
+                contextDeployer.setAttribute(ANDROID_CONTEXT_ATTRIBUTE, (Context) ShuttleService.this);
 //                contextDeployer.setAttribute(JETTY_SERVER_ATTRIBUTE, getServer());
                 contextDeployer.setContexts(contexts);
                 contextDeployer.setAndroidHandler(_handler);
@@ -710,10 +709,10 @@ public class TrendBoxService extends Service
     
     public void configureRealm () throws IOException
     {
-        File realmProps = new File(TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__ETC_DIR+"/realm.properties");
+        File realmProps = new File(Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__ETC_DIR+"/realm.properties");
         if (realmProps.exists())
         {
-            HashLoginService realm = new HashLoginService("Console", TrendBox.__TRENDBOX_DIR+"/"+TrendBox.__ETC_DIR+"/realm.properties");
+            HashLoginService realm = new HashLoginService("Console", Shuttle.__SHUTTLE_DIR +"/"+ Shuttle.__ETC_DIR+"/realm.properties");
             realm.setRefreshInterval(0);
             if (_consolePassword != null)
                 realm.putUser("admin", Credential.getCredential(_consolePassword), new String[]{"admin"}); //set the admin password for console webapp
@@ -726,7 +725,7 @@ public class TrendBoxService extends Service
     {
 
         //Set jetty.home
-        System.setProperty ("jetty.home", TrendBox.__TRENDBOX_DIR.getAbsolutePath());
+        System.setProperty ("jetty.home", Shuttle.__SHUTTLE_DIR.getAbsolutePath());
 
         //ipv6 workaround for froyo
         System.setProperty("java.net.preferIPv6Addresses", "false");
