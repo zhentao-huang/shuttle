@@ -28,42 +28,42 @@
     <string name="console_category">Console</string>
     <string name="pref_nio_value">true</string>
     <string name="pref_nio_title">Use NIO</string>
-    <string name="pref_nio_key">com.trendmicro.mobilelab.toolbox.pref_nio</string>
-    <string name="pref_ssl_nio_key">com.trendmicro.mobilelab.toolbox.pref_ssl_nio</string>
+    <string name="pref_nio_key">net.shuttleplay.shuttle.pref_nio</string>
+    <string name="pref_ssl_nio_key">net.shuttleplay.shuttle.pref_ssl_nio</string>
     <string name="pref_ssl_nio_value">true</string>
     <string name="pref_ssl_value">false</string>
     <string name="pref_ssl_title">Use SSL</string>
-    <string name="pref_ssl_key">com.trendmicro.mobilelab.toolbox.pref_ssl</string>
+    <string name="pref_ssl_key">net.shuttleplay.shuttle.pref_ssl</string>
     <string name="pref_ssl_port_title">Edit Port</string>
     <string name="pref_ssl_port_value">8443</string>
-    <string name="pref_ssl_port_key">com.trendmicro.mobilelab.toolbox.pref.sslport</string>
+    <string name="pref_ssl_port_key">net.shuttleplay.shuttle.pref.sslport</string>
     <string name="pref_ssl_port">Port</string>
     <string name="pref_port_value">8000</string>
     <string name="pref_port">Port</string>
     <string name="pref_port_title">Edit Port</string>
-    <string name="pref_port_key">com.trendmicro.mobilelab.toolbox.pref.port</string>
+    <string name="pref_port_key">net.shuttleplay.shuttle.pref.port</string>
 
-    <string name="pref_keystore_pwd_key">com.trendmicro.mobilelab.toolbox.pref.keystore.pwd</string>
+    <string name="pref_keystore_pwd_key">net.shuttleplay.shuttle.pref.keystore.pwd</string>
     <string name="pref_keystore_pwd">Keystore Password</string>
     <string name="pref_keystore_pwd_title">Edit Password</string>
     <string name="pref_keystore_pwd_value">OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4</string>
 
-    <string name="pref_keymgr_pwd_key">com.trendmicro.mobilelab.toolbox.pref.keymgr.pwd</string>
+    <string name="pref_keymgr_pwd_key">net.shuttleplay.shuttle.pref.keymgr.pwd</string>
     <string name="pref_keymgr_pwd">KeyStoreManager Password</string>
     <string name="pref_keymgr_pwd_title">Edit KeystoreManager Password</string>
     <string name="pref_keymgr_pwd_value">OBF:1u2u1wml1z7s1z7a1wnl1u2g</string>
 
-    <string name="pref_keystore_file_key">com.trendmicro.mobilelab.toolbox.pref.keystore.file</string>
+    <string name="pref_keystore_file_key">net.shuttleplay.shuttle.pref.keystore.file</string>
     <string name="pref_keystore_file">Keystore Filename</string>
     <string name="pref_keystore_file_title">Edit Keystore Filename</string>
     <string name="pref_keystore_file_value">/sdcard/jetty/etc/keystore</string>
 
-    <string name="pref_truststore_pwd_key">com.trendmicro.mobilelab.toolbox.pref.truststore.pwd</string>
+    <string name="pref_truststore_pwd_key">net.shuttleplay.shuttle.pref.truststore.pwd</string>
     <string name="pref_truststore_pwd">Truststore Password</string>
     <string name="pref_truststore_pwd_title">Edit Truststore Password</string>
     <string name="pref_truststore_pwd_value">OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4</string>
 
-    <string name="pref_truststore_file_key">com.trendmicro.mobilelab.toolbox.pref.truststore.file</string>
+    <string name="pref_truststore_file_key">net.shuttleplay.shuttle.pref.truststore.file</string>
     <string name="pref_truststore_file">Truststore Filename</string>
     <string name="pref_truststore_file_title">Edit Truststore Filename</string>
     <string name="pref_truststore_file_value">/sdcard/jetty/etc/keystore</string>
@@ -71,7 +71,7 @@
     <string name="pref_console_pwd_value">admin</string>
     <string name="pref_console_pwd">Console Password</string>
     <string name="pref_console_pwd_title">Edit Console Password</string>
-    <string name="pref_console_pwd_key">com.trendmicro.mobilelab.toolbox.pref.pwd</string>
+    <string name="pref_console_pwd_key">net.shuttleplay.shuttle.pref.pwd</string>
     <string name="edit_preferences">Edit IJetty Settings</string>
     <string name="connector_settings">Connector settings</string>
     <string name="webapp_exists">Already Exists</string>

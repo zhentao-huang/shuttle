@@ -77,7 +77,7 @@
     </dependency>
     <!--
     <dependency>
-      <groupId>com.trendmicro.mobilelab.toolbox</groupId>
+      <groupId>net.shuttleplay.shuttle</groupId>
       <artifactId>cchess</artifactId>
       <version>${project.version}</version>
       <type>war</type>

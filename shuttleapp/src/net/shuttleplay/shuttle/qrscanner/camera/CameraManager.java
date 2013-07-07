@@ -30,6 +30,8 @@ import net.shuttleplay.shuttle.qrscanner.Go;
 import net.shuttleplay.shuttle.qrscanner.PlanarYUVLuminanceSource;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
@@ -72,6 +74,29 @@ public final class CameraManager {
     autoFocusCallback = new AutoFocusCallback();
   }
 
+  public Camera getForeCamera()
+  {
+      Camera c = null;
+      try {
+          Method getNumberOfCameras = Camera.class.getMethod("getNumberOfCameras");
+          if (getNumberOfCameras != null)
+          {
+              int n = (Integer) getNumberOfCameras.invoke(null);
+              if (n != 0)
+              {
+                  Method open = Camera.class.getMethod("open", int.class);
+                  c = (Camera) open.invoke(null, 0);
+              }
+          }
+      } catch (NoSuchMethodException e) {
+          e.printStackTrace();
+      } catch (InvocationTargetException e) {
+          e.printStackTrace();
+      } catch (IllegalAccessException e) {
+          e.printStackTrace();
+      }
+      return c;
+  }
   /**
    * Opens the camera driver and initializes the hardware parameters.
    *
@@ -83,7 +108,9 @@ public final class CameraManager {
     if (theCamera == null) {
       theCamera = Camera.open();
       if (theCamera == null) {
-        throw new IOException();
+        theCamera = getForeCamera();
+        if (theCamera == null)
+          throw new IOException();
       }
       camera = theCamera;
     }
