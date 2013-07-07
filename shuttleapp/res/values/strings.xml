@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Trend Shuttle</string>
+    <string name="app_name">Shuttle</string>
     <string name="jetty_started">Shuttle started</string>
     <string name="jetty_starting">Shuttle starting</string>
     <string name="jetty_stopping">Shuttle stopping</string>
