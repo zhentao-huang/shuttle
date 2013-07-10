@@ -31,6 +31,7 @@ import java.util.Enumeration;
 
 import org.eclipse.jetty.util.IO;
 
+import net.shuttleplay.shuttle.common.NetUtil;
 import net.shuttleplay.shuttle.qrscanner.QReaderActivity;
 import net.shuttleplay.shuttle.R;
 
@@ -55,6 +56,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -142,6 +144,9 @@ public class Shuttle extends Activity
     private TextView footer;
     private TextView info;
     private TextView console;
+    private TextView wifi;
+    private TextView ip;
+    private TextView count;
     private ScrollView consoleScroller;
     private StringBuilder consoleBuffer = new StringBuilder();
     private Runnable scrollTask;
@@ -491,7 +496,7 @@ public class Shuttle extends Activity
     {
         super.onCreate(icicle);
         
-        setContentView(R.layout.jetty_controller);
+        setContentView(R.layout.shuttle_controller);
         
         startButton = (Button)findViewById(R.id.start);
         stopButton = (Button)findViewById(R.id.stop);
@@ -499,7 +504,11 @@ public class Shuttle extends Activity
         helloButton = (Button)findViewById(R.id.hello);
         scanButton = (Button)findViewById(R.id.scan);
 //        launchButton = (Button)findViewById(R.id.launch_any);
-        
+
+        wifi = (TextView) findViewById(R.id.wifi);
+        ip = (TextView) findViewById(R.id.wifiip);
+        count = (TextView) findViewById(R.id.shared);
+
         final Button downloadButton = (Button)findViewById(R.id.download);
         
         
@@ -762,7 +771,23 @@ public class Shuttle extends Activity
                 startJettyServer();
             }
         }
-        
+
+        String ssid = NetUtil.getWifiSSID(this);
+        if (ssid == null)
+        {
+            wifi.setText(getResources().getText(R.string.nowifi));
+            ip.setText(getResources().getText(R.string.noip));
+        }
+        else
+        {
+            wifi.setText(getResources().getString(R.string.wifissid, ssid));
+            ip.setText(getResources().getString(R.string.yourip, NetUtil.getLocalIpAddress(this)));
+        }
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        int c = sp.getInt("SharedCounter",0);
+
+        count.setText(getResources().getString(R.string.shared,  c));
         
         if (ShuttleService.isRunning())
         {

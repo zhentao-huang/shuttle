@@ -55,7 +55,18 @@ public class NetUtil
                 }
 		return localip;
 	}
-	
+
+    public static String getWifiSSID(Context context)
+    {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        if (info != null)
+        {
+            return info.getSSID();
+        }
+        return null;
+    }
+
 	public static void copyIO(InputStream in, OutputStream out) throws IOException
 	{
 		byte[] buffer = new byte[bufferSize];

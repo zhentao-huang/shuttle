@@ -22,12 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -158,6 +160,15 @@ public class ModuleListServlet extends HttpServlet {
 					InputStream in = new BufferedInputStream(new FileInputStream(file));
 					OutputStream out = resp.getOutputStream();
 					NetUtil.copyIO(in, out);
+                    synchronized (getAndroidContext().getMainLooper())
+                    {
+                        Context context = getAndroidContext();
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+                        int c = sp.getInt("SharedCounter", 0);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putInt("SharedCounter", ++c);
+                        editor.commit();
+                    }
 				}
 			}
 			Log.i(TAG, "Download end");

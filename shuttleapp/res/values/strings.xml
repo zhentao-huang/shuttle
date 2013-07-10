@@ -90,9 +90,9 @@
     <string name="launch_any">Launch!</string>
     <string name="forward">Forward</string>
     <string name="refresh">Refresh</string>
-    <string name="first_statement">First, make sure devices connect in same network:&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Wifi network&lt;br/>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Portable WIFI hotspot on your device&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 2G/3G network&lt;/small&gt;&lt;br/&gt;</string>
+    <string name="first_statement">Shuttle enables free sharing&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Click \"Start Shuttle\", ... would you find the little yellow bus?&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - Click \"Stop Shuttle\"... to stop the bus and get out &lt;br/&gt;&lt;/small&gt;</string>
     <!-- <string name="first_statement">hello</string>  -->
-    <string name="next_statement">Click \"Share\" to &lt;b&gt;launch web share&lt;/b&gt;&lt;br/&gt;</string>
+    <string name="next_statement">Click \"Share\" to &lt;b&gt;share your cool things&lt;/b&gt;&lt;br/&gt;</string>
 
     <string name="last_statement">Click \"Acquire\" to get stuff by &lt;b&gt;QR code scan &lt;/b&gt;&lt;br/&gt;</string>
 
@@ -113,6 +113,13 @@
     <string name="msg_default_status">Place a QR code inside the viewfinder rectangle to scan it</string>
     <string name="msg_intent_failed">Sorry, the requested application could not be launched. The barcode contents may be invalid.</string>
     <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
+    <string name="wifissd">Wifi Connection</string>
+    <string name="wifiip">IP address</string>
+    <string name="nowifi">No connection</string>
+    <string name="noip">No IP address</string>
+    <string name="wifissid">Your Wifi SSID is %s</string>
+    <string name="yourip">IP address is %s</string>
+    <string name="shared">Total shared %d time(s)</string>
 
 
 </resources>

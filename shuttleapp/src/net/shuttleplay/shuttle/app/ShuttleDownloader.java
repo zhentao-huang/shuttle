@@ -128,7 +128,7 @@ public class ShuttleDownloader extends Activity
         if (!tmpDir.exists())
             tmpDir.mkdirs();
         
-        setContentView(R.layout.jetty_downloader);
+        setContentView(R.layout.shuttle_downloader);
         _progressBar = (ProgressBar)findViewById(R.id.progress);
         final Button startDownloadButton = (Button)findViewById(R.id.start_download);
         startDownloadButton.setOnClickListener(

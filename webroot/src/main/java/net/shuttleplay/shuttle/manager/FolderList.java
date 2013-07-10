@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.os.Environment;
 
@@ -126,10 +128,27 @@ public class FolderList extends HttpServlet {
 				InputStream in = new BufferedInputStream(new FileInputStream(file));
 				OutputStream out = resp.getOutputStream();
 				NetUtil.copyIO(in, out);
-			}
+                Context context = getAndroidContext();
+                synchronized (context.getMainLooper())
+                {
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+                    int c = sp.getInt("SharedCounter", 0);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt("SharedCounter", ++c);
+                    editor.commit();
+                }
+
+            }
 		}
 	}
-	
+
+    private Context getAndroidContext()
+    {
+        ServletContext sContext = getServletContext();
+        Context context = (Context) sContext.getAttribute(ANDROID_CONTEXT_NAME);
+        return context;
+    }
+
 	private static class FileComparator implements Comparator<File>
 	{
 
