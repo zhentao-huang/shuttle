@@ -54,6 +54,7 @@ public class ModuleListServlet extends HttpServlet {
 	{
 		super();
 		mShuttlePackages = new Hashtable<String, ModuleListServlet.PackageData>();
+        mOrders = new ArrayList<String>();
 		Log.i(TAG, "ModuleListServlet initialized");
 		mInited = false;
 	}
@@ -63,9 +64,8 @@ public class ModuleListServlet extends HttpServlet {
 			throws ServletException, IOException {
 		if (!mInited)
 		{
-			mNonShuttle = "1".equals(getServletConfig().getInitParameter("Non-Shuttle"));
-			mPath = mNonShuttle ? "/appshare/modlist2/" : "/appshare/modlist/";
-			mInited = true;
+            mPath = "/appshare/modlist/";
+            mInited = true;
 		}
 		String pathInfo = req.getPathInfo();
 		
@@ -189,8 +189,10 @@ public class ModuleListServlet extends HttpServlet {
 				resp.setContentType("text/html;charset=UTF-8");
 				TagWriter table = new TagWriter(resp.getWriter(), "table");
 				table.setIndent(2);
-				for (PackageData data : new ArrayList<PackageData>(mShuttlePackages.values()))
+				for (String pname : mOrders)
+//                        PackageData data : new ArrayList<PackageData>(mShuttlePackages.values()))
 				{
+                    PackageData data = mShuttlePackages.get(pname);
 					table
 					.addChild("tr")
 						.addChild("td").push();
@@ -352,9 +354,10 @@ public class ModuleListServlet extends HttpServlet {
 		{
 			Context context = getAndroidContext();
 			
-			if (!mNonShuttle &&
-				pinfo.packageName != null &&
-				pinfo.packageName.startsWith("net.shuttleplay."))
+			if (pinfo.packageName != null &&
+                pinfo.applicationInfo != null &&
+                pinfo.applicationInfo.sourceDir != null &&
+                !pinfo.applicationInfo.sourceDir.startsWith("/system/app/"))
 			{
 				try {
 
@@ -369,34 +372,19 @@ public class ModuleListServlet extends HttpServlet {
 						data.mStartIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					}
 					mShuttlePackages.put(data.mPackageName, data);
-					Log.i(TAG, "Get a drawable instance : " + data.mIcon.getClass().getName());
-					
-//					data.mContext = context.createPackageContext(data.mPackageName, Context.CONTEXT_INCLUDE_CODE);
-//					data.mResources = data.mContext.getResources();
-					data.mSourceApk = pinfo.applicationInfo.sourceDir;
-				} catch (NameNotFoundException e) {
-				}
-			}
-			else if (mNonShuttle &&
-				pinfo.packageName != null &&
-				pinfo.applicationInfo != null &&
-				pinfo.applicationInfo.sourceDir != null &&
-				!pinfo.applicationInfo.sourceDir.startsWith("/system/app/") &&
-				!pinfo.packageName.startsWith("net.shuttleplay."))
-			{
-				try {
 
-					PackageData data = new PackageData();
-					data.mPackageName = pinfo.packageName;
-					data.mIcon = mPackageManager.getApplicationIcon(data.mPackageName);
-					data.mLabel = mPackageManager.getApplicationLabel(
-							mPackageManager.getApplicationInfo(data.mPackageName, PackageManager.GET_META_DATA)).toString();
-					data.mStartIntent = mPackageManager.getLaunchIntentForPackage(data.mPackageName);
-					if (data.mStartIntent != null)
-					{
-						data.mStartIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					}
-					mShuttlePackages.put(data.mPackageName, data);
+                    if (data.mPackageName.equals(context.getPackageName()))
+                    {
+                        mSelf = data;
+                    }
+                    else if (data.mPackageName.startsWith("net.shuttleplay."))
+                    {
+                        mOrders.add(0, data.mPackageName);
+                    }
+                    else
+                    {
+                        mOrders.add(data.mPackageName);
+                    }
 					Log.i(TAG, "Get a drawable instance : " + data.mIcon.getClass().getName());
 					
 //					data.mContext = context.createPackageContext(data.mPackageName, Context.CONTEXT_INCLUDE_CODE);
@@ -405,7 +393,8 @@ public class ModuleListServlet extends HttpServlet {
 				} catch (NameNotFoundException e) {
 				}
 			}
-		}
+		} // End for
+        mOrders.add(0, mSelf.mPackageName);
 	}
 	
 	private Context getAndroidContext()
@@ -431,7 +420,9 @@ public class ModuleListServlet extends HttpServlet {
 
 	
 	PackageManager mPackageManager;
+    ArrayList<String> mOrders;
 	Hashtable<String, PackageData> mShuttlePackages;
+    PackageData mSelf;
 	boolean mNonShuttle;
 	String mPath;
 	boolean mInited;

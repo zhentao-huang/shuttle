@@ -11,30 +11,30 @@
 	<servlet>
 		<servlet-name>ModuleListServlet</servlet-name>
 		<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>
-		<init-param>
-			<param-name>Non-Shuttle</param-name>
-			<param-value>0</param-value>
-		</init-param>
+		<!--<init-param>-->
+			<!--<param-name>Non-Shuttle</param-name>-->
+			<!--<param-value>0</param-value>-->
+		<!--</init-param>-->
 	</servlet>
 	
-	<servlet>
-		<servlet-name>ModuleListServlet2</servlet-name>
-		<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>
-		<init-param>
-			<param-name>Non-Shuttle</param-name>
-			<param-value>1</param-value>
-		</init-param>
-	</servlet>
+	<!--<servlet>-->
+		<!--<servlet-name>ModuleListServlet2</servlet-name>-->
+		<!--<servlet-class>net.shuttleplay.shuttle.appshare.ModuleListServlet</servlet-class>-->
+		<!--<init-param>-->
+			<!--<param-name>Non-Shuttle</param-name>-->
+			<!--<param-value>1</param-value>-->
+		<!--</init-param>-->
+	<!--</servlet>-->
 
 	<servlet-mapping>
 		<servlet-name>ModuleListServlet</servlet-name>
 		<url-pattern>/modlist/*</url-pattern>
 	</servlet-mapping>
 	
-	<servlet-mapping>
-		<servlet-name>ModuleListServlet2</servlet-name>
-		<url-pattern>/modlist2/*</url-pattern>
-	</servlet-mapping>
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>ModuleListServlet2</servlet-name>-->
+		<!--<url-pattern>/modlist2/*</url-pattern>-->
+	<!--</servlet-mapping>-->
 	
 	<!-- 
     <security-constraint>
