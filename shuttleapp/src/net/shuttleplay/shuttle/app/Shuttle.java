@@ -143,25 +143,25 @@ public class Shuttle extends Activity
 //    private Button launchButton;
     private TextView footer;
     private TextView info;
-    private TextView console;
+//    private TextView console;
     private TextView wifi;
     private TextView ip;
     private TextView count;
-    private ScrollView consoleScroller;
-    private StringBuilder consoleBuffer = new StringBuilder();
-    private Runnable scrollTask;
+//    private ScrollView consoleScroller;
+//    private StringBuilder consoleBuffer = new StringBuilder();
+//    private Runnable scrollTask;
     private ProgressDialog progressDialog;
     private Thread progressThread;
     private Handler handler;
     private BroadcastReceiver bcastReceiver;
     
-    class ConsoleScrollTask implements Runnable
-    {
-        public void run()
-        {
-            consoleScroller.fullScroll(View.FOCUS_DOWN);
-        }
-    }
+//    class ConsoleScrollTask implements Runnable
+//    {
+//        public void run()
+//        {
+//            consoleScroller.fullScroll(View.FOCUS_DOWN);
+//        }
+//    }
     
     /**
      * ProgressThread
@@ -417,22 +417,22 @@ public class Shuttle extends Activity
         String msg = String.format(format,args);
         if (msg.length() > 0)
         {
-            consoleBuffer.append(msg).append("<br/>");
-            console.setText(Html.fromHtml(consoleBuffer.toString()));
+//            consoleBuffer.append(msg).append("<br/>");
+//            console.setText(Html.fromHtml(consoleBuffer.toString()));
             Log.i(TAG,msg); // Only interested in non-empty lines being output to Log
         }
-        else
-        {
-            consoleBuffer.append(msg).append("<br/>");
-            console.setText(Html.fromHtml(consoleBuffer.toString()));
-        }
+//        else
+//        {
+//            consoleBuffer.append(msg).append("<br/>");
+//            console.setText(Html.fromHtml(consoleBuffer.toString()));
+//        }
 
-        if (scrollTask == null)
-        {
-            scrollTask = new ConsoleScrollTask();
-        }
-
-        consoleScroller.post(scrollTask);
+//        if (scrollTask == null)
+//        {
+//            scrollTask = new ConsoleScrollTask();
+//        }
+//
+//        consoleScroller.post(scrollTask);
     }
     
     
@@ -537,7 +537,7 @@ public class Shuttle extends Activity
                             consolePrint(connectors[i]);
                     }  
                     
-                    printNetworkInterfaces();
+//                    printNetworkInterfaces();
                     
                     resetHelloButtonState();
                     
@@ -690,8 +690,8 @@ public class Shuttle extends Activity
 
         info = (TextView)findViewById(R.id.info);
         footer = (TextView)findViewById(R.id.footer);
-        console = (TextView)findViewById(R.id.console);
-        consoleScroller = (ScrollView)findViewById(R.id.consoleScroller);
+//        console = (TextView)findViewById(R.id.console);
+//        consoleScroller = (ScrollView)findViewById(R.id.consoleScroller);
         
         StringBuilder infoBuffer = new StringBuilder(); 
         try
@@ -828,25 +828,25 @@ public class Shuttle extends Activity
         }
     }
 
-    private void printNetworkInterfaces()
-    {
-        try
-        {
-            Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
-            for (NetworkInterface ni : Collections.list(nis))
-            {
-                Enumeration<InetAddress> iis = ni.getInetAddresses();
-                for (InetAddress ia : Collections.list(iis))
-                {
-                    consoleBuffer.append(formatJettyInfoLine("Network interface: %s: %s",ni.getDisplayName(),ia.getHostAddress()));
-                }
-            }
-        }
-        catch (SocketException e)
-        {
-            Log.w(TAG, e);
-        }
-    }
+//    private void printNetworkInterfaces()
+//    {
+//        try
+//        {
+//            Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+//            for (NetworkInterface ni : Collections.list(nis))
+//            {
+//                Enumeration<InetAddress> iis = ni.getInetAddresses();
+//                for (InetAddress ia : Collections.list(iis))
+//                {
+//                    consoleBuffer.append(formatJettyInfoLine("Network interface: %s: %s",ni.getDisplayName(),ia.getHostAddress()));
+//                }
+//            }
+//        }
+//        catch (SocketException e)
+//        {
+//            Log.w(TAG, e);
+//        }
+//    }
 
 
 
