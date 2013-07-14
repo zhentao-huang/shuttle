@@ -135,9 +135,8 @@
         </plugin>
         <plugin>
           <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-          <artifactId>maven-android-plugin</artifactId>
-          <!--<version>2.9.0-beta-5</version> -->
-          <version>3.0.0-alpha-11</version>
+          <artifactId>android-maven-plugin</artifactId>
+          <version>3.1.1</version>
           <extensions>true</extensions>
           <configuration>
               <sdk>
@@ -170,7 +169,8 @@
                 <plugins>
                     <plugin>
                         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                        <artifactId>maven-android-plugin</artifactId>
+                        <artifactId>android-maven-plugin</artifactId>
+                        <version>3.1.1</version>
                         <configuration>
                             <sign>
                                 <debug>false</debug>
