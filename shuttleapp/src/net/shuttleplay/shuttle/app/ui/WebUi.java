@@ -15,6 +15,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.flurry.android.FlurryAgent;
+
 
 public class WebUi extends Activity
 {
@@ -33,7 +35,17 @@ public class WebUi extends Activity
         
     }
 
+    protected void onStart()
+    {
+        super.onStart();
+        FlurryAgent.onStartSession(this,"B3ZJCB5RZBWGBXTRWYBF");
+    }
 
+    protected void onStop()
+    {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
+    }
 
     private static final String SAVED_URL = "SAVED_URL";
     

@@ -51,6 +51,12 @@
     </dependency>
     <dependency>
       <groupId>net.shuttleplay.shuttle</groupId>
+      <artifactId>FlurryAgent</artifactId>
+      <type>jar</type>
+      <version>3.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>net.shuttleplay.shuttle</groupId>
       <artifactId>web</artifactId>
       <type>jar</type>
       <version>${project.version}</version>

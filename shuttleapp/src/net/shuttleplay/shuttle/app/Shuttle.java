@@ -68,6 +68,8 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
+
 /**
  * IJetty
  * 
@@ -713,6 +715,18 @@ public class Shuttle extends Activity
         footerBuffer.append(res.getString(R.string.next_statement));
         footerBuffer.append(res.getString(R.string.last_statement));
         footer.setText(Html.fromHtml(footerBuffer.toString()));
+    }
+
+    protected void onStart()
+    {
+        super.onStart();
+        FlurryAgent.onStartSession(this, "B3ZJCB5RZBWGBXTRWYBF");
+    }
+
+    protected void onStop()
+    {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
     }
 
     public static void show(Context context)
