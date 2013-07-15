@@ -1,6 +1,12 @@
 Shuttle is an Android application.
 It's based on i-Jettty, zxing and net.sf.webdav-servlet.
 You can build it with Maven 3.0 and above, Android SDK level 8 and above.
+
+To build, type:
+ mvn clean package
+
+And you would find shuttleapp-1.0-aligned.apk in folder "shuttleapp/target"
+
 You may encounter build failure. i.e. aapt tool can't be found, just make a softlink
 to where it requests. The build environment is easy to be satisfied with a little
 modification. just trust me and yourself.
