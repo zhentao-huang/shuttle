@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.util.Log;
@@ -103,7 +104,7 @@ public class Manager extends HttpServlet {
 		}
 		else if (pathInfo.startsWith("/count"))
 		{
-			resp.setContentType("text/plain");
+			resp.setContentType("text/plain;charset=UTF-8");
 			resp.getWriter().print(mHandlers.length - 1);
 		}
 		else if (pathInfo.startsWith("/view"))
@@ -111,6 +112,7 @@ public class Manager extends HttpServlet {
 			resp.setContentType("text/html;charset=UTF-8");
 			TagWriter table = new TagWriter(resp.getWriter(),"table");
 			table.setIndent(2);
+            String qrcode = getQrCodeString();
 			for (ContextHandler handler : mHandlers)
 			{
 				String name = handler.getDisplayName();
@@ -145,20 +147,20 @@ public class Manager extends HttpServlet {
 						.end()
 					.addChild("td")
 						.addChild("a").addAttr("href", qr)
-							.addText("QR code");
+							.addText(qrcode);
 			}
 			table.finish();
 		}
 		else if (pathInfo.startsWith("/ip"))
 		{
-			resp.setContentType("text/plain");
+			resp.setContentType("text/plain;charset=UTF-8");
 			PrintWriter out = resp.getWriter();
 			String url = "http://" + NetUtil.getLocalIpAddress(mContext) + ":8000" + encoder.encode(pathInfo.substring("/ip".length())); 
 			out.print(url);
 		}
 		else if (pathInfo.startsWith("/qrip"))
 		{
-			resp.setContentType("text/plain");
+			resp.setContentType("text/plain;charset=UTF-8");
 			PrintWriter out = resp.getWriter();
 			String url = "http://" + NetUtil.getLocalIpAddress(mContext) + ":8000" + encoder.encode(encoder.encode(pathInfo.substring("/qrip".length()))); 
 			out.print("http://" + NetUtil.getLocalIpAddress(mContext) + ":8000/manager/qr/" + url);
@@ -199,5 +201,13 @@ public class Manager extends HttpServlet {
 			
 		}
 	}
-	
+
+    private String getQrCodeString()
+    {
+        Context context = (Context) getServletContext().getAttribute(ANDROID_CONTEXT_ATTRIBUTE);
+        Resources res = context.getResources();
+        int id = res.getIdentifier("qrcode","string", context.getPackageName());
+        return res.getString(id);
+    }
+
 }

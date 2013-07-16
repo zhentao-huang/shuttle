@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.os.Environment;
@@ -67,6 +68,9 @@ public class FolderList extends HttpServlet {
 			resp.setContentType("text/html;charset=UTF-8");
 			TagWriter table = new TagWriter(resp.getWriter(), "table");
 			table.setIndent(2);
+            String qrcode = getResString("qrcode");
+            String folder = getResString("folder");
+            String enter = getResString("enter");
 			for (File file : files)
 			{
 				URLEncoder encoder = new URLEncoder();
@@ -91,14 +95,14 @@ public class FolderList extends HttpServlet {
 				
 				if (file.isDirectory())
 				{
-					table.last().addText("Folder")
+					table.last().addText(folder)
 				 			.end();
 					String target = "http://" + localip + ":8000" + encoder.encode(url);
 					String qr = "http://" + localip + ":8000/manager/qr/" + target;
 					
 					table.last()
 						.addChild("td")
-							.addChild("a").addAttr("href", qr).addText("QR code");
+							.addChild("a").addAttr("href", url).addText(enter).end();
 				}
 				else
 				{
@@ -109,7 +113,7 @@ public class FolderList extends HttpServlet {
 					
 					table.last()
 						.addChild("td")
-							.addChild("a").addAttr("href", qr).addText("QR code");
+							.addChild("a").addAttr("href", qr).addText(qrcode);
 				}
 			
 			}
@@ -149,7 +153,15 @@ public class FolderList extends HttpServlet {
         return context;
     }
 
-	private static class FileComparator implements Comparator<File>
+    private String getResString(String name)
+    {
+        Context context = getAndroidContext();
+        Resources res = context.getResources();
+        int id = res.getIdentifier(name,"string", context.getPackageName());
+        return res.getString(id);
+    }
+
+    private static class FileComparator implements Comparator<File>
 	{
 
 		public int compare(File o1, File o2) {
