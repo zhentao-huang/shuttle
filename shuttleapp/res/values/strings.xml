@@ -120,6 +120,8 @@
     <string name="wifissid">Your Wifi SSID is %s</string>
     <string name="yourip">IP address is %s</string>
     <string name="shared">Total shared %d time(s)</string>
-
+    <string name="qrcode">QR code</string>
+    <string name="enter">Enter</string>
+    <string name="folder">Folder</string>
 
 </resources>

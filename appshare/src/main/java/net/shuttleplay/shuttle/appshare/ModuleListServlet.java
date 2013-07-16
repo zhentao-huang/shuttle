@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -77,7 +78,7 @@ public class ModuleListServlet extends HttpServlet {
 				{
 					updateShuttlePackages();
 				}
-				resp.setContentType("text/plain");
+				resp.setContentType("text/plain;charset=UTF-8");
 				resp.getWriter().print(mShuttlePackages.size());
 			}
 		}
@@ -189,7 +190,8 @@ public class ModuleListServlet extends HttpServlet {
 				resp.setContentType("text/html;charset=UTF-8");
 				TagWriter table = new TagWriter(resp.getWriter(), "table");
 				table.setIndent(2);
-				for (String pname : mOrders)
+                String qrcode = getQrCodeString();
+                for (String pname : mOrders)
 //                        PackageData data : new ArrayList<PackageData>(mShuttlePackages.values()))
 				{
                     PackageData data = mShuttlePackages.get(pname);
@@ -225,7 +227,7 @@ public class ModuleListServlet extends HttpServlet {
 					if (readable)
 					{
 						String localip = NetUtil.getLocalIpAddress(getAndroidContext());
-						
+
 						String localapk = "http://" + localip + ":8000/appshare/modlist" + (mNonShuttle ?"2":"") + "/down/" + data.mPackageName;
 						
 						StringBuilder urlstr = new StringBuilder();
@@ -237,7 +239,7 @@ public class ModuleListServlet extends HttpServlet {
 						
 						table.last()
 								.addChild("a").addAttr("href", urlstr.toString())
-									.addText("QR code")
+									.addText(qrcode)
 									.end()
 								.end()
 							.end();
@@ -403,6 +405,14 @@ public class ModuleListServlet extends HttpServlet {
 		Context context = (Context) sContext.getAttribute(ANDROID_CONTEXT_NAME);
 		return context;
 	}
+
+    private String getQrCodeString()
+    {
+        Context context = getAndroidContext();
+        Resources res = context.getResources();
+        int id = res.getIdentifier("qrcode","string", context.getPackageName());
+        return res.getString(id);
+    }
 	
 	private class PackageData
 	{
