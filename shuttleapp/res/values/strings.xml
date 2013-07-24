@@ -9,7 +9,7 @@
     <string name="jetty_stopped">闪传停止</string>
     <string name="jetty_not_stopped">闪传未关闭</string>
     <string name="jetty_not_running">闪传未运行</string>
-    <string name="manage_jetty">闪传控制器</string>
+    <string name="manage_jetty">闪传控制台</string>
     <string name="jetty_controller">启停闪传</string>
     <string name="jetty_downloader">输入网址</string>
     <string name="start_jetty">启动闪传</string>
