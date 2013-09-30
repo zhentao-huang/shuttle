@@ -196,8 +196,8 @@ public class ModuleListServlet extends HttpServlet {
 				{
                     PackageData data = mShuttlePackages.get(pname);
 					table
-					.addChild("tr")
-						.addChild("td").push();
+					.addChild("tr").push()
+						.addChild("td");
 //							.addChild("a").addAttr("href", mPath + "start/" +data.mPackageName)
 //								.addChild("img").addAttr("src", mPath + "icon/" + data.mPackageName).end()
 //								.end()

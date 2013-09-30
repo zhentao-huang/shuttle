@@ -9,17 +9,43 @@
     <script src="/jquery.js"></script>
     <script type="text/javascript">
 	// <![CDATA[
+
+	function reload(text, status, XMLHttpRequest)
+	{
+	    if (status == "error")
+	    {
+	        window.location.reload();
+	        return;
+	    }
+
+	}
+
+        function tryReload()
+        {
+            if (!$("#handlers_num").text() ||
+                !$("#plglist").html())
+            {
+                window.location.reload();
+                setTimeout(tryReload, 5000);
+            }
+        }
+
 	$(document).ready(function() 
 		{
-			$("#handlers_num").load("/manager/count");
-			$("#plglist").load("/manager/view");
-			$("#ip").load("/manager/ip");
+			$("#handlers_num").load("/manager/count", reload );
+			$("#plglist").load("/manager/view", reload);
+			$("#ip").load("/manager/ip", reload);
                         $.get("/manager/qrip", {}, function(data)
                     {$("#qrip").attr("href",data)});
+
+
+                        setTimeout(tryReload, 5000);
 		}
-	// ]]>
 	);
-	
+
+
+	// ]]>
+
 	</script>
     <META http-equiv="Cache-Control" content="no-cache,no-store"/>
 </head>
@@ -49,8 +75,7 @@
         
     </div>
     
-    <div id="plglist">
-    </div>
+    <div id="plglist"></div>
     
     <div id="footer">
         Served up by i-jetty<br />Now with 100% more awesome.
