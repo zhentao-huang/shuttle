@@ -174,7 +174,20 @@ public class QReaderActivity extends Activity implements Callback {
 		lastResult = rawResult;
 
 		ParsedResult result = ResultParser.parseResult(lastResult);
-		if (result.getType().equals(ParsedResultType.URI)) {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action != null && action.equals(Intent.ACTION_PICK))
+        {
+            String text = lastResult.getText();
+            if (text != null)
+            {
+                //Handler handler = intent.getE
+                setResult(RESULT_OK, intent);
+                finish();
+                return;
+            }
+        }
+		else if (result.getType().equals(ParsedResultType.URI)) {
 			URIParsedResult uriResult = (URIParsedResult) result;
 			launchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(uriResult
 					.getURI())));
