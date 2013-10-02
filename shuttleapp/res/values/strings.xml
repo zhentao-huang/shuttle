@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">闪传</string>
-    <string name="jetty_started">闪传运行</string>
-    <string name="jetty_starting">闪传启动</string>
-    <string name="jetty_stopping">闪传关闭</string>
-    <string name="jetty_not_started">闪传未启动</string>
-    <string name="jetty_already_started">闪传已运行</string>
-    <string name="jetty_stopped">闪传停止</string>
-    <string name="jetty_not_stopped">闪传未关闭</string>
-    <string name="jetty_not_running">闪传未运行</string>
-    <string name="manage_jetty">闪传控制台</string>
-    <string name="jetty_controller">启停闪传</string>
+    <string name="app_name">流传</string>
+    <string name="jetty_started">流传运行</string>
+    <string name="jetty_starting">流传启动</string>
+    <string name="jetty_stopping">流传关闭</string>
+    <string name="jetty_not_started">流传未启动</string>
+    <string name="jetty_already_started">流传已运行</string>
+    <string name="jetty_stopped">流传停止</string>
+    <string name="jetty_not_stopped">流传未关闭</string>
+    <string name="jetty_not_running">流传未运行</string>
+    <string name="manage_jetty">流传控制台</string>
+    <string name="jetty_controller">启停流传</string>
     <string name="jetty_downloader">输入网址</string>
-    <string name="start_jetty">启动闪传</string>
-    <string name="stop_jetty">停止闪传</string>
+    <string name="start_jetty">启动流传</string>
+    <string name="stop_jetty">停止流传</string>
     <string name="config_jetty">配置</string>
     <string name="start_download">下载</string>
     <string name="download_webapp">下载</string>
     <string name="loader_installed">%s 安装成功</string>
-    <string name="loader_deployed">闪传布署完毕</string>
+    <string name="loader_deployed">流传布署完毕</string>
     <string name="retry">重试</string>
     <string name="url">网址</string>
     <string name="console">控制台</string>
@@ -72,7 +72,7 @@
     <string name="pref_console_pwd">Console Password</string>
     <string name="pref_console_pwd_title">Edit Console Password</string>
     <string name="pref_console_pwd_key">net.shuttleplay.shuttle.pref.pwd</string>
-    <string name="edit_preferences">编辑闪传设置</string>
+    <string name="edit_preferences">编辑流传设置</string>
     <string name="connector_settings">连接器设置</string>
     <string name="webapp_exists">已存在</string>
     <string name="download_fail">下载失败</string>
@@ -90,7 +90,7 @@
     <string name="launch_any">启动!</string>
     <string name="forward">前进</string>
     <string name="refresh">刷新</string>
-    <string name="first_statement">闪传开启自由分享&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 点击 \"启动闪传\", ... 有没找到小的黄色巴士?&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 点击 \"停止闪传\"... 来退出应用 &lt;br/&gt;&lt;/small&gt;</string>
+    <string name="first_statement">流传开启自由分享&lt;br/&gt;&lt;small&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 点击 \"启动流传\", ... 有没找到小的黄色巴士?&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; - 点击 \"停止流传\"... 来退出应用 &lt;br/&gt;&lt;/small&gt;</string>
     <!-- <string name="first_statement">hello</string>  -->
     <string name="next_statement">点击 \"分享\" &lt;b&gt;将你的应用，文件分享他人&lt;/b&gt;&lt;br/&gt;</string>
 
@@ -98,7 +98,7 @@
 
     
     <!-- External Storage State Messages -->
-    <string name="header_sd_media"><b>无扩展存贮</b>\n\n扩展存贮，即sd卡或内部存贮, 对于闪传是要求必备的。并且要求是可写的，有足够的空间。否则闪传无法工作</string>
+    <string name="header_sd_media"><b>无扩展存贮</b>\n\n扩展存贮，即sd卡或内部存贮, 对于流传是要求必备的。并且要求是可写的，有足够的空间。否则流传无法工作</string>
     <string name="sd_media_removed"><b>MEDIA_REMOVED</b>\n\n请换一张sd卡并重试.</string>
     <string name="sd_media_unmounted"><b>MEDIA_UNMOUNTED</b>\n\nsd卡未映射，请检查你的系统设定</string>
     <string name="sd_media_checking"><b>MEDIA_CHECKING</b>\n\nsd卡正被系统检查，请稍等几分钟</string>
