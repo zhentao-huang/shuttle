@@ -68,7 +68,7 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 /**
  * IJetty
@@ -720,13 +720,13 @@ public class Shuttle extends Activity
     protected void onStart()
     {
         super.onStart();
-        FlurryAgent.onStartSession(this, "B3ZJCB5RZBWGBXTRWYBF");
+        EasyTracker.getInstance(this).activityStart(this);
     }
 
     protected void onStop()
     {
         super.onStop();
-        FlurryAgent.onEndSession(this);
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     public static void show(Context context)

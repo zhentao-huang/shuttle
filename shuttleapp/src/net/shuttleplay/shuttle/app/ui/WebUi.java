@@ -15,8 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.flurry.android.FlurryAgent;
-
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class WebUi extends Activity
 {
@@ -38,13 +37,13 @@ public class WebUi extends Activity
     protected void onStart()
     {
         super.onStart();
-        FlurryAgent.onStartSession(this,"B3ZJCB5RZBWGBXTRWYBF");
+        EasyTracker.getInstance(this).activityStart(this); 
     }
 
     protected void onStop()
     {
         super.onStop();
-        FlurryAgent.onEndSession(this);
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private static final String SAVED_URL = "SAVED_URL";
