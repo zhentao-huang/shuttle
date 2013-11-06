@@ -6,7 +6,7 @@
 
 <web-app>
 
-	<display-name>SD card</display-name>
+	<display-name>存贮的文件</display-name>
 	<description>
 		a servlet that brings easy WebDAV access to any store, only 1 interface needs to be implemented
 	</description>

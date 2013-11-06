@@ -545,7 +545,9 @@ public class Shuttle extends Activity
                     
                     try
                     {
-                        String[] names = new String[]{"webroot", "appshare", "webdav"};
+                        Resources res = getResources();
+                        int resId = res.getIdentifier("builtin", "array", getPackageName());
+                        String[] names = res.getStringArray(resId);
                         for (String name : names)
                         {
                             File webappDir = new File (__SHUTTLE_DIR +"/"+__WEBAPP_DIR);
@@ -554,7 +556,7 @@ public class Shuttle extends Activity
     
                             if (!appDir.exists())
                             {
-                                int resId = getResources().getIdentifier(name,"raw",getPackageName());
+                                resId = getResources().getIdentifier(name,"raw",getPackageName());
                                 InputStream warStream = getResources().openRawResource(resId);
                            
                                 if (name.equals("webroot"))
