@@ -182,6 +182,23 @@ public class WebUi extends Activity
         {
             return false;
         }
+
+//        @Override
+//        protected void onActivityResult (int requestCode, int resultCode, Intent data)
+//        {
+//            if (resultCode == RESULT_OK)
+//            {
+//                switch (requestCode)
+//                {
+//                case 1:     // be a string;
+//                {
+//                    String result = data.getStringExtra("RESULT_STRING");
+//                    
+//                    break;
+//                }
+//                }
+//            }
+//        }
     }
     
     private WebView mWebView;

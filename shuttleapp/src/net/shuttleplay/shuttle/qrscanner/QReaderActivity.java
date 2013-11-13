@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 //import android.widget.TextView;
+import net.shuttleplay.shuttle.common.QrHistory;
 
 
 public class QReaderActivity extends Activity implements Callback {
@@ -172,16 +173,29 @@ public class QReaderActivity extends Activity implements Callback {
 	public void handleDecode(Result rawResult, Bitmap barcode) {
 		inactivityTimer.onActivity();
 		lastResult = rawResult;
+                String text = null;
+                if (lastResult != null)
+                {
+                    text = lastResult.getText();
+                }
+                if (text != null && text.length() > 0)
+                {
+                    QrHistory qrHistory = new QrHistory(this);
+                    qrHistory.addText(text);
+                }
+                else
+                {
+                    finish();
+                    return;
+                }
 
 		ParsedResult result = ResultParser.parseResult(lastResult);
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action != null && action.equals(Intent.ACTION_PICK))
         {
-            String text = lastResult.getText();
             if (text != null)
             {
-                //Handler handler = intent.getE
                 setResult(RESULT_OK, intent);
                 finish();
                 return;
@@ -189,7 +203,7 @@ public class QReaderActivity extends Activity implements Callback {
         }
 		else if (result.getType().equals(ParsedResultType.URI)) {
 			URIParsedResult uriResult = (URIParsedResult) result;
-			launchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(uriResult
+            launchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(uriResult
 					.getURI())));
 			finish();
 			return;
