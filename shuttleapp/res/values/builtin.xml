@@ -4,5 +4,6 @@
         <item>webroot</item>
         <item>appshare</item>
         <item>webdav</item>
+        <item>qrecorder</item>
     </string-array>
 </resources>

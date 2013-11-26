@@ -18,6 +18,7 @@
        <module>appshare</module>
        <!-- <module>cchess</module> -->
        <module>webdav</module>
+       <module>qrecorder</module>
        <module>shuttleapp</module>
    </modules>
 

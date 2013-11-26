@@ -81,6 +81,12 @@
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
+    <dependency>
+      <groupId>net.shuttleplay.shuttle</groupId>
+      <artifactId>qrecorder</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
     <!--
     <dependency>
       <groupId>net.shuttleplay.shuttle</groupId>
@@ -116,7 +122,7 @@
                 <overWriteIfNewer>true</overWriteIfNewer>
                 <excludeTransitive>true</excludeTransitive>
                 <stripVersion>true</stripVersion>
-                <includeArtifactIds>webroot,appshare,webdav</includeArtifactIds>
+                <includeArtifactIds>webroot,appshare,webdav,qrecorder</includeArtifactIds>
       	      </configuration>
       	    </execution>
       	  </executions>

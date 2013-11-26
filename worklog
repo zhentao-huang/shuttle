@@ -1,0 +1,8 @@
+2013.11.13 QrHistory move to package net.shuttleplay.shuttle.common. Save record in to DB for each qr scanning.
+           TODO : Add Qreader into mvn build system.
+2013.11.14 Build including Qrecorder success. But QreaderServlet is unable to work. Qreader renamed to Qrecorder
+           TODO : Bug fix, make QreaderServlet work
+2013.11.19 QreaderServlet works, but the output of /qrecorder/qreader/qrlist is still empty.
+           TODO : qrlist should generate a list (html table) of qr recorder scanned by shuttle.
+2013.11.26 QreaderServlet bugfixed. Only recorder url of scanned result
+           TODO : Refine QReader web page, enable auto refresh and L10n

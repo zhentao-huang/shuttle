@@ -178,33 +178,30 @@ public class QReaderActivity extends Activity implements Callback {
                 {
                     text = lastResult.getText();
                 }
-                if (text != null && text.length() > 0)
-                {
-                    QrHistory qrHistory = new QrHistory(this);
-                    qrHistory.addText(text);
-                }
-                else
+                if (text == null || text.length() == 0)
                 {
                     finish();
                     return;
                 }
 
 		ParsedResult result = ResultParser.parseResult(lastResult);
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        if (action != null && action.equals(Intent.ACTION_PICK))
-        {
-            if (text != null)
-            {
-                setResult(RESULT_OK, intent);
-                finish();
-                return;
-            }
-        }
+                Intent intent = getIntent();
+                String action = intent.getAction();
+                if (action != null && action.equals(Intent.ACTION_PICK))
+                {
+                    if (text != null)
+                    {
+                        setResult(RESULT_OK, intent);
+                        finish();
+                        return;
+                    }
+                }
 		else if (result.getType().equals(ParsedResultType.URI)) {
 			URIParsedResult uriResult = (URIParsedResult) result;
             launchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(uriResult
 					.getURI())));
+                        QrHistory qrHistory = new QrHistory(this);
+                        qrHistory.addText(text);
 			finish();
 			return;
 		}

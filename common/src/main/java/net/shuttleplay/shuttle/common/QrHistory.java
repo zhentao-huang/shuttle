@@ -51,7 +51,7 @@ public class QrHistory extends SQLiteOpenHelper
     public Cursor query()
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query("qrhistory", null, null, null, null, null, BaseColumns._ID +  " DESC");
+        return db.query("qrhistory", new String[]{"rawtext","timestamp"}, null, null, null, null, BaseColumns._ID +  " DESC");
     }
 
     public int getCount()
